@@ -1,0 +1,119 @@
+/* Original invitation collection. Artwork is vector, with no image requests. */
+.collection-motif { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.invitation-art:is(.theme-mehfil,.theme-kesar,.theme-lotus,.theme-pichwai,.theme-ocean,.theme-champagne,.theme-sindoor) { isolation: isolate; }
+.invitation-art:is(.theme-mehfil,.theme-kesar,.theme-lotus,.theme-pichwai,.theme-ocean,.theme-champagne,.theme-sindoor) .art-border { display: none; }
+.invitation-art .art-copy h2 > span { overflow-wrap: anywhere; }
+.preview-mehfil { background: #e1e2e9; }.preview-kesar { background: #f6e8cf; }.preview-lotus { background: #f0dfe0; }.preview-pichwai { background: #e4e8d9; }.preview-ocean { background: #dfecef; }.preview-champagne { background: #eae5dc; }.preview-sindoor { background: #edd9cc; }
+
+/* Midnight Mehfil: a starlit cusped portal, slender lettering, and gold borders. */
+.theme-mehfil { background: #26334c; color: #ead5a4; }
+.theme-mehfil .collection-motif { color: #c8ab73; }
+.theme-mehfil .art-copy { padding: 99px 42px 48px; }
+.theme-mehfil .art-copy h2 { font-weight: 400; font-size: 49px; margin-top: 21px; letter-spacing: -.035em; }
+.theme-mehfil .art-copy h2 i { font-size: 24px; margin-block: 10px; color: #c8ab73; }
+.theme-mehfil .art-divider { font-size: 10px; margin-top: 17px; }
+.theme-mehfil .art-copy .eyebrow { font-size: 6px; letter-spacing: .2em; }
+.theme-mehfil .art-date { margin-top: 13px; font-size: 10px; }
+.compact.theme-mehfil .art-copy { padding: 65px 27px 31px; }.compact.theme-mehfil .art-copy h2 { font-size: 35px; margin-top: 15px; }.compact.theme-mehfil .art-copy h2 i { font-size: 20px; margin-block: 6px; }.compact.theme-mehfil .art-divider { margin-top: 10px; }.compact.theme-mehfil .art-copy .eyebrow { font-size: 5px; }
+
+/* Kesar: a folk sun above an asymmetric letter, flowers below a cream wave. */
+.theme-kesar { background: #f0b951; color: #763919; }
+.theme-kesar .art-copy { align-items: flex-start; justify-content: center; padding: 54px 35px 57px; text-align: left; }
+.theme-kesar .art-copy .eyebrow { width: 115px; line-height: 1.8; margin-bottom: 10px; }
+.theme-kesar .art-copy h2 { font-size: 53px; margin-top: 8px; font-weight: 600; line-height: .95; }
+.theme-kesar .art-copy h2 i { font-size: 28px; margin: 8px 0 7px 33px; }
+.theme-kesar .art-divider { display: none; }.theme-kesar .art-copy p { margin-top: 23px; }
+.theme-kesar .art-date { margin-top: 24px; font-size: 11px; font-weight: 600; }
+.theme-kesar .art-city { margin-top: 6px; }
+.compact.theme-kesar .art-copy { padding: 38px 25px 39px; }.compact.theme-kesar .art-copy h2 { font-size: 39px; }.compact.theme-kesar .art-copy .eyebrow { width: 85px; font-size: 5px; margin-bottom: 5px; }.compact.theme-kesar .art-copy h2 i { font-size: 21px; margin: 5px 0 5px 22px; }.compact.theme-kesar .art-copy p { margin-top: 13px; }.compact.theme-kesar .art-date { margin-top: 18px; font-size: 8px; }
+
+/* Lotus: a blush oval and watercolour-like petals beneath the invitation. */
+.theme-lotus { background: #f4e2df; color: #804653; }
+.theme-lotus .collection-motif { color: #9d626b; }
+.theme-lotus .art-copy { padding: 71px 43px 126px; justify-content: center; }
+.theme-lotus .art-copy .eyebrow { max-width: 125px; font-size: 6px; line-height: 1.8; }
+.theme-lotus .art-copy h2 { font-size: 49px; font-style: italic; margin-top: 21px; }
+.theme-lotus .art-copy h2 i { font-size: 22px; margin-block: 8px; }
+.theme-lotus .art-divider { display: none; }.theme-lotus .art-copy p { margin-top: 17px; font-size: 7px; }.theme-lotus .art-date { font-size: 9px; margin-top: 13px; }
+.compact.theme-lotus .art-copy { padding: 50px 29px 89px; }.compact.theme-lotus .art-copy h2 { font-size: 36px; margin-top: 15px; }.compact.theme-lotus .art-copy h2 i { font-size: 18px; margin-block: 5px; }.compact.theme-lotus .art-copy .eyebrow { font-size: 5px; max-width: 97px; }.compact.theme-lotus .art-copy p { font-size: 6px; margin-top: 10px; }.compact.theme-lotus .art-date { font-size: 8px; margin-top: 9px; }
+
+/* Pichwai: a botanical court with hand-drawn facing peacocks. */
+.theme-pichwai { background: #c1cbb0; color: #405b43; }
+.theme-pichwai .art-copy { padding: 116px 44px 80px; }
+.theme-pichwai .art-copy h2 { font-size: 47px; margin-top: 17px; }
+.theme-pichwai .art-copy h2 i { color: #a57660; font-size: 24px; margin-block: 9px; }
+.theme-pichwai .art-copy .eyebrow { font-size: 6px; }.theme-pichwai .art-divider { display: none; }.theme-pichwai .art-copy p { margin-top: 20px; font-size: 7px; }.theme-pichwai .art-date { font-size: 10px; margin-top: 12px; }
+.compact.theme-pichwai .art-copy { padding: 79px 31px 53px; }.compact.theme-pichwai .art-copy h2 { font-size: 33px; margin-top: 13px; }.compact.theme-pichwai .art-copy h2 i { font-size: 20px; margin-block: 5px; }.compact.theme-pichwai .art-copy .eyebrow { font-size: 5px; }.compact.theme-pichwai .art-copy p { font-size: 6px; margin-top: 13px; }.compact.theme-pichwai .art-date { font-size: 8px; margin-top: 10px; }
+
+/* By the Blue: an open editorial letter meeting three layers of coastal water. */
+.theme-ocean { background: #f3f2e8; color: #28566a; }
+.theme-ocean .art-copy { align-items: flex-start; justify-content: flex-start; padding: 86px 33px 85px; text-align: left; }
+.theme-ocean .art-copy .eyebrow { max-width: 120px; line-height: 1.8; font-size: 6px; }
+.theme-ocean .art-copy h2 { font-family: var(--sans); font-size: 43px; font-weight: 350; letter-spacing: -.07em; margin-top: 24px; }
+.theme-ocean .art-copy h2 i { font-family: var(--serif); font-size: 30px; font-weight: 400; margin-block: 7px; }
+.theme-ocean .art-divider { display: none; }.theme-ocean .art-copy p { margin-top: 22px; font-size: 7px; }.theme-ocean .art-date { font-size: 10px; margin-top: 13px; }
+.compact.theme-ocean .art-copy { padding: 57px 25px 60px; }.compact.theme-ocean .art-copy h2 { font-size: 33px; margin-top: 18px; }.compact.theme-ocean .art-copy .eyebrow { font-size: 5px; max-width: 96px; }.compact.theme-ocean .art-copy h2 i { font-size: 21px; margin-block: 5px; }.compact.theme-ocean .art-copy p { margin-top: 14px; font-size: 6px; }.compact.theme-ocean .art-date { font-size: 8px; margin-top: 10px; }
+
+/* Champagne: angular art-deco linework, restrained capitals, and warm metallic ink. */
+.theme-champagne { background: #f4eee0; color: #615035; }
+.theme-champagne .collection-motif { color: #a18a5b; }
+.theme-champagne .art-copy { padding: 105px 43px 93px; }
+.theme-champagne .art-copy .eyebrow { font-size: 6px; letter-spacing: .19em; }
+.theme-champagne .art-copy h2 { font-size: 37px; text-transform: uppercase; font-weight: 400; letter-spacing: .075em; margin-top: 23px; }
+.theme-champagne .art-copy h2 i { font-size: 22px; margin-block: 12px; letter-spacing: 0; }
+.theme-champagne .art-divider { width: 31px; height: 1px; overflow: hidden; background: #aa946b; margin-top: 20px; }.theme-champagne .art-copy p { font-size: 7px; margin-top: 13px; }.theme-champagne .art-date { font-size: 10px; margin-top: 14px; }
+.compact.theme-champagne .art-copy { padding: 71px 29px 66px; }.compact.theme-champagne .art-copy h2 { font-size: 26px; margin-top: 17px; }.compact.theme-champagne .art-copy h2 i { font-size: 17px; margin-block: 8px; }.compact.theme-champagne .art-copy .eyebrow { font-size: 5px; }.compact.theme-champagne .art-divider { margin-top: 14px; width: 23px; }.compact.theme-champagne .art-copy p { font-size: 6px; margin-top: 9px; }.compact.theme-champagne .art-date { font-size: 8px; margin-top: 11px; }
+
+/* Sindoor: a bright vermillion court and a hand-drawn rangoli medallion. */
+.theme-sindoor { background: #ac3f2c; color: #973723; }
+.theme-sindoor .art-copy { padding: 128px 49px 86px; }
+.theme-sindoor .art-copy h2 { font-size: 48px; font-weight: 600; margin-top: 17px; }
+.theme-sindoor .art-copy h2 i { font-weight: 400; font-size: 25px; margin-block: 7px; }
+.theme-sindoor .art-copy .eyebrow { font-size: 6px; max-width: 130px; line-height: 1.7; }.theme-sindoor .art-divider { display: none; }.theme-sindoor .art-copy p { margin-top: 20px; font-size: 7px; }.theme-sindoor .art-date { font-size: 10px; margin-top: 13px; }
+.compact.theme-sindoor .art-copy { padding: 91px 32px 60px; }.compact.theme-sindoor .art-copy h2 { font-size: 34px; margin-top: 12px; }.compact.theme-sindoor .art-copy h2 i { font-size: 20px; margin-block: 5px; }.compact.theme-sindoor .art-copy .eyebrow { font-size: 5px; max-width: 90px; }.compact.theme-sindoor .art-copy p { font-size: 6px; margin-top: 12px; }.compact.theme-sindoor .art-date { font-size: 8px; margin-top: 10px; }
+
+/* Each public invitation carries its composition into the actual event page. */
+.demo-mehfil { --theme-accent: #283650; --theme-light: #e5e7ee; background: #f5f3ee; }
+.demo-mehfil .invite-hero-art .invitation-art { box-shadow: 0 17px 45px #26334c26; }
+.demo-mehfil .function-card { border-radius: 90px 90px 5px 5px; border-color: #c4c9d3; padding-top: 39px; }
+.demo-mehfil .function-icon { background: #283650; color: #ead5a4; }.demo-mehfil .rsvp-section { border-top: 3px double #a1a9b7; border-bottom: 3px double #a1a9b7; }
+.demo-kesar { --muted: #62584e; --theme-accent: #85401c; --theme-light: #f6e5c0; background: #fffbef; }
+.demo-kesar .invite-hero { grid-template-columns: 1.1fr 1fr; }.demo-kesar .invite-hero-art { order: 2; transform: rotate(2deg); }
+.demo-kesar .function-card { border-radius: 5px; border: 0; background: #fbebc7; border-top: 4px solid #c78738; }.demo-kesar .function-card:nth-child(even) { background: #f4e0c9; border-top-color: #a86440; }.demo-kesar .function-number { font-style: normal; font-size: 35px; color: #965225; }
+.demo-kesar .rsvp-section { border-radius: 6px 90px 6px 6px; }.demo-kesar .invite-section-heading { text-align: left; }
+.demo-lotus { --muted: #62584e; --theme-accent: #804653; --theme-light: #f1dfe0; background: #fff7f4; }
+.demo-lotus .invite-hero { grid-template-columns: 1fr; max-width: 760px; margin-inline: auto; text-align: center; gap: 30px; }.demo-lotus .invite-hero-art { width: 350px; max-width: 100%; margin-inline: auto; }.demo-lotus .invite-hero-art .invitation-art { border-radius: 180px; }.demo-lotus .invite-welcome { max-width: 570px; margin-inline: auto; }
+.demo-lotus .family-names,.demo-lotus .invite-location,.demo-lotus .invite-hero-actions,.demo-lotus .countdown { justify-content: center; }.demo-lotus .invite-welcome h1 { font-style: italic; }
+.demo-lotus .function-card { border-radius: 120px 120px 10px 10px; text-align: center; background: #fffdfb; border-color: #dfc5c8; padding-top: 38px; }.demo-lotus .function-top { justify-content: center; position: relative; }.demo-lotus .function-number { position: absolute; right: 0; }.demo-lotus .venue-details strong,.demo-lotus .venue-details a { justify-content: center; align-self: center; }.demo-lotus .rsvp-section { border-radius: 120px 120px 8px 8px; }
+.demo-pichwai { --theme-accent: #435947; --theme-light: #e0e7d5; background: #f4f4e9; }
+.demo-pichwai .invite-hero-art .invitation-art { border-radius: 5px; box-shadow: 12px 12px 0 #dce2d0; }.demo-pichwai .function-card { border-radius: 5px; border: 5px double #a5b39a; background: #fcfbef; }.demo-pichwai .function-icon { border-radius: 50% 50% 0 0; color: #435947; }.demo-pichwai .function-details h3 { font-style: italic; }.demo-pichwai .rsvp-section { border: 1px solid #a5b39a; border-radius: 5px; }.demo-pichwai .invite-nav { border-block: 3px double #bbc5ad; }
+.demo-ocean { --theme-accent: #225972; --theme-light: #e0edf0; background: #f7faf8; }
+.demo-ocean .invite-hero { grid-template-columns: 1.1fr 1fr; gap: 65px; }.demo-ocean .invite-hero-art { order: 2; }.demo-ocean .invite-hero-art .invitation-art { box-shadow: 12px 14px 0 #d9e9eb; }.demo-ocean .invite-welcome h1,.demo-ocean .function-details h3 { font-family: var(--sans); letter-spacing: -.055em; font-weight: 400; }
+.demo-ocean .functions-grid { grid-template-columns: 1fr 1fr; gap: 28px; }.demo-ocean .function-card { border-radius: 0; border: 0; border-top: 2px solid #91b4bc; background: transparent; padding: 25px 0; }.demo-ocean .function-top { justify-content: flex-start; gap: 15px; }.demo-ocean .function-number { color: #417285; font: 12px var(--sans); }.demo-ocean .rsvp-section { border-radius: 0 80px 0 80px; }
+.demo-champagne { --theme-accent: #75603e; --theme-light: #eee6d8; background: #fbf8f1; }
+.demo-champagne .invite-hero-art .invitation-art { box-shadow: none; border: 1px solid #c8b890; }.demo-champagne .invite-welcome h1 { text-transform: uppercase; font-size: 41px; letter-spacing: .03em; }.demo-champagne .invite-nav { border-block: 3px double #d2c5ad; }
+.demo-champagne .function-card { border-radius: 0; border: 3px double #c8b890; background: transparent; }.demo-champagne .function-icon { border-radius: 0; transform: rotate(45deg); width: 36px; height: 36px; margin: 6px; }.demo-champagne .function-icon svg { transform: rotate(-45deg); }.demo-champagne .function-details h3 { text-transform: uppercase; font-size: 29px; letter-spacing: .04em; }.demo-champagne .rsvp-section { border-radius: 0; outline: 1px solid #c8b890; outline-offset: -9px; }
+.demo-sindoor { --muted: #62584e; --theme-accent: #a43828; --theme-light: #f3dfca; background: #fff9ef; }
+.demo-sindoor .invite-hero-art .invitation-art { box-shadow: 11px 11px 0 #e9c3a8; }.demo-sindoor .function-card { border-radius: 75px 4px 75px 4px; border: 1px solid #ca8466; background: #fff4e3; }.demo-sindoor .function-card:nth-child(even) { border-radius: 4px 75px 4px 75px; }.demo-sindoor .function-number { color: #a43828; }.demo-sindoor .function-icon { background: #a43828; color: #fff4e3; }.demo-sindoor .rsvp-section { border-radius: 6px; border-top: 5px solid #a43828; }.demo-sindoor .invite-section-heading h2 { color: #813725; }
+.demo-page:is(.demo-mehfil,.demo-kesar,.demo-lotus,.demo-pichwai,.demo-ocean,.demo-champagne,.demo-sindoor) .button:not(.button-secondary) { background: var(--theme-accent); }
+.demo-page:is(.demo-mehfil,.demo-kesar,.demo-lotus,.demo-pichwai,.demo-ocean,.demo-champagne,.demo-sindoor) .invite-hero-art .art-copy h2 { font-size: 55px; }
+.demo-page.demo-champagne .invite-hero-art .art-copy h2 { font-size: 39px; }.demo-page.demo-ocean .invite-hero-art .art-copy h2 { font-size: 46px; }
+.demo-page:is(.demo-mehfil,.demo-kesar,.demo-lotus,.demo-pichwai,.demo-ocean,.demo-champagne,.demo-sindoor) .invite-hero-art .art-copy .eyebrow { font-size: 7px; }
+.demo-page:is(.demo-mehfil,.demo-kesar,.demo-lotus,.demo-pichwai,.demo-ocean,.demo-champagne,.demo-sindoor) .invite-hero-art .art-copy p { font-size: 8px; }
+.theme-switcher nav { max-width: 100%; overflow-x: auto; scrollbar-width: thin; }.theme-switcher nav a { flex-shrink: 0; }
+
+@media (max-width: 1100px) and (min-width: 761px) {
+  .demo-kesar .invite-hero,.demo-ocean .invite-hero { grid-template-columns: 1fr 1fr; gap: 35px; }
+  .demo-page.demo-champagne .invite-hero-art .art-copy h2 { font-size: 35px; }
+}
+@media (max-width: 760px) {
+  .demo-kesar .invite-hero,.demo-ocean .invite-hero { grid-template-columns: 1fr; gap: 32px; }.demo-kesar .invite-hero-art,.demo-ocean .invite-hero-art { order: 0; }.demo-kesar .invite-hero-art { max-width: 300px; }
+  .demo-lotus .invite-hero { margin: 27px 20px 33px; }.demo-lotus .invite-hero-art { max-width: 310px; }.demo-lotus .invite-hero-art .invitation-art { height: 435px; }
+  .demo-kesar .invite-section-heading > p { margin-left: 0; }.demo-kesar .rsvp-section { border-radius: 5px 60px 5px 5px; }
+  .demo-ocean .functions-grid { grid-template-columns: 1fr; gap: 5px; }.demo-ocean .invite-welcome { text-align: left; }.demo-ocean .family-names,.demo-ocean .invite-location,.demo-ocean .invite-hero-actions,.demo-ocean .countdown { justify-content: flex-start; }.demo-ocean .rsvp-section { border-radius: 0 55px 0 55px; }
+  .demo-pichwai .invite-hero-art { max-width: 310px; }.demo-sindoor .invite-hero-art { max-width: 310px; }
+  .demo-champagne .invite-welcome h1 { font-size: 32px; }.demo-champagne .function-details h3 { font-size: 29px; }
+  .demo-page:is(.demo-mehfil,.demo-kesar,.demo-lotus,.demo-pichwai,.demo-ocean,.demo-champagne,.demo-sindoor) .invite-hero-art .art-copy h2 { font-size: 50px; }
+  .demo-page.demo-champagne .invite-hero-art .art-copy h2 { font-size: 34px; }.demo-page.demo-ocean .invite-hero-art .art-copy h2 { font-size: 43px; }
+  .theme-switcher { overflow: hidden; }.theme-switcher nav { width: 100%; justify-content: flex-start; padding-bottom: 4px; }
+}
