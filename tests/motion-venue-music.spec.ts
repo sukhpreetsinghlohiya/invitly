@@ -1,15 +1,41 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Locator } from "@playwright/test";
 import { occasions } from "../src/data/occasions";
 import { occasionCollections } from "../src/data/occasion-demos";
 import { themes } from "../src/data/themes";
 import { getOccasionThemes } from "../src/data/occasion-themes";
+
+async function loadedCoverArtwork(cover: Locator) {
+  const assets: string[] = [];
+  for (const image of await cover.locator('img').all()) {
+    if (!await image.isVisible()) continue;
+    await image.scrollIntoViewIfNeeded();
+    await expect.poll(() => image.evaluate(node => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+    const source = new URL(await image.getAttribute('src') || '', 'http://127.0.0.1');
+    assets.push(source.searchParams.get('url') || source.pathname);
+  }
+  for (const ornament of await cover.locator('[data-archive-ornament]').all()) {
+    if (!await ornament.isVisible()) continue;
+    const source = await ornament.evaluate(async node => {
+      const url = getComputedStyle(node).maskImage.match(/url\(["']?(.*?)["']?\)/)?.[1];
+      if (!url) throw new Error('Visible archival artwork has no SVG source');
+      const image = new Image();
+      image.src = url;
+      await image.decode();
+      if (!image.naturalWidth) throw new Error(`Artwork did not load: ${url}`);
+      return new URL(url).pathname;
+    });
+    assets.push(source);
+  }
+  expect(assets.length, 'The cover contains loaded artwork').toBeGreaterThan(0);
+  return [...new Set(assets)].sort();
+}
 
 for (const occasion of occasions) {
   test(`${occasion.id} has its own illustration, readable schedule and editable entry point`, async ({ page }, info) => {
     const theme = occasionCollections[occasion.id].theme;
     await page.goto(`/demo?theme=${theme}&occasion=${occasion.id}`);
     await expect(page.getByRole('heading',{level:1})).toContainText(occasionCollections[occasion.id].names[0]);
-    await expect(page.locator(`[data-occasion-art="${occasion.id}"]`).first()).toBeVisible();
+    await expect(page.locator(occasion.id === "wedding" ? `[data-illustrated-cover="${theme}"]` : `[data-occasion-art="${occasion.id}"]`).first()).toBeVisible();
     await expect(page.getByRole('heading',{name:occasion.id === "wedding" ? "Wedding" : occasion.schedule,exact:true})).toBeVisible();
     expect(await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth)).toBeLessThanOrEqual(0);
     if (occasion.id !== 'wedding') await expect(page.locator('main')).not.toContainText('Sunshine yellows');
@@ -35,9 +61,26 @@ test('legacy links for every occasion remain usable across all ten theme IDs', a
 
 for (const occasion of occasions.filter(item => item.id !== 'wedding')) {
   test(`${occasion.id} offers three real cover compositions with readable actions`, async ({ page }, info) => {
+    test.setTimeout(60000);
     const designs = getOccasionThemes(occasion.id);
     expect(designs).toHaveLength(3);
     const layouts = new Set<string>();
+    const errors: string[] = [];
+    page.on('pageerror', error => errors.push(error.message));
+    const galleryArtwork = new Map<string, string[]>();
+    await page.goto(`/templates?occasion=${occasion.id}`);
+    await expect(page.locator('article.collection-card')).toHaveCount(3);
+    if (page.viewportSize()!.width <= 600) {
+      expect((await page.locator('article.collection-card').first().boundingBox())!.width, 'Phone galleries show one readable stationery card per row').toBeGreaterThan(page.viewportSize()!.width * .75);
+    }
+    for (const design of designs) {
+      const card = page.locator(`article.collection-card [data-occasion-layout="${design.layout}"]`);
+      await expect(card).toBeVisible();
+      galleryArtwork.set(design.id, await loadedCoverArtwork(card));
+      await expect(page.getByRole('link', { name: `Customize ${design.name}`, exact: true })).toHaveAttribute('href', new RegExp(`theme=${design.id}.*occasion=${occasion.id}`));
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
+    await page.locator('#collection').screenshot({ path: `artifacts/screenshots/curated-${occasion.id}-gallery-${info.project.name}.png` });
     for (const design of designs) {
       await page.goto(`/demo?occasion=${occasion.id}&theme=${design.id}`);
       await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
@@ -45,15 +88,23 @@ for (const occasion of occasions.filter(item => item.id !== 'wedding')) {
       await expect(cover).toHaveAttribute('data-occasion-layout', design.layout);
       await expect(cover.getByRole('heading', { level: 1 })).toContainText(occasionCollections[occasion.id].names[0]);
       await expect(cover.locator(`[data-occasion-art="${occasion.id}"]`)).toBeVisible();
+      expect(await loadedCoverArtwork(cover), 'Gallery and guest invitation use the same real artwork').toEqual(galleryArtwork.get(design.id));
       layouts.add((await cover.getAttribute('data-occasion-layout'))!);
       expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth), `${occasion.id}/${design.name}`).toBeLessThanOrEqual(0);
       const directions = cover.getByRole('link', { name: /directions/i }).first();
       await expect(directions).toBeVisible();
       expect((await directions.boundingBox())?.height).toBeGreaterThanOrEqual(44);
+      await expect(directions).toHaveAttribute('href', /https:\/\/www.google.com\/maps\/dir\/\?api=1&destination=/);
+      await directions.scrollIntoViewIfNeeded();
       await expect(directions).toBeInViewport({ ratio: 1 });
-      await page.screenshot({ path: `artifacts/screenshots/curated-${occasion.id}-${design.layout}-${info.project.name}.png` });
+      await cover.getByRole('link', { name: 'Schedule', exact: true }).click();
+      await expect(page.locator('#celebrations')).toBeInViewport();
+      await cover.getByRole('link', { name: 'RSVP', exact: true }).click();
+      await expect(page.locator('#rsvp')).toBeInViewport();
+      await cover.screenshot({ path: `artifacts/screenshots/curated-${occasion.id}-${design.layout}-${info.project.name}.png` });
     }
     expect([...layouts].sort()).toEqual(['editorial', 'keepsake', 'signature']);
+    expect(errors).toEqual([]);
   });
 }
 

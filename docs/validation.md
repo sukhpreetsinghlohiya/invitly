@@ -1,5 +1,35 @@
 # Production validation
 
+## Invitation design and animated stories — 2 October 2026
+
+Implemented and reviewed all 34 designs across nine occasions, including enhanced painted/engraved covers, independent ceremony-art motion, cover-first photo slideshows, a framed three-card album, individual couple/family profiles, optional film, independent countdown date, RSVP visibility and configurable envelope openings. Existing public/guest photo authorization and protected image delivery are preserved. Five specialist agents contributed across two waves; all project changes and review artifacts stayed inside the Invitly directory.
+
+Final local verification against the production build at `127.0.0.1:3011`:
+
+- Build (including TypeScript), full ESLint and `git diff --check`: pass.
+- Data validation: 29 tests pass, including optional-field roundtrips, legacy drafts, bounded prefixes/portrait IDs and video-host validation.
+- Public pages, editor, home/account entry and music regression: 28 pass; four database-dependent cases skipped because local Supabase is stopped.
+- All 34 gallery/guest cover compositions, asset loading and readable actions at 390px and 768px: 18 pass; two editor cases intentionally excluded by project guard.
+- New photo/ceremony interaction suite: 12 pass at 320px and 1440px. Covers chosen-photo order, autoplay visibility, pause, keyboard focus plus pointer exit, reduced/disabled motion, three-card album, lightbox navigation, independent dhol parts, quiet remembrance and artwork-off.
+- Profile/options journeys: five pass across 360px, 320px and desktop, including save/reload, custom parents/grandparents prefixes, heading/portrait visibility, independent countdown date, RSVP off, envelope keyboard focus and click-to-load video. The all-ten-wedding long-name/sans-font regression also passes.
+- Native-size visual review of all 34 covers, 14 ceremony scenes, portrait cards, original envelope, new album canopy and supplied hands SVG. Corrected a 7px Royal album overflow, a mobile hero-control overlap, thin SVG lines, and clipped moving-art seams. Final reviewed pages have zero horizontal overflow at 320px and 1440px.
+
+Review artifacts are local/ignored: `artifacts/template-review/all-34-designs.png`, `artifacts/template-review/index.html`, `artifacts/experience-review/`, and browser logs under `artifacts/`.
+
+**Database/deployment limit:** `supabase/migrations/20261002171500_invitation_story_options.sql` is required to include `personProfiles`, `profileSection`, `countdownAt` and `video` in published and personal guest projections. The new SQL regressions preserve legacy absence, public/private function filtering, guest-group behavior, private-key exclusion and media metadata filtering. SQL execution and actual authenticated upload/publish flows were not rerun: local Docker/Supabase is stopped. No hosted migration or deployment was applied. Editor/preview checks use authorized-route fixture photos; they are not evidence of a fresh storage upload test.
+
+
+## Architecture review — 2 October 2026
+
+Read-only review of the application boundaries, host actions, private media and public/guest projections found several remaining reliability and scaling items. These are separate from the template design work; this review is not a blanket production sign-off.
+
+- Existing-event save failures write a device backup under an event-specific key in `src/components/editor/invitation-editor.tsx`, but editor initialization only restores the generic anonymous draft. A failed account save therefore needs an explicit recovery path before the “device backup” promise is reliable after reload.
+- Photo uploads in `src/app/dashboard/media-actions.ts` permit 5 MiB through a Server Action. The configured 6 MB Next.js body limit does not remove Vercel Functions’ [4.5 MB request limit](https://vercel.com/docs/functions/limitations). Move the byte upload to signed storage, as audio already does, or lower the effective photo limit for that deployment.
+- `src/app/audio/[eventId]/[audioId]/route.ts` downloads the full storage object before producing a range response. Repeated seek requests can repeatedly transfer and buffer the whole recording; saves also revalidate the selected recording. Streaming/range-aware storage retrieval and bounded revalidation would improve scale.
+- Individual file limits do not form an account-level byte quota. Abandoned/replaced audio objects need cleanup and a bounded upload budget. Announcement fallback polling also repeatedly fetches the broader invitation projection; a narrow updates projection would reduce work.
+
+The reviewed owner checks, server-only credentials, private-media cache protections, hashed guest tokens and SQL RSVP concurrency guards remain in place. A fresh local build, lint and 26 data tests passed during this review. Local Supabase was stopped, so live database authorization, hosted migration state, and production deployment were not reverified. The earlier isolated integration results below remain historical evidence, not new results from this pass.
+
 ## Local P0 verification — 1 October 2026
 
 Verified the current app against isolated local Supabase and a production build on port 3010. This pass found and fixed a photo privacy issue: after an invitation was unpublished, its protected `/media/[id]` route returned 404, but a previously requested Next image-optimizer URL still returned cached bytes with a public four-hour cache lifetime. `images.localPatterns` now permits only public site artwork and bundled static images. Protected invitation media cannot enter the shared optimizer cache. A disposable fixture reproduced the issue before the fix and confirmed optimizer requests return 400 afterward, while the normal photo route changes from 200 to 404 on unpublish. [Before evidence](../artifacts/p0-image-cache-before.json), [after evidence](../artifacts/p0-image-cache-after.json).

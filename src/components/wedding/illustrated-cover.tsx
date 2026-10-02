@@ -1,7 +1,9 @@
 import { useId } from "react";
+import Image from "next/image";
 import { getDesign, guestWording } from "@/data/occasions";
 import { formatEventDate } from "@/data/demo-invitation";
 import { hasIndicText } from "@/lib/invitation-text";
+import { ArchiveOrnament } from "@/components/archive-ornament";
 import type { Invitation, ThemeId } from "@/types/invitation";
 import "@fontsource/cormorant-garamond/latin-400.css";
 import "@fontsource/cormorant-garamond/latin-400-italic.css";
@@ -10,11 +12,23 @@ import styles from "./illustrated-cover.module.css";
 
 type Props = { invitation: Invitation; theme: ThemeId; compact?: boolean };
 
+const paintedScenes: Partial<Record<ThemeId, string>> = {
+  royal: "/images/occasions/wedding.webp",
+  floral: "/images/occasions/anniversary.webp",
+  mehfil: "/images/ceremonies/mehndi.webp",
+  kesar: "/images/ceremonies/haldi.webp",
+  champagne: "/images/ceremonies/reception.webp",
+  sindoor: "/images/ceremonies/sangeet.webp",
+};
+
 /** Original printmaking motifs. SVG definitions are scoped to each card instance. */
 function Motifs({ id, theme }: { id: string; theme: ThemeId }) {
   return <defs>
     <g id={`${id}-flower`} stroke="var(--art-line)" strokeWidth=".8">
-      {Array.from({ length: 10 }, (_, i) => <path key={i} transform={`rotate(${i * 36})`} d="M0-3C-5-7-8-17-3-22C2-27 9-19 7-14C9-9 3-5 0-3Z" fill="var(--art-petal)" />)}
+      {Array.from({ length: 10 }, (_, i) => <g key={i} transform={`rotate(${i * 36})`}>
+        <path d="M0-3C-5-7-8-17-3-22C2-27 9-19 7-14C9-9 3-5 0-3Z" fill="var(--art-petal)" />
+        <path d="M0-7Q-3-14-1-20M2-9Q5-15 3-19" fill="none" strokeWidth=".4" opacity=".65" />
+      </g>)}
       <circle r="8" fill="var(--art-gold)" /><circle r="4.5" fill="var(--art-petal)" />
       {[0, 60, 120, 180, 240, 300].map(angle => <circle key={angle} transform={`rotate(${angle})`} cy="-5.5" r=".8" fill="var(--art-line)" stroke="none" />)}
       <circle r="1.5" fill="var(--art-line)" />
@@ -29,6 +43,7 @@ function Motifs({ id, theme }: { id: string; theme: ThemeId }) {
       <path d="M-5 43C-39 24-28-10-3-28C9-38 16-46 11-60C49-31 53 7 32 33C20 49 6 50-5 43Z" />
       <path d="M-3 34C-25 20-16-3 2-18C12-27 18-32 19-40C37-17 37 7 23 25C15 37 5 39-3 34Z" fill="none" /><path d="M0 23C-13 11-3-2 9 0C24 2 20 20 10 19C3 18 4 11 9 11" fill="none" />
       <path d="m-24 7 6 1m-1-16 5 4m6-17 4 6m12-21 2 6m24 32-6 1m1 12-6-2m-1 14-5-4m-6 12-3-6m-10 8 1-6" /><circle cx="14" cy="-22" r="3" fill="var(--art-gold)" />
+      <path d="M-9 37C-34 13-13-18 8-31M25 32Q44 9 29-19" fill="none" strokeWidth="1.8" strokeLinecap="round" strokeDasharray=".1 4.5" />
     </g> : null}
     {(theme === "lotus" || theme === "pichwai") && <g id={`${id}-lotus`} stroke="var(--art-line)" strokeWidth="1" strokeLinejoin="round">
       <path d="M0 8C-21-7-20-32 0-49C20-32 21-7 0 8Z" fill="var(--art-petal)" /><path d="M0 10C-32 3-43-21-36-39C-9-33 0-17 0 10ZM0 10C32 3 43-21 36-39C9-33 0-17 0 10Z" fill="var(--art-soft)" />
@@ -38,6 +53,7 @@ function Motifs({ id, theme }: { id: string; theme: ThemeId }) {
     {theme === "pichwai" && <g id={`${id}-peacock`} stroke="var(--art-line)" strokeWidth="1.1" strokeLinejoin="round">
       <g transform="translate(-20 15)">{[-65, -43, -21, 1, 23].map(angle => <g key={angle} transform={`rotate(${angle})`}>
         <path d="M0 12C-22-15-24-65 0-87C24-65 22-15 0 12Z" fill="var(--art-leaf)" /><path d="M0 6V-77M-9-14-1-6m13-19-10 10m-15-24 12 12m12-29-12 12" fill="none" stroke="var(--art-gold)" />
+        <path d="M-6-6Q-16-22-15-39M6-6Q16-22 15-39M-15-48Q-17-66-4-79M15-48Q17-66 4-79" fill="none" stroke="var(--art-gold)" strokeWidth=".55" />
         <ellipse cy="-59" rx="10" ry="16" fill="var(--art-gold)" /><ellipse cy="-61" rx="5.5" ry="10" fill="var(--art-blue)" /><circle cy="-65" r="2.5" fill="var(--art-paper)" />
       </g>)}</g>
       <path d="M-25 8C-7 28 16 28 27 12C41-8 18-38 30-58C37-71 48-69 52-61C56-52 47-48 43-51C39-39 54-22 55-6C63 20 42 46 15 45C-5 43-13 29-25 8Z" fill="var(--art-blue)" />
@@ -139,18 +155,34 @@ function FrameMiddle({ theme }: { theme: ThemeId }) {
 /** Keep ornaments anchored to the paper edge when long names make the sheet taller. */
 function TopOrnament({ id, theme }: { id: string; theme: ThemeId }) {
   if (theme === "royal") return <use href={`#${id}-flower`} transform="translate(230 109) scale(.7)" />;
-  if (theme === "mehfil") return <><use href={`#${id}-lantern`} transform="translate(106 94) scale(.8)" /><use href={`#${id}-lantern`} transform="translate(354 94) scale(.8)" /><use href={`#${id}-lantern`} transform="translate(230 132) scale(.46)" /></>;
-  if (theme === "modern") return <><circle cx="335" cy="100" r="28" fill="var(--art-petal)" /><path d="M318 100h34m-17-17v34" stroke="var(--art-paper)" strokeWidth=".8" /><path d="M80 108h61m-61 9h34" stroke="var(--art-line)" strokeWidth="1" /></>;
+  if (theme === "mehfil") return <>{[106, 354, 230].map((x, index) => <g key={x} className={styles.lanternMotion} data-cover-motion="lantern" style={{ animationDelay: `${index * -2.7}s` }}><use href={`#${id}-lantern`} transform={`translate(${x} ${index === 2 ? 132 : 94}) scale(${index === 2 ? .46 : .8})`} /></g>)}</>;
+  if (theme === "modern") return <>
+    <circle cx="335" cy="100" r="28" fill="var(--art-petal)" />
+    <circle cx="335" cy="100" r="23" fill="none" stroke="var(--art-paper)" strokeWidth=".6" opacity=".7" />
+    <g fill="none" stroke="var(--art-paper)" strokeWidth="1"><ellipse cx="330" cy="102" rx="8" ry="10" transform="rotate(-22 330 102)" /><ellipse cx="340" cy="102" rx="8" ry="10" transform="rotate(22 340 102)" /><path d="m333 89 2-3 2 3-2 3Z" /></g>
+    <path d="M80 108h61m-61 9h34" stroke="var(--art-line)" strokeWidth="1" />
+  </>;
   if (theme === "floral") return <><use href={`#${id}-sprig`} transform="translate(164 79) rotate(-64) scale(.65)" /><use href={`#${id}-sprig`} transform="translate(296 79) rotate(64) scale(-.65 .65)" /><use href={`#${id}-flower`} transform="translate(230 71) scale(.9)" /></>;
   if (theme === "kesar") return <use href={`#${id}-flower`} transform="translate(230 120) scale(.75)" />;
   if (theme === "lotus") return <use href={`#${id}-lotus`} transform="translate(230 100) scale(.63)" />;
   if (theme === "pichwai") return <use href={`#${id}-lotus`} transform="translate(230 110) scale(.45)" />;
   if (theme === "ocean") return <>
     {[0, 1, 2].map(i => <path key={i} d={`M44 ${102 + i * 13}Q70 ${84 + i * 13} 101 ${102 + i * 13}T160 ${102 + i * 13}M300 ${102 + i * 13}Q329 ${84 + i * 13} 358 ${102 + i * 13}T416 ${102 + i * 13}`} fill="none" stroke="var(--art-leaf)" strokeWidth=".7" />)}
-    <g transform="translate(230 105)" fill="var(--art-petal)" stroke="var(--art-line)" strokeWidth=".8"><path d="M-7 22C-47-1-40-33-25-29C-26-47-9-49 0-35C9-49 26-47 25-29C40-33 47-1 7 22Z" /><path d="m0 20-24-45m24 45v-50m0 50 24-45m-24 45-32-25m32 25 32-25M-8 23H8v8H-8Z" fill="none" /></g>
   </>;
   if (theme === "champagne") return <DecoChevron />;
   return <use href={`#${id}-flower`} transform="translate(230 154) scale(.48)" />;
+}
+
+function DateOrnament({ id, theme }: { id: string; theme: ThemeId }) {
+  if (theme === "kesar" || theme === "sindoor" || theme === "lotus" || theme === "pichwai") {
+    const lotus = theme === "lotus" || theme === "pichwai";
+    return <svg className={`${styles.dateFlourish} ${styles.dateEmblem}`} viewBox="0 0 100 20" data-decoration aria-hidden="true" focusable="false">
+      <path d="M2 10H31M69 10H98M7 13H26M74 13H93" stroke="var(--art-line)" strokeWidth=".65" />
+      <use href={`#${id}-${lotus ? "lotus" : "flower"}`} transform={lotus ? "translate(50 12) scale(.23)" : "translate(50 10) scale(.4)"} />
+    </svg>;
+  }
+  if (theme === "modern" || theme === "ocean" || theme === "champagne") return <span className={styles.dateFlourish} data-decoration aria-hidden="true" />;
+  return <ArchiveOrnament kind="flourish" className={styles.dateFlourish} />;
 }
 
 function Landscape({ id, theme }: { id: string; theme: ThemeId }) {
@@ -166,7 +198,7 @@ function Landscape({ id, theme }: { id: string; theme: ThemeId }) {
   if (theme === "ocean") return <>
     <path d="M18 495C84 475 100 551 174 533C246 515 260 468 332 506C384 534 412 527 442 510V626H18Z" fill="var(--art-soft)" />
     <path d="M18 531C97 501 117 568 184 547C255 525 279 518 337 547C382 569 415 555 442 539V626H18Z" fill="var(--art-blue)" opacity=".64" /><path d="M18 567C85 544 146 598 230 570S363 590 442 565V626H18Z" fill="var(--art-leaf)" opacity=".7" />
-    {[0, 17, 34].map(y => <path key={y} d={`M40 ${562 + y}q38-13 72 0t72 0t72 0t72 0t72 0`} fill="none" stroke="var(--art-paper)" strokeWidth=".85" opacity=".85" />)}
+    <g className={styles.waterMotion} data-cover-motion="water">{[0, 7, 17, 24, 34, 41].map((y, index) => <path key={y} d={`M${index % 2 ? 25 : 40} ${556 + y}q38-13 72 0t72 0t72 0t72 0t72 0`} fill="none" stroke="var(--art-paper)" strokeWidth={index % 2 ? ".45" : ".85"} opacity={index % 2 ? ".45" : ".85"} />)}</g>
   </>;
   if (theme === "champagne") return <g transform="translate(460 644) rotate(180)"><DecoChevron /></g>;
   if (theme === "sindoor") return null;
@@ -175,6 +207,22 @@ function Landscape({ id, theme }: { id: string; theme: ThemeId }) {
     <use href={`#${id}-sprig`} transform="translate(161 568) rotate(-44) scale(.6)" /><use href={`#${id}-sprig`} transform="translate(299 568) rotate(44) scale(-.6 .6)" /><use href={`#${id}-flower`} transform="translate(230 565) scale(1.2)" /><use href={`#${id}-flower`} transform="translate(193 586) scale(.61)" /><use href={`#${id}-flower`} transform="translate(267 586) scale(.61)" />
     <path d="M111 615h91m56 0h91" fill="none" stroke="var(--art-line)" strokeWidth=".6" />
   </>;
+}
+
+/** Detailed focal illustrations sit in a reserved area below the editable copy. */
+function CoverIllustration({ id, theme, compact }: { id: string; theme: ThemeId; compact: boolean }) {
+  const painted = paintedScenes[theme];
+  if (painted) return <div className={styles.paintedScene} data-cover-painted-scene={theme} data-cover-ornament="bottom" data-decoration aria-hidden="true">
+    <Image src={painted} alt="" width={600} height={450} sizes={compact ? "220px" : "(max-width: 600px) 78vw, 400px"} loading={compact ? "lazy" : "eager"} />
+    {(theme === "royal" || theme === "kesar" || theme === "sindoor") && <>
+      <span className={styles.sceneSprigLeft}><span className={styles.sprigMotion} data-cover-motion="botanical"><Image src="/images/marketing/marigold-branch.webp" alt="" width={180} height={270} sizes="70px" /></span></span>
+      <span className={styles.sceneSprigRight}><span className={styles.sprigMotion} data-cover-motion="botanical"><Image src="/images/marketing/marigold-branch.webp" alt="" width={180} height={270} sizes="70px" /></span></span>
+    </>}
+  </div>;
+  if (theme === "modern") return <div className={styles.botanicalSpecimen} data-cover-ornament="bottom" data-decoration aria-hidden="true"><span className={styles.specimenRule} /><span className={styles.sprigMotion} data-cover-motion="botanical"><ArchiveOrnament kind="branch" /></span></div>;
+  if (theme === "lotus") return <div className={styles.lotusGarden} data-cover-ornament="bottom" data-decoration aria-hidden="true"><span className={styles.pondRipples} data-cover-motion="water" /><Image src="/images/art/patterned-lotus.svg" alt="" width={480} height={346} sizes={compact ? "170px" : "280px"} /><span className={styles.lotusBudLeft} /><span className={styles.lotusBudRight} /></div>;
+  if (theme === "pichwai") return <div className={styles.peacockGarden} data-cover-ornament="bottom" data-decoration aria-hidden="true"><span className={styles.peacockLeft} /><span className={styles.peacockRight} /><span className={styles.gardenVine} data-cover-motion="botanical"><ArchiveOrnament kind="branch" /></span></div>;
+  return <svg className={styles.landscape} viewBox="0 450 460 194" data-cover-ornament="bottom" data-decoration aria-hidden="true" focusable="false"><Landscape id={id} theme={theme} /></svg>;
 }
 
 /** A single, real cover composition shared by the catalogue and the invitation. */
@@ -189,7 +237,7 @@ export function IllustratedCover({ invitation, theme, compact = false }: Props) 
   const location = invitation.city || firstEvent?.venue;
   const coverText = guestWording(invitation).cover;
   const extendedCopy = Boolean(invitation.blessing) || coverText.length > 64 || (location?.length || 0) > 40 || nameLength > 20;
-  return <div className={`${styles.cover} ${compact ? styles.compact : styles.full}`} data-illustrated-cover={theme} data-compact={compact} data-extended-copy={extendedCopy} data-palette={design.palette} data-typography={design.typography} data-artwork={design.decoration ? "on" : "off"} data-long-names={nameLength > 20 ? "very" : nameLength > 11 ? "true" : undefined} aria-hidden={compact || undefined}>
+  return <div className={`${styles.cover} ${compact ? styles.compact : styles.full}`} data-illustrated-cover={theme} data-cover-illustration={paintedScenes[theme] ? "painted" : "engraved"} data-motion={design.motion || "gentle"} data-compact={compact} data-extended-copy={extendedCopy} data-palette={design.palette} data-typography={design.typography} data-artwork={design.decoration ? "on" : "off"} data-long-names={nameLength > 20 ? "very" : nameLength > 11 ? "true" : undefined} aria-hidden={compact || undefined}>
     <div className={styles.sheet}>
       {design.decoration && <>
         {extendedCopy ? <>
@@ -198,16 +246,20 @@ export function IllustratedCover({ invitation, theme, compact = false }: Props) 
           <svg className={styles.frameBottom} viewBox="0 322 460 322" data-cover-frame-slice="bottom" data-decoration aria-hidden="true" focusable="false"><use href={`#${id}-frame`} /></svg>
         </> : <svg className={styles.border} viewBox="0 0 460 644" preserveAspectRatio="none" data-decoration aria-hidden="true" focusable="false"><Motifs id={id} theme={theme} /><Border id={id} theme={theme} /></svg>}
         <svg className={styles.topOrnament} viewBox="0 0 460 200" data-cover-ornament="top" data-decoration aria-hidden="true" focusable="false"><TopOrnament id={id} theme={theme} /></svg>
+        <div className={styles.engravedGarden} data-decoration aria-hidden="true"><ArchiveOrnament kind="branch" className={styles.engravedLeft} /><ArchiveOrnament kind="branch" className={styles.engravedRight} /></div>
+        {theme === "ocean" && <span className={styles.shellSpecimen} data-decoration aria-hidden="true" />}
+        <div className={styles.edgePetals} data-decoration aria-hidden="true">{[0, 1, 2, 3].map(index => <span key={index} data-cover-motion="petal" />)}</div>
       </>}
       <div className={styles.copy} data-cover-copy>
         <div className={styles.readingArea} data-cover-reading-area>
           {invitation.blessing && <p className={styles.blessing} data-indic={hasIndicText(invitation.blessing) || undefined}>{invitation.blessing}</p>}
           <p className={styles.eyebrow} data-indic={hasIndicText(coverText) || undefined}>{coverText}</p>
           <div className={styles.names} data-indic={hasIndicText(names.join(" ")) || undefined}>{names.length ? names.map((name, index) => <span className={styles.person} key={index}>{index > 0 && <span className={styles.ampersand}>&</span>}<span>{name}</span></span>) : <span>Your names</span>}</div>
+          {design.decoration && <DateOrnament id={id} theme={theme} />}
           <div className={styles.details}><p>{dateLabel}</p>{location && <p className={styles.location} data-indic={hasIndicText(location) || undefined}>{location}</p>}</div>
         </div>
       </div>
-      {design.decoration && <svg className={styles.landscape} viewBox="0 450 460 194" data-cover-ornament="bottom" data-decoration aria-hidden="true" focusable="false"><Landscape id={id} theme={theme} /></svg>}
+      {design.decoration && <CoverIllustration id={id} theme={theme} compact={compact} />}
     </div>
   </div>;
 }

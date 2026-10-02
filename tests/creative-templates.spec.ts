@@ -43,6 +43,9 @@ test('all ten wedding covers are real, match their gallery artwork and fit every
   await page.goto('/templates');
   await expect(page.locator('article.collection-card')).toHaveCount(10);
   await expect(page.locator('article.collection-card [data-illustrated-cover]')).toHaveCount(10);
+  if (width <= 600) {
+    expect((await page.locator('article.collection-card').first().boundingBox())!.width, 'Phone galleries show one readable stationery card per row').toBeGreaterThan(width * .75);
+  }
   for (const theme of themes) {
     const card = page.locator(`article.collection-card [data-illustrated-cover="${theme.id}"]`);
     await expect(card).toHaveAttribute('data-compact', 'true');
@@ -154,19 +157,32 @@ test('long multilingual names survive all theme switches, quiet artwork, save an
   await page.getByLabel(/^Event date and time/).fill('2027-04-03T12:00');
   await page.getByLabel('City', { exact: true }).fill('Chandigarh');
   await page.getByRole('button', { name: 'Design', exact: true }).click();
+  await page.getByRole('combobox', { name: 'Typography', exact: true }).selectOption('sans');
   const frame = page.frameLocator('iframe[title="Actual guest invitation preview"]');
   for (const theme of themes) {
     await page.getByRole('button', { name: theme.name, exact: true }).click();
     const art = frame.locator(`#invitation [data-illustrated-cover="${theme.id}"]`);
     await expect(art).toContainText(first);
     await expect(art).toContainText(second);
+    await expect(art.getByText(first, { exact: true })).toHaveCSS('font-family', /sans-serif/);
     const lastName = await art.getByText(second, { exact: true }).boundingBox();
     const date = await art.getByText(/3 April 2027/).boundingBox();
     expect(lastName).not.toBeNull();
     expect(date).not.toBeNull();
     expect(date!.y, `${theme.id}: date below editable names`).toBeGreaterThanOrEqual(lastName!.y + lastName!.height - 1);
     await expect(frame.locator('main')).toContainText(message);
-    expect(await frame.locator('html').evaluate(node => node.scrollWidth - node.clientWidth), theme.id).toBeLessThanOrEqual(0);
+    const overflow = await frame.locator('html').evaluate(node => ({
+      width: node.scrollWidth - node.clientWidth,
+      elements: [...document.querySelectorAll('main *')].filter(element => {
+        if (!(element instanceof HTMLElement)) return false;
+        const bounds = element.getBoundingClientRect();
+        return bounds.width > 0 && (bounds.left < -1 || bounds.right > node.clientWidth + 1 || element.scrollWidth > element.clientWidth + 1);
+      }).slice(0, 16).map(element => {
+        const bounds = element.getBoundingClientRect();
+        return { tag: element.tagName, class: element.className, text: element.textContent?.slice(0, 80), left: bounds.left, right: bounds.right, width: bounds.width, scrollWidth: element.scrollWidth, clientWidth: element.clientWidth };
+      }),
+    }));
+    expect(overflow.width, `${theme.id}: ${JSON.stringify(overflow.elements)}`).toBeLessThanOrEqual(0);
   }
   await page.getByRole('button', { name: 'Royal Indian', exact: true }).click();
   await expect(frame.getByRole('button', { name: 'Open invitation', exact: true })).toBeVisible();

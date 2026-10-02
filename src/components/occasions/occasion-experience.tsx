@@ -1,9 +1,11 @@
+import { SaveDateIllustration } from "@/components/save-date-illustration";
 import { hasIndicText } from "@/lib/invitation-text";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, CalendarDays, CalendarPlus, ChevronUp, MapPin } from "lucide-react";
 import type { InvitationRenderProps } from "@/components/invitation-view";
 import type { OccasionId } from "@/types/invitation";
 import { Brand } from "@/components/brand";
+import { ArchiveOrnament } from "@/components/archive-ornament";
 import { Countdown } from "@/components/demo/countdown";
 import { MusicControl } from "@/components/demo/music-control";
 import { RsvpForm } from "@/components/demo/rsvp-form";
@@ -13,6 +15,10 @@ import { InvitationMotion } from "@/components/invitation-motion";
 import { invitationPresentation } from "@/components/invitation-presentation";
 import { LiveAnnouncements } from "@/components/live-announcements";
 import { VenueCard } from "@/components/venue-card";
+import { CoupleProfiles } from "@/components/couple-profiles";
+import { InvitationVideo } from "@/components/invitation-video";
+import { InvitationEnvelope } from "@/components/invitation-envelope";
+import { CeremonyArt } from "@/components/ceremony-art";
 import { PhotoGallery } from "@/components/wedding/photo-gallery";
 import { formatEventDate } from "@/data/demo-invitation";
 import { getDesign, getOccasion, guestWording } from "@/data/occasions";
@@ -48,7 +54,8 @@ export function OccasionExperience({ invitation, theme, mode, musicEnabled = mod
   const families = invitation.families.filter(Boolean);
   const events = [...invitation.functions].sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt));
   const cover = photos.find(photo => photo.id === invitation.coverPhotoId) || photos[0];
-  const showRsvp = isDemo || isPreview || Boolean(rsvpContent);
+  const showRsvp = design.rsvp !== false && (isDemo || isPreview || Boolean(rsvpContent));
+  const countdownDate = invitation.countdownAt || invitation.weddingAt;
   const showUpdates = Boolean(liveUpdates) || invitation.updates.length > 0;
   const timezone = invitation.timezone === "Asia/Kolkata" ? "IST" : invitation.timezone;
   const calendarDate = (value: string) => formatEventDate(value, invitation.timezone, { day: "numeric", month: "long", year: "numeric" });
@@ -65,7 +72,8 @@ export function OccasionExperience({ invitation, theme, mode, musicEnabled = mod
       {isDemo && <Link href={personalizeHref} className="occasion-personalize">Make it yours <ArrowUpRight size={15} /></Link>}
     </header>}
     <main id="main" className="invitation-ordered">
-      <OccasionCover invitation={invitation} theme={theme} cover={cover} showRsvp={showRsvp} />
+      <InvitationEnvelope invitation={invitation} />
+      <OccasionCover invitation={invitation} theme={theme} cover={cover} photos={photos} showRsvp={showRsvp} />
       {musicEnabled && <div className="occasion-music" data-section="music"><MusicControl key={`${design.music?.source}:${design.music?.track}:${design.music?.audioTrack}:${design.music?.uploadedAudio?.id}:${design.music?.youtubeUrl}`} music={design.music} /></div>}
       <nav className="occasion-nav" data-section="navigation" aria-label="Invitation sections">
         <a href="#invitation" className="occasion-nav-top" aria-label="Back to invitation cover"><ChevronUp size={17} /></a>
@@ -77,7 +85,8 @@ export function OccasionExperience({ invitation, theme, mode, musicEnabled = mod
 
       <section id="our-note" className="occasion-story occasion-section" data-section="story" aria-labelledby="occasion-story-title">
         <div data-reveal className="occasion-letter">
-          <span className="occasion-overline">{words.storyLabel}</span>
+          {design.decoration && <ArchiveOrnament kind="flourish" className="occasion-letter-ornament" />}
+          {design.decoration && copy.romantic && <SaveDateIllustration />}<span className="occasion-overline">{words.storyLabel}</span>
           <h2 id="occasion-story-title">{words.storyTitle}</h2>
           {invitation.intro && <p className="occasion-intro" data-indic={hasIndicText(invitation.intro) || undefined}>{invitation.intro}</p>}
           {invitation.message && <p className="occasion-message" data-indic={hasIndicText(invitation.message) || undefined}>{invitation.message}</p>}
@@ -89,8 +98,9 @@ export function OccasionExperience({ invitation, theme, mode, musicEnabled = mod
         {occasion === "anniversary" && <div className="occasion-anniversary-rule" aria-hidden="true" data-decoration><span />{invitation.initials || "&"}<span /></div>}
       </section>
 
-      {design.countdown && !isQuiet && Number.isFinite(Date.parse(invitation.weddingAt)) && <section className="occasion-countdown" data-section="countdown" aria-label="Event countdown"><Countdown date={invitation.weddingAt} initialRemaining={Math.max(0, Date.parse(invitation.weddingAt) - renderTimestamp)} /></section>}
+      {design.countdown && !isQuiet && Number.isFinite(Date.parse(countdownDate)) && <section className="occasion-countdown" data-section="countdown" aria-label="Event countdown"><Countdown key={countdownDate} date={countdownDate} timezone={invitation.timezone} initialRemaining={Math.max(0, Date.parse(countdownDate) - renderTimestamp)} /></section>}
 
+      <CoupleProfiles invitation={invitation} photos={photos} />
       {!!todayEvents.length && <aside className="occasion-today" data-section="today" aria-label="Today’s schedule"><CalendarDays size={22} /><div><strong>Today · {timezone}</strong>{todayEvents.map(event => <p key={event.id} data-indic={hasIndicText(event.name + event.venue) || undefined}>{event.name} · {formatEventDate(event.startsAt, invitation.timezone, { hour: "numeric", minute: "2-digit" })} · {event.venue}</p>)}</div><a href="#celebrations">Details <ArrowUpRight size={15} /></a></aside>}
 
       <section id="celebrations" className="occasion-schedule occasion-section" data-section="schedule" aria-labelledby="occasion-schedule-title">
@@ -98,14 +108,15 @@ export function OccasionExperience({ invitation, theme, mode, musicEnabled = mod
         {calendarHref && !!events.length && <div className="occasion-calendar"><a href={calendarHref}><CalendarPlus size={17} /> Add schedule to calendar</a><span>Times adjust to your calendar’s timezone. End times are estimates.</span></div>}
         {!events.length && <p className="occasion-empty">Your hosts will share the time and place here.</p>}
         <div className="occasion-event-list">{events.map((event, index) => <article data-reveal key={event.id} className="occasion-event">
-          <div className="occasion-event-date"><span className="occasion-event-index">{String(index + 1).padStart(2, "0")}</span><span>{formatEventDate(event.startsAt, invitation.timezone, { weekday: "long" })}</span><strong>{formatEventDate(event.startsAt, invitation.timezone, { day: "2-digit" })}</strong><span>{formatEventDate(event.startsAt, invitation.timezone, { month: "long", year: "numeric" })}</span></div>
-          <div className="occasion-event-content"><h3 data-indic={hasIndicText(event.name) || undefined}>{event.name}</h3><time dateTime={event.startsAt}>{formatEventDate(event.startsAt, invitation.timezone, { hour: "numeric", minute: "2-digit" })} · {timezone}</time><span className="sr-only">{calendarDate(event.startsAt)}</span>{event.description && <p className="occasion-event-description" data-indic={hasIndicText(event.description) || undefined}>{event.description}</p>}{event.dressCode && <p className="occasion-dress-note" data-indic={hasIndicText(event.dressCode) || undefined}><strong>Dress note</strong> {event.dressCode}</p>}<VenueCard venue={event.venue} address={event.address} mapUrl={event.mapUrl} eventName={event.name} /></div>
+          <div className="occasion-event-date"><span className="occasion-event-index">{String(index + 1).padStart(2, "0")}</span><span>{formatEventDate(event.startsAt, invitation.timezone, { weekday: "long" })}</span><strong>{formatEventDate(event.startsAt, invitation.timezone, { day: "2-digit" })}</strong><span>{formatEventDate(event.startsAt, invitation.timezone, { month: "long", year: "numeric" })}</span>{design.decoration && <div className="occasion-event-art"><CeremonyArt title={event.name} fallbackIcon={event.icon} occasion={occasion} /></div>}</div>
+          <div className="occasion-event-content" data-reveal-content><h3 data-indic={hasIndicText(event.name) || undefined}>{event.name}</h3><time dateTime={event.startsAt}>{formatEventDate(event.startsAt, invitation.timezone, { hour: "numeric", minute: "2-digit" })} · {timezone}</time><span className="sr-only">{calendarDate(event.startsAt)}</span>{event.description && <p className="occasion-event-description" data-indic={hasIndicText(event.description) || undefined}>{event.description}</p>}{event.dressCode && <p className="occasion-dress-note" data-indic={hasIndicText(event.dressCode) || undefined}><strong>Dress note</strong> {event.dressCode}</p>}<VenueCard venue={event.venue} address={event.address} mapUrl={event.mapUrl} eventName={event.name} /></div>
         </article>)}</div>
         {isDemo && <p className="occasion-demo-note">Fictional names, dates and venue details for this demo. Add and check your own details before sharing.</p>}
       </section>
 
-      {!!photos.length && <section id="memories" className="occasion-photos occasion-section" data-section="photos" aria-labelledby="occasion-photos-title"><div data-reveal className="occasion-section-heading"><span className="occasion-overline">{isQuiet ? "REMEMBERING, TOGETHER" : "FROM OUR ALBUM"}</span><h2 id="occasion-photos-title">{words.photoTitle}</h2></div><PhotoGallery photos={photos} /></section>}
+      {!!photos.length && <section id="memories" className="occasion-photos occasion-section" data-section="photos" aria-labelledby="occasion-photos-title"><div data-reveal className="occasion-section-heading"><span className="occasion-overline">{isQuiet ? "REMEMBERING, TOGETHER" : "FROM OUR ALBUM"}</span><h2 id="occasion-photos-title">{words.photoTitle}</h2></div><PhotoGallery photos={photos} motion={isQuiet ? "none" : design.motion} theme={theme} occasion={occasion} /></section>}
 
+      <InvitationVideo video={invitation.video} />
       {showRsvp && <section id="rsvp" className="occasion-rsvp occasion-section" data-section="rsvp" aria-labelledby="occasion-rsvp-title"><div data-reveal className="occasion-rsvp-copy"><span className="occasion-overline">{isQuiet ? "YOUR PRESENCE" : "YOU ARE INVITED"}</span><h2 id="occasion-rsvp-title">{words.rsvpTitle}</h2><p>{copy.rsvpIntro}</p>{isQuiet ? !!families.length && <p className="occasion-rsvp-signature" data-indic={hasIndicText(families.join(" ")) || undefined}>{families.join(" & ")}</p> : <p className="occasion-rsvp-signature" data-indic={hasIndicText(names) || undefined}>{names}</p>}</div><div className="occasion-rsvp-response">{isDemo || isPreview ? <RsvpForm quiet={isQuiet} scope={`occasion:${invitation.slug}`} /> : rsvpContent}</div></section>}
 
       {showUpdates && <section id="updates" className="occasion-updates occasion-section" data-section="updates" aria-labelledby="occasion-updates-title"><div data-reveal className="occasion-section-heading"><span className="occasion-overline">GOOD TO KNOW</span><h2 id="occasion-updates-title">Notes from your hosts.</h2><p>Details to help you plan your visit.</p></div>{isDemo ? <UpdatesPreview updates={invitation.updates} /> : liveUpdates ? <LiveAnnouncements {...liveUpdates} timezone={invitation.timezone} /> : <div className="update-feed">{invitation.updates.map(update => <article className="update-card" key={update.id}><div><p className="update-time" data-indic={hasIndicText(update.time) || undefined}>{update.time}</p><p data-indic={hasIndicText(update.message) || undefined}>{update.message}</p></div></article>)}</div>}</section>}

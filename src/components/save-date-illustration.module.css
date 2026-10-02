@@ -1,0 +1,6 @@
+.illustration { position:relative; width:150px; aspect-ratio:248.54/217; margin:30px auto; color:var(--wine,var(--theme-accent,#713d4c)); }
+.illustration>span { position:absolute; inset:0; background:currentColor; mask:url('/images/art/save-date-hands.svg') center/contain no-repeat; }
+.illustration>i { position:absolute; width:17px; height:17px; left:61%; top:66.5%; color:#b89051; background:currentColor; clip-path:polygon(50% 0,58% 42%,100% 50%,58% 58%,50% 100%,42% 58%,0 50%,42% 42%); }
+[data-revealed=true] .illustration>i { animation:ring-light 1.8s ease-out 1; }
+@keyframes ring-light { 0%,100% { transform:scale(.5); opacity:.5; } 45% { transform:scale(1.2) rotate(45deg); opacity:1; } }
+@media(prefers-reduced-motion:reduce) { .illustration>i { animation:none!important; } }

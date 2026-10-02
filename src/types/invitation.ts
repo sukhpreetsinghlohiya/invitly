@@ -4,12 +4,16 @@ export type TraditionId = "neutral" | "hindu" | "sikh" | "muslim" | "christian" 
 export type SectionId = "story" | "schedule" | "photos" | "rsvp" | "updates";
 export type MusicMood = "santoor" | "bansuri" | "celebration";
 export type UploadedAudio = { id: string; eventId: string; name: string };
+export type PersonProfile = { photoId?: string; grandparents?: string; parentsPrefix?: string; grandparentsPrefix?: string };
+export type InvitationOpening = { style: "theme" | "none" | "envelope"; icon: "rings" | "flower" | "monogram"; line: string };
 export type InvitationMusic = { source: "original" | "youtube" | "library" | "upload"; track: MusicMood; youtubeUrl: string; audioTrack?: string; uploadedAudio?: UploadedAudio };
 export type InvitationDesign = {
   palette: "original" | "rose" | "sage" | "indigo";
   typography: "original" | "serif" | "sans" | "script";
   decoration: boolean;
   countdown: boolean;
+  rsvp?: boolean;
+  opening?: InvitationOpening;
   sectionOrder: SectionId[];
   motion?: "gentle" | "expressive" | "none";
   music?: InvitationMusic;
@@ -23,6 +27,10 @@ export type Invitation = {
   coverText?: string;
   closingText?: string;
   coverPhotoId?: string;
+  personProfiles?: [PersonProfile, PersonProfile];
+  profileSection?: { heading?: string; showPhotos?: boolean };
+  countdownAt?: string;
+  video?: { enabled: boolean; url: string; title?: string };
   design?: InvitationDesign;
   slug: string;
   couple: [string, string];

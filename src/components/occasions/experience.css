@@ -178,3 +178,32 @@
 }
 .embedded-preview .occasion-experience { --cover-top-offset:0px; }
 @media(prefers-reduced-motion:reduce) { .occasion-experience *, .occasion-experience *::before, .occasion-experience *::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }
+
+/* Continue the stationery's ink, rules and typography through the guest journey. */
+.occasion-experience { --serif:"Cormorant Garamond",Georgia,"Invitly Devanagari","Invitly Gurmukhi","Invitly Gujarati",serif; }
+.occasion-letter-ornament { width:105px; color:var(--occasion-accent); margin:0 auto 26px; opacity:.75; }
+.occasion-layout--editorial .occasion-letter-ornament,.occasion-experience--remembrance .occasion-letter-ornament { margin-left:0; width:80px; }
+.occasion-experience--engagement .occasion-letter { box-shadow:none; border-inline:0; padding-inline:30px; }
+.occasion-experience--naming .occasion-letter { outline-offset:6px; background:transparent; }
+.occasion-experience .occasion-event { border-radius:3px; }
+.occasion-experience .occasion-event-content { padding:34px; }
+.occasion-experience .occasion-event-date { border-right:1px solid var(--occasion-rule); }
+.occasion-experience .occasion-event-content h3 { font-size:36px; letter-spacing:-.025em; }
+.occasion-experience .occasion-rsvp { border-radius:0; border-block:1px solid var(--occasion-rule); }
+.occasion-experience .rsvp-preview { border-radius:3px; background:var(--occasion-paper); box-shadow:0 12px 25px -18px #30271940; }
+.occasion-experience .occasion-nav .occasion-nav-top { border-radius:3px; }
+.occasion-experience .occasion-try-designs a { border-radius:3px; }
+.occasion-experience--engagement.occasion-layout--keepsake { --occasion-accent:#56664c; --occasion-surface:#e1e6d5; --occasion-rule:#bec8ae; }
+.occasion-experience--birthday.occasion-layout--editorial,.occasion-experience--birthday.occasion-layout--keepsake { --occasion-accent:#315978; --occasion-surface:#dae7e5; --occasion-rule:#b0c5c9; }
+.occasion-experience--baby-shower.occasion-layout--editorial { --occasion-accent:#84594c; --occasion-surface:#efe0cd; --occasion-rule:#d4bdab; }
+.occasion-experience--housewarming.occasion-layout--editorial { --occasion-accent:#84462e; --occasion-surface:#f0dec6; --occasion-rule:#d6b997; }
+.occasion-experience--naming.occasion-layout--editorial { --occasion-accent:#5a644f; --occasion-surface:#e1e6d7; --occasion-rule:#c2c9b3; }
+.occasion-experience--naming.occasion-layout--keepsake { --occasion-accent:#5b6a79; --occasion-surface:#e1e6e7; --occasion-rule:#b9c4c8; }
+.occasion-experience--anniversary.occasion-layout--editorial { --occasion-accent:#734348; --occasion-surface:#efdfd7; --occasion-rule:#d2b9ae; }
+.occasion-experience--anniversary.occasion-layout--keepsake,.occasion-experience--other.occasion-layout--signature { --occasion-accent:#293e4c; --occasion-surface:#dee3e0; --occasion-rule:#b6c3c2; }
+.occasion-experience--other.occasion-layout--keepsake { --occasion-accent:#4b5c43; --occasion-surface:#e0e4d1; --occasion-rule:#c0c8ad; }
+.occasion-experience[data-palette]:not([data-palette=original]) { --occasion-accent:var(--custom-accent); --occasion-surface:var(--custom-light); }
+@media(max-width:650px) { .occasion-experience .occasion-event-content { padding:25px 21px; }.occasion-experience .occasion-event-date { border-right:0; border-bottom:1px solid var(--occasion-rule); }.occasion-experience .occasion-event-content h3 { font-size:30px; }.occasion-experience--engagement .occasion-letter { padding-inline:5px; } }
+
+.occasion-event-art { width:min(210px,100%); margin:22px auto 0; }.occasion-event-art [data-ceremony-art] { width:100%; }
+@media(max-width:650px) { .occasion-event-art { width:140px; margin:16px 0 0; } }

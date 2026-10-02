@@ -1,0 +1,37 @@
+.hero { position:absolute; inset:0; overflow:hidden; isolation:isolate; }
+.heroSlide { position:absolute; inset:0; opacity:0; transition:opacity 1500ms ease; pointer-events:none; }
+.heroSlide[data-active=true] { opacity:1; z-index:1; }
+.heroSlide img { object-fit:cover; object-position:center; }
+.heroSlide[data-active=true] img { animation:photo-drift 8s linear both; animation-play-state:paused; }
+.hero[data-photo-playing=true] .heroSlide[data-active=true] img { animation-play-state:running; }
+@keyframes photo-drift { from { transform:scale(1.045); } to { transform:scale(1); } }
+.heroControls { position:absolute; right:24px; bottom:26px; z-index:5; display:flex; align-items:center; gap:3px; border:1px solid #fff7e85e; border-radius:30px; padding:2px; background:#241b16a6; color:#fff9ef; backdrop-filter:blur(10px); pointer-events:auto; }
+.heroControls button,.controls button { display:grid; place-items:center; min-width:44px; min-height:44px; border:0; background:transparent; color:inherit; cursor:pointer; border-radius:50%; }
+.heroControls button:hover { background:#fff2; }.heroControls button:focus-visible,.controls button:focus-visible,.card:focus-visible { outline:2px solid currentColor; outline-offset:4px; }
+.heroControls span { font:11px/1.4 var(--sans); font-variant-numeric:tabular-nums; letter-spacing:.12em; }.heroControls i { margin-inline:5px; font-style:normal; opacity:.55; }
+.album { width:100%; max-width:1040px; min-width:0; margin:0 auto; color:var(--invitation-accent,var(--wine,#713d4c)); }
+.stage { position:relative; display:grid; width:100%; min-height:300px; aspect-ratio:1.8; place-items:center; perspective:1400px; isolation:isolate; }
+.frame { position:absolute; inset:5% 6% 7%; border:1px solid currentColor; opacity:.3; border-radius:48% 48% 2px 2px; pointer-events:none; }
+.frame::before { content:""; position:absolute; inset:9px; border:1px solid currentColor; border-radius:inherit; }.frame::after { content:"✦"; position:absolute; bottom:-12px; left:calc(50% - 20px); width:40px; background:var(--invitation-paper,var(--paper,#fbf5eb)); text-align:center; font-size:20px; }
+.frameBranch { position:absolute; bottom:-5%; width:30%; height:42%; color:currentColor; }.frameBranch:first-child { left:-7%; transform:rotate(-28deg); }.frameBranch:last-child { right:-7%; transform:scaleX(-1) rotate(-28deg); }
+.canopy { position:absolute; top:0; left:0; width:100%; height:auto; pointer-events:none; overflow:visible; color:var(--custom-accent,#a48656); z-index:4; }
+.canopyPaper { fill:var(--paper,#faf4e8); stroke:currentColor; stroke-width:1.4; }
+.canopyFlower { fill:var(--custom-light,#e2c8b4); stroke:currentColor; stroke-width:.8; }
+.canopyFlower circle { fill:currentColor; }.hangingBud { transform-box:view-box; transform-origin:42px 54px; animation:album-bud 7s ease-in-out infinite; animation-play-state:paused; }
+.album[data-photo-playing=true] .hangingBud { animation-play-state:running; }
+@keyframes album-bud { 0%,100% { transform:rotate(-1.5deg); } 50% { transform:rotate(1.5deg); } }
+.card { position:absolute; width:37%; height:80%; padding:10px 10px 36px; background:var(--invitation-paper,#fffaf2); border:1px solid #a7895d42; box-shadow:0 18px 32px #3b281b20; cursor:pointer; opacity:0; transform:translate3d(0,0,-220px) scale(.8); transition:transform 1000ms cubic-bezier(.22,.7,.2,1),opacity 650ms ease,box-shadow 900ms ease; pointer-events:none; }
+.card[data-position=center] { z-index:3; opacity:1; transform:translate3d(0,-1%,30px) rotate(-1.5deg); pointer-events:auto; }
+.card[data-position=left] { z-index:2; opacity:.8; transform:translate3d(-70%,5%,-110px) rotate(-12deg); pointer-events:auto; }
+.card[data-position=right] { z-index:1; opacity:.8; transform:translate3d(70%,5%,-110px) rotate(12deg); pointer-events:auto; }
+.cardImage { position:relative; display:block; width:100%; height:100%; overflow:hidden; background:#e9dfd3; }.cardImage img { object-fit:cover; }
+.cardNumber { position:absolute; bottom:12px; left:15px; font:italic 12px/1 var(--serif,serif); }.expand { position:absolute; right:13px; bottom:8px; }
+.controls { display:flex; justify-content:center; align-items:center; gap:14px; margin-top:18px; }.controls button { border:1px solid color-mix(in srgb,currentColor 25%,transparent); }.controls button:disabled { opacity:.35; cursor:default; }
+.caption { margin:18px auto 0; max-width:500px; text-align:center; font:italic 18px/1.6 var(--serif,serif); overflow-wrap:anywhere; }.counter { font:11px var(--sans); letter-spacing:.16em; min-width:65px; text-align:center; font-variant-numeric:tabular-nums; }
+.album[data-count="1"] .card { width:50%; }.album[data-count="1"] .stage { max-width:700px; margin:auto; }
+[data-motion=none] .heroSlide,[data-motion=none] .heroSlide img,[data-motion=none] .card { transition:none; transform:none; }
+[data-motion=none] .card[data-position=left] { transform:translateX(-70%) rotate(-12deg) scale(.88); }[data-motion=none] .card[data-position=right] { transform:translateX(70%) rotate(12deg) scale(.88); }
+@media(max-width:650px) { .heroControls { right:12px; bottom:16px; }.stage { aspect-ratio:1.05; min-height:270px; }.card { width:58%; height:76%; padding:7px 7px 29px; }.card[data-position=left] { transform:translate3d(-36%,5%,-150px) rotate(-12deg); }.card[data-position=right] { transform:translate3d(36%,5%,-150px) rotate(12deg); }.frame { inset:4% 4% 7%; }.frameBranch { width:37%; }.cardNumber { bottom:9px; }.expand { bottom:5px; }.caption { font-size:16px; padding-inline:10px; }.controls { gap:9px; }.album[data-count="1"] .card { width:76%; }[data-motion=none] .card[data-position=left] { transform:translateX(-36%) rotate(-12deg) scale(.88); }[data-motion=none] .card[data-position=right] { transform:translateX(36%) rotate(12deg) scale(.88); } }
+@media(prefers-reduced-motion:reduce) { .heroSlide,.heroSlide img,.card { transition:none; }.heroSlide img { transform:none!important; animation:none!important; }.playback { display:none!important; } }
+.frameBranch:first-child { left:-1%; }.frameBranch:last-child { right:-1%; }
+@media(max-width:650px) { .heroSlide img[src*="courtyard"] { object-position:74% center; } }

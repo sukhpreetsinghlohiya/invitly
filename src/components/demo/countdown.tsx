@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-export function Countdown({ date, initialRemaining }: { date: string; initialRemaining: number }) {
+export function Countdown({ date, initialRemaining, timezone = "Asia/Kolkata" }: { date: string; initialRemaining: number; timezone?: string }) {
   // The server supplies the initial value, so the countdown is useful before
   // hydration and the first client render exactly matches the HTML.
   const [remaining, setRemaining] = useState(initialRemaining);
@@ -24,8 +24,8 @@ export function Countdown({ date, initialRemaining }: { date: string; initialRem
 
   return (
     <div className="countdown-wrap">
-      <p className="eyebrow">{remaining === 0 ? "The celebration has begun" : "Counting the moments"}</p>
-      <div className="countdown" aria-label="Time until the event">
+      <p className="eyebrow">{remaining === 0 ? "The countdown is complete" : "Counting the moments"}</p>
+      <div className="countdown" aria-label="Time until the countdown ends">
         {["Days", "Hours", "Minutes", "Seconds"].map((label, index) => (
           <div className="countdown-unit" key={label}>
             <span className="countdown-number">{values[index] === null ? "—" : String(values[index]).padStart(2, "0")}</span>
@@ -33,7 +33,7 @@ export function Countdown({ date, initialRemaining }: { date: string; initialRem
           </div>
         ))}
       </div>
-      <noscript><p>Celebrate with us on {new Date(date).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Kolkata" })}.</p></noscript>
+      <noscript><p>Countdown ends on {new Date(date).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric", timeZone: timezone })}.</p></noscript>
     </div>
   );
 }

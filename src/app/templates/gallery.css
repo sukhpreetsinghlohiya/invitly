@@ -13,7 +13,6 @@
 .collection-hero-card { position:absolute; width:159px; box-shadow:0 13px 20px -8px #4a30263b; container-type:inline-size; }
 .collection-hero-card>div,.collection-hero-card>.invitation-art { width:100%; height:auto; min-height:140cqi; }
 .collection-hero-card-back { right:29px; top:14px; transform:rotate(10deg); }.collection-hero-card-front { left:31px; top:63px; transform:rotate(-8deg); }
-.collection-hero-card .invitation-art { padding:9px; }.collection-hero-card .invitation-art h2 { font-size:25px!important; }
 .collection-hero-flower { position:absolute; right:10px; bottom:52px; width:31px; height:31px; color:#bb7d51; --flower-centre:#f5e7ce; transform:rotate(15deg); }.collection-hero-caption { position:absolute; right:0; bottom:0; text-align:center; color:#8c7054; font-size:9px; line-height:1.5; }.collection-hero-caption em { font:italic 15px var(--serif); }
 .collection-catalog { padding-block:35px 52px; border-top:1px solid var(--collection-line); scroll-margin-top:20px; }
 .collection-section-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:30px; margin-bottom:25px; }.collection-section-heading .eyebrow { font-size:9px; letter-spacing:.13em; color:#835d3e; }.collection-section-heading h2 { font:400 clamp(32px,3.8vw,43px)/1.15 var(--serif); letter-spacing:-.04em; margin-top:12px; }.collection-section-heading h2 em { color:var(--maroon); }.collection-section-heading>p { font-size:12px; line-height:1.75; color:var(--collection-muted); max-width:260px; }
@@ -33,8 +32,8 @@
 .collection-card-art>.invitation-art { width:100%; height:auto; min-height:140cqi; transform:none; }
 /* Shared rows align the portrait stage without constraining editable artwork height. */
 @supports (grid-template-rows:subgrid) {
- .collection-gallery[data-gallery-occasion="wedding"] .collection-card { display:grid; grid-template-rows:subgrid; grid-row:span 2; row-gap:0; }
- .collection-gallery[data-gallery-occasion="wedding"] .collection-card-preview { display:grid; align-items:center; }
+ .collection-gallery .collection-card { display:grid; grid-template-rows:subgrid; grid-row:span 2; row-gap:0; }
+ .collection-gallery .collection-card-preview { display:grid; align-items:center; }
 }
 .collection-card-preview-label { position:absolute; bottom:12px; left:50%; transform:translateX(-50%); display:inline-flex; justify-content:center; align-items:center; white-space:nowrap; gap:8px; min-height:35px; padding:8px 13px; border:1px solid #cfbaa6; border-radius:999px; background:#fffcf4; font:600 11px/1 var(--sans); color:#694837; box-shadow:0 2px 4px #4b302608; }
 .collection-card-preview-label>svg:first-child { width:10px; }.collection-card-preview-label>svg:last-child { color:#95694e; }
@@ -81,3 +80,21 @@
  .occasion-collection-grid { grid-template-columns:1fr; }.occasion-collection { grid-template-columns:83px minmax(0,1fr); gap:13px; padding:16px; }.occasion-card-art { width:100%; aspect-ratio:1; }.occasion-collection-copy>strong { font-size:24px; }.occasion-collection-copy>p { font-size:12px; }
 }
 @media(prefers-reduced-motion:reduce) { .collection-card-art,.collection-filters button,.occasion-collection,.occasion-card-art img { transition:none; translate:none!important; transform:none!important; } }
+
+/* A stationery catalogue: generous paper mounts and readable design notes. */
+.collection-gallery:not([data-gallery-occasion=wedding]) .collection-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:28px; }
+.collection-card { border-radius:3px; box-shadow:none; }
+.collection-card-preview { padding:22px 24px 63px; background-image:repeating-linear-gradient(90deg,#fff2 0 1px,transparent 1px 5px); }
+.collection-card-art { filter:drop-shadow(0 8px 9px #44342124); }
+.collection-card-preview-label { border-radius:3px; background:#fffcf7; font-weight:500; box-shadow:none; }
+.collection-card-copy { padding:20px; }
+.collection-card-heading h3 { font-size:26px; letter-spacing:-.035em; }
+.collection-card-tags>span { border:0; padding-left:0; background:none; letter-spacing:.07em; text-transform:uppercase; }
+.collection-card-tags>span+span { margin-left:5px; padding-left:9px; border-left:1px solid var(--collection-line); border-radius:0; background:none; }
+.collection-card-category { font-size:9px; }.collection-card-description { color:#6d5d50; }
+.collection-card-actions { gap:12px; }.collection-card-actions a+a { border-radius:3px; }
+.collection-search-controls { border-radius:3px; background:#f2ece1; }
+.collection-gallery .collection-card-art>.invitation-art { height:auto; min-height:0; }
+@media(min-width:1100px) { .collection-gallery:not([data-gallery-occasion=wedding]) .collection-card-preview { padding:28px 30px 68px; }.collection-gallery:not([data-gallery-occasion=wedding]) .collection-card-heading h3 { font-size:30px; }.collection-gallery:not([data-gallery-occasion=wedding]) .collection-card-description { font-size:13px; } }
+@media(max-width:900px) { .collection-gallery:not([data-gallery-occasion=wedding]) .collection-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px; } }
+@media(max-width:600px) { .collection-gallery[data-gallery-occasion] .collection-grid { grid-template-columns:1fr; gap:28px; }.collection-card-preview { padding:20px 22px 62px; }.collection-card-copy { padding:18px; }.collection-card-heading h3 { font-size:26px; } }

@@ -1,0 +1,31 @@
+Wedding archive illustrations
+Retrieved: 2026-10-02
+
+peacock-engraving.svg
+Title: Peacock Drawing
+Creator: johnny_automatic
+Source: https://www.clipsafari.com/clips/o2897-peacock-drawing
+Download: https://images.clipsafari.com/tbw1kjesizxi90g9un8tenmp5bn2?filename=peacock-drawing.svg
+License: CC0 1.0 Universal, as explicitly stated on the asset page.
+https://creativecommons.org/publicdomain/zero/1.0/
+Adaptation: removed non-drawing attributes; inverted black and white fills for a CSS luminance mask, so the engraving follows the invitation palette.
+
+seashell-engraving.svg
+Title: seashell
+Creator/uploader: johnny_automatic
+Original work: Line and Form by Walter Crane, 1914
+Source: https://openclipart.org/detail/7425/seashell
+Download: https://openclipart.org/download/7425
+License: public domain, under Openclipart's public-domain dedication.
+https://openclipart.org/share
+Adaptation: removed metadata and non-drawing attributes; used as a monochrome mask.
+
+patterned-lotus.svg
+Title: Lotus
+Creator/uploader: shuvashish76
+Source: https://openclipart.org/detail/343915/lotus
+Download: https://openclipart.org/download/343915
+License: public domain, under Openclipart's public-domain dedication.
+https://openclipart.org/share
+The source identifies the artwork as a remix of Openclipart item 343912.
+Adaptation: removed editor metadata and non-drawing attributes; retained internal patterns and drawing filters.

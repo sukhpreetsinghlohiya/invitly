@@ -1,4 +1,6 @@
-export type CeremonyArtId = "haldi" | "sangeet" | "mehndi" | "wedding" | "reception" | "baraat" | "engagement";
+import type { OccasionId } from "@/types/invitation";
+
+export type CeremonyArtId = "haldi" | "sangeet" | "mehndi" | "wedding" | "reception" | "baraat" | "engagement" | "birthday" | "baby-shower" | "housewarming" | "naming" | "anniversary" | "remembrance" | "other";
 export type CeremonyArtwork = {
   id: CeremonyArtId;
   label: string;
@@ -17,6 +19,13 @@ export const ceremonyArtwork: readonly CeremonyArtwork[] = [
   { id: "reception", label: "Reception", src: "/images/ceremonies/reception.webp", width: 600, height: 450, aliases: ["reception", "रिसेप्शन", "रिसेप्‍शन", "ਰਿਸੈਪਸ਼ਨ", "ਰਿਸੈਪਸ਼ਨ"] },
   { id: "baraat", label: "Baraat", src: "/images/ceremonies/baraat.webp", width: 600, height: 450, aliases: ["baraat", "barat", "बारात", "ਬਰਾਤ"] },
   { id: "engagement", label: "Engagement", src: "/images/occasions/engagement.webp", width: 480, height: 360, aliases: ["engagement", "ring ceremony", "roka", "sagai", "सगाई", "रोका", "ਮੰਗਣੀ", "ਰੋਕਾ"] },
+  { id: "birthday", label: "Birthday", src: "/images/occasions/birthday.webp", width: 480, height: 360, aliases: ["birthday", "cake cutting", "जन्मदिन", "ਜਨਮਦਿਨ"] },
+  { id: "baby-shower", label: "Baby shower", src: "/images/occasions/baby-shower.webp", width: 480, height: 360, aliases: ["baby shower", "god bharai", "गोद भराई"] },
+  { id: "housewarming", label: "Housewarming", src: "/images/occasions/housewarming.webp", width: 480, height: 360, aliases: ["housewarming", "griha pravesh", "grih pravesh", "गृह प्रवेश"] },
+  { id: "naming", label: "Naming ceremony", src: "/images/occasions/naming.webp", width: 480, height: 360, aliases: ["naming", "naamkaran", "namkaran", "नामकरण", "ਨਾਮਕਰਨ"] },
+  { id: "anniversary", label: "Anniversary", src: "/images/occasions/anniversary.webp", width: 480, height: 360, aliases: ["anniversary", "सालगिरह", "ਵਰ੍ਹੇਗੰਢ"] },
+  { id: "remembrance", label: "Remembrance", src: "/images/occasions/remembrance.webp", width: 480, height: 360, aliases: ["remembrance", "memorial", "श्रद्धांजलि", "ਸ਼ਰਧਾਂਜਲੀ"] },
+  { id: "other", label: "Together", src: "/images/occasions/other.webp", width: 480, height: 360, aliases: [] },
 ];
 
 function normalizeTitle(value: string) {
@@ -25,7 +34,7 @@ function normalizeTitle(value: string) {
 const wordCharacter = /[\p{L}\p{M}\p{N}]/u;
 
 /** Whole words across Indic scripts. Specific ceremonies beat a generic wedding qualifier. */
-export function getCeremonyArt(title: string): CeremonyArtwork | null {
+export function getCeremonyArt(title: string, occasion?: OccasionId): CeremonyArtwork | null {
   const normalized = normalizeTitle(title);
   let result: CeremonyArtwork | null = null;
   let earliest = Number.POSITIVE_INFINITY;
@@ -45,5 +54,5 @@ export function getCeremonyArt(title: string): CeremonyArtwork | null {
       }
     }
   }
-  return result;
+  return result || (occasion && occasion !== "wedding" ? ceremonyArtwork.find(item => item.id === occasion) || null : null);
 }

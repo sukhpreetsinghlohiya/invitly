@@ -1,0 +1,1 @@
+.options { margin-top:28px; }.section { margin-block:24px; padding-top:22px; border-top:1px solid #e1d8ce; }.section h3 { margin:0 0 18px; color:var(--wine); font:400 27px/1.2 var(--serif); }.section :global(.form-field) { margin-bottom:18px; }.section :global(.editor-toggle) { margin-block:12px 20px; }

@@ -3,8 +3,75 @@ import { demoInvitation } from "../src/data/demo-invitation";
 import { applyOccasion, createOccasionInvitation } from "../src/data/occasions";
 import { themes } from "../src/data/themes";
 import { isValidInvitationDate, validateInvitationDraft, type InvitationDraft } from "../src/lib/invitation-draft";
+import { parseInvitationVideo } from "../src/lib/invitation-video";
 
 const makeDraft = (): InvitationDraft => ({ themeId: "royal", invitation: structuredClone(demoInvitation), musicEnabled: false });
+
+test("portrait cards and optional invitation sections survive validation without changing legacy drafts", () => {
+  const legacy = validateInvitationDraft(makeDraft());
+  expect(legacy.error).toBeUndefined();
+  expect(legacy.data?.invitation.personProfiles).toBeUndefined();
+  expect(legacy.data?.invitation.profileSection).toBeUndefined();
+  expect(legacy.data?.invitation.countdownAt).toBeUndefined();
+  expect(legacy.data?.invitation.video).toBeUndefined();
+  expect(legacy.data?.invitation.design?.rsvp).toBe(true);
+  const draft = makeDraft();
+  draft.invitation.profileSection = { heading: "हमारी कहानी · ਸਾਡੀ ਕਹਾਣੀ", showPhotos: false };
+  draft.invitation.personProfiles = [
+    { photoId: "11111111-1111-4111-a111-111111111111", grandparents: "Harjit Kaur & Manjeet Singh", parentsPrefix: "Child of", grandparentsPrefix: "Grandchild of" },
+    { photoId: "", grandparents: "सरला और मोहन", parentsPrefix: "", grandparentsPrefix: "" },
+  ];
+  draft.invitation.countdownAt = "2027-02-13T10:30:00+05:30";
+  draft.invitation.design = { ...legacy.data!.invitation.design!, rsvp: false, opening: { style: "envelope", icon: "flower", line: "A letter for our favourite people" } };
+  draft.invitation.video = { enabled: true, url: "https://youtu.be/M7lc1UVf-VE", title: "The story so far" };
+  const result = validateInvitationDraft(draft);
+  expect(result.error).toBeUndefined();
+  expect(result.data?.invitation.personProfiles).toEqual(draft.invitation.personProfiles);
+  expect(result.data?.invitation.profileSection).toEqual(draft.invitation.profileSection);
+  expect(result.data?.invitation.couple).toEqual(draft.invitation.couple);
+  expect(result.data?.invitation.families).toEqual(draft.invitation.families);
+  expect(result.data?.invitation.countdownAt).toBe("2027-02-13T05:00:00.000Z");
+  expect(result.data?.invitation.design?.opening).toEqual(draft.invitation.design.opening);
+  expect(result.data?.invitation.design?.rsvp).toBe(false);
+  expect(result.data?.invitation.video?.url).toBe("https://www.youtube.com/watch?v=M7lc1UVf-VE");
+  draft.invitation.profileSection.heading = "";
+  draft.invitation.countdownAt = "";
+  const blank = validateInvitationDraft(draft);
+  expect(blank.data?.invitation.profileSection?.heading).toBe("");
+  expect(blank.data?.invitation.countdownAt).toBe("");
+});
+
+test("profile references, prefixes and new section choices reject malformed values", () => {
+  const base = makeDraft();
+  const invalid = [
+    { personProfiles: [{}] }, { personProfiles: [null, {}] },
+    { personProfiles: [{ photoId: "https://example.com/a.jpg" }, {}] },
+    { personProfiles: [{ grandparents: "x".repeat(241) }, {}] },
+    { personProfiles: [{ parentsPrefix: "x".repeat(61) }, {}] },
+    { profileSection: { showPhotos: "yes" } }, { profileSection: { heading: "x".repeat(121) } },
+    { countdownAt: "2027-02-30T12:00:00Z" },
+    { design: { ...validateInvitationDraft(base).data!.invitation.design, rsvp: "yes" } },
+    { design: { ...validateInvitationDraft(base).data!.invitation.design, opening: { style: "javascript", icon: "flower", line: "" } } },
+    { video: { enabled: true, url: "https://evil.example/embed/movie" } },
+  ];
+  for (const patch of invalid) expect(validateInvitationDraft({ ...base, invitation: { ...base.invitation, ...patch } }).error).toBeTruthy();
+  const extra = validateInvitationDraft({ ...base, invitation: { ...base.invitation, personProfiles: [{ photoId: "", grandparents: "", unsafeHtml: "<script>" }, {}] } });
+  expect(extra.data?.invitation.personProfiles?.[0]).not.toHaveProperty("unsafeHtml");
+  const unfinished = { ...base, invitation: { ...base.invitation, video: { enabled: true, url: "" } } };
+  expect(validateInvitationDraft(unfinished, "draft").error).toBeUndefined();
+  expect(validateInvitationDraft(unfinished, "publish").error).toContain("video link");
+});
+
+test("only supported HTTPS video IDs become click-to-load embed URLs", () => {
+  const youtube = parseInvitationVideo("https://www.youtube.com/watch?v=M7lc1UVf-VE&t=20");
+  expect(youtube?.embedUrl).toBe("https://www.youtube-nocookie.com/embed/M7lc1UVf-VE?autoplay=0&rel=0");
+  const vimeo = parseInvitationVideo("https://vimeo.com/123456789/abcdef1234");
+  expect(vimeo?.externalUrl).toBe("https://vimeo.com/123456789/abcdef1234");
+  expect(vimeo?.embedUrl).toContain("https://player.vimeo.com/video/123456789?");
+  expect(vimeo?.embedUrl).toContain("autoplay=0");
+  expect(vimeo?.embedUrl).toContain("h=abcdef1234");
+  for (const url of ["javascript:alert(1)", "http://vimeo.com/123456789", "https://youtube.com.evil.test/watch?v=M7lc1UVf-VE", "https://user:pass@vimeo.com/123456789", "https://vimeo.com/123456789?h=<script>", "https://vimeo.com/channels/anything", "<iframe src='https://vimeo.com/123456789'>"]) expect(parseInvitationVideo(url), url).toBeNull();
+});
 
 test("all available themes accept an editable wedding with English, Hindi and Punjabi", () => {
   for (const theme of themes) {

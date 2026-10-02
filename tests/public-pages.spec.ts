@@ -82,25 +82,18 @@ test("demo RSVP persists, can be edited, and updates stay explicitly simulated",
 });
 
 test("music only starts after a guest chooses play and can be stopped", async ({ page }) => {
-  await page.addInitScript(() => {
-    const NativeAudioContext = window.AudioContext;
-    Object.defineProperty(window, "__invitlyAudioContexts", { value: 0, writable: true });
-    window.AudioContext = class extends NativeAudioContext {
-      constructor(options?: AudioContextOptions) {
-        super(options);
-        const counter = window as unknown as { __invitlyAudioContexts: number };
-        counter.__invitlyAudioContexts += 1;
-      }
-    };
-  });
+  const audioRequests: string[] = [];
+  page.on("request", request => { if (/\/audio\/.*\.mp3/.test(request.url())) audioRequests.push(request.url()); });
   await page.goto("/demo");
-  const audioContexts = () => page.evaluate(() => (window as unknown as { __invitlyAudioContexts: number }).__invitlyAudioContexts);
-  expect(await audioContexts()).toBe(0);
+  expect(audioRequests).toHaveLength(0);
+  await expect(page.locator("audio[autoplay]")).toHaveCount(0);
   await page.getByRole("button", { name: "Play music", exact: true }).click();
   await expect(page.getByRole("button", { name: "Pause music", exact: true })).toBeVisible();
-  expect(await audioContexts()).toBe(1);
+  await expect.poll(() => page.locator("audio").evaluate((audio: HTMLAudioElement) => audio.currentTime)).toBeGreaterThan(0);
+  expect(audioRequests.length).toBeGreaterThan(0);
   await page.getByRole("button", { name: "Pause music", exact: true }).click();
   await expect(page.getByRole("button", { name: "Play music", exact: true })).toHaveAttribute("aria-pressed", "false");
+  expect(await page.locator("audio").evaluate((audio: HTMLAudioElement) => audio.paused)).toBe(true);
 });
 
 test("sharing copies the current theme link and offers a manual fallback", async ({ page }) => {

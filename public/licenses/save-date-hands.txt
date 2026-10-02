@@ -1,0 +1,3 @@
+Save-date hands illustration supplied by the user on 2 October 2026 for this invitation project.
+Geometry retained from the supplied SVG. Editor classes, global IDs and animation-library attributes removed. Rendered as a theme-coloured mask, with a 0.5-unit matching stroke added for legibility at invitation size.
+External authorship and license were not independently supplied or verified. This file is not part of the CC0 archive collection.

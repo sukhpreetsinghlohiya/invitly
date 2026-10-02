@@ -1,0 +1,30 @@
+Archival clipart used in Invitly invitation stationery
+Retrieved 2 October 2026. Assets are hosted locally; no third-party image requests.
+
+engraved-branch.svg
+Title: Flower Branch
+Creator: warszawianka
+Source: https://www.clipsafari.com/clips/o23773-flower-branch
+Download: https://images.clipsafari.com/qjdy0ndx7mmsk5wqdjk20zwev0k8?filename=flower-branch.svg
+License: CC0 1.0, explicitly stated on the asset page.
+License URL: https://creativecommons.org/publicdomain/zero/1.0/
+
+floral-divider.svg
+Title: Small Floral Divider
+Creator: j4p4n
+Source: https://openclipart.org/detail/58351/small-floral-divider
+Download: https://openclipart.org/download/58351
+License: Public domain / CC0, per Openclipart and the original SVG metadata.
+License URL: https://creativecommons.org/publicdomain/zero/1.0/
+
+vintage-balloon.svg
+Title: Balloon (from FACC 14)
+Creator/uploader: liftarn
+Source: https://openclipart.org/detail/337907/balloon
+Download: https://openclipart.org/download/337907
+License: Public domain / CC0, per Openclipart and the original SVG metadata.
+License URL: https://creativecommons.org/publicdomain/zero/1.0/
+
+Modifications: retained only SVG geometry and presentation attributes; removed
+editor metadata and unused definitions. Rendered as CSS alpha masks so ink follows
+the chosen invitation palette. Cropped, mirrored and scaled for each composition.

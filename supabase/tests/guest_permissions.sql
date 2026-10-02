@@ -48,6 +48,8 @@ do $$ declare payload jsonb; result jsonb; begin
  if jsonb_array_length(payload#>'{invitation_content,functions}') is distinct from 1 then raise exception 'Public function filter failed'; end if;
  if payload#>>'{invitation_content,functions,0,id}' is distinct from 'public' then raise exception 'Wrong public function exposed'; end if;
  if payload::text like '%PRIVATE%' or payload::text like '%SECRET VENUE%' then raise exception 'Public JSON private data leaked'; end if;
+ if (payload->'invitation_content') ?| array['personProfiles','profileSection','countdownAt','video'] then raise exception 'Legacy invitation gained optional story settings'; end if;
+ if payload#>'{photos,0}' ?| array['storage_path','event_id','owner_id'] then raise exception 'Photo storage or ownership details leaked'; end if;
  if payload->>'venue' is distinct from 'Public city' then raise exception 'Public venue is not sanitized'; end if;
  if jsonb_array_length(payload->'updates') is distinct from 1 then raise exception 'Private announcement leaked'; end if;
  if public.get_public_invitation('guest-policy-draft') is not null then raise exception 'Draft publicly available'; end if;
@@ -82,13 +84,36 @@ end; $$;
 -- Explicitly hidden schedule items must stay hidden even when a group selects them.
 update public.events set invitation_content=jsonb_set(invitation_content,'{functions,1,visibility}','"hidden"') || '{"occasion":"remembrance","tradition":"neutral","blessing":"A shared memory","coverText":"In loving memory","design":{"palette":"sage","typography":"sans","decoration":false,"countdown":false,"sectionOrder":["story","schedule","photos","rsvp","updates"]}}'::jsonb
 where id='f4000000-0000-4000-a000-000000000001';
+-- Optional story settings are public presentation data. False and intentionally
+-- empty choices must survive both public and guest projections without widening
+-- either schedule visibility or the allowlist of invitation fields.
+update public.events set invitation_content=invitation_content || jsonb_build_object(
+ 'personProfiles',jsonb_build_array(
+   jsonb_build_object('photoId','f7000000-0000-4000-a000-000000000001','grandparents','Grandparent One & Grandparent Two','parentsPrefix','S/o','grandparentsPrefix','GS/o'),
+   jsonb_build_object('photoId','','grandparents','','parentsPrefix','','grandparentsPrefix','')),
+ 'profileSection',jsonb_build_object('heading','','showPhotos',false),
+ 'countdownAt','2026-10-05T00:00:00.000Z',
+ 'video',jsonb_build_object('enabled',false,'url','https://www.youtube.com/watch?v=M7lc1UVf-VE','title','Our film'),
+ 'design',(invitation_content->'design') || jsonb_build_object('rsvp',false,'opening',jsonb_build_object('style','envelope','icon','monogram','line','A special day awaits')))
+where id='f4000000-0000-4000-a000-000000000001';
 set local role anon;
-do $$ declare payload jsonb; begin
+do $$ declare payload jsonb; public_content jsonb; guest_content jsonb; begin
  payload:=public.get_guest_invitation(repeat('a',64));
  if jsonb_array_length(payload#>'{invitation,invitation_content,functions}') is distinct from 0 then raise exception 'Hidden function leaked to its assigned group'; end if;
  if payload#>>'{invitation,invitation_content,occasion}' is distinct from 'remembrance' then raise exception 'Occasion lost in public projection'; end if;
  if payload#>>'{invitation,invitation_content,design,palette}' is distinct from 'sage' then raise exception 'Design lost in public projection'; end if;
  if payload#>>'{invitation,invitation_content,blessing}' is distinct from 'A shared memory' then raise exception 'Editable blessing lost in projection'; end if;
+ guest_content:=payload#>'{invitation,invitation_content}';
+ public_content:=public.get_public_invitation('guest-policy-a')->'invitation_content';
+ if jsonb_array_length(public_content->'functions') is distinct from 1 or public_content#>>'{functions,0,id}' is distinct from 'public' then raise exception 'Story settings widened public schedule visibility'; end if;
+ if guest_content::text like '%PRIVATE%' or public_content::text like '%PRIVATE%' or guest_content::text like '%SECRET VENUE%' or public_content::text like '%SECRET VENUE%' then raise exception 'Story settings exposed private invitation fields'; end if;
+ if public_content->'personProfiles' is distinct from '[{"photoId":"f7000000-0000-4000-a000-000000000001","grandparents":"Grandparent One & Grandparent Two","parentsPrefix":"S/o","grandparentsPrefix":"GS/o"},{"photoId":"","grandparents":"","parentsPrefix":"","grandparentsPrefix":""}]'::jsonb then raise exception 'Portrait or family settings lost in public projection'; end if;
+ if public_content->'profileSection' is distinct from '{"heading":"","showPhotos":false}'::jsonb then raise exception 'Blank heading or hidden portrait choice lost in public projection'; end if;
+ if public_content->>'countdownAt' is distinct from '2026-10-05T00:00:00.000Z' then raise exception 'Custom countdown target lost in public projection'; end if;
+ if public_content->'video' is distinct from '{"enabled":false,"url":"https://www.youtube.com/watch?v=M7lc1UVf-VE","title":"Our film"}'::jsonb then raise exception 'Video settings lost in public projection'; end if;
+ if public_content#>'{design,rsvp}' is distinct from 'false'::jsonb then raise exception 'RSVP visibility choice lost in public projection'; end if;
+ if public_content#>'{design,opening}' is distinct from '{"style":"envelope","icon":"monogram","line":"A special day awaits"}'::jsonb then raise exception 'Envelope settings lost in public projection'; end if;
+ if (guest_content - 'functions') is distinct from (public_content - 'functions') then raise exception 'Guest and public story settings differ'; end if;
 end; $$;
 reset role;
 update public.events set is_published=false where id='f4000000-0000-4000-a000-000000000001';

@@ -23,7 +23,7 @@ export const traditions: { id: TraditionId; name: string }[] = [
   { id: "interfaith", name: "Interfaith / mixed traditions" }, { id: "other", name: "Another tradition / custom" },
 ];
 
-export const defaultDesign: InvitationDesign = { palette: "original", typography: "original", decoration: true, countdown: true, sectionOrder: ["story", "schedule", "photos", "rsvp", "updates"], motion: "gentle", music: defaultMusic };
+export const defaultDesign: InvitationDesign = { palette: "original", typography: "original", decoration: true, countdown: true, rsvp: true, sectionOrder: ["story", "schedule", "photos", "rsvp", "updates"], motion: "gentle", music: defaultMusic };
 export const sectionLabels = { story: "Story & family", schedule: "Schedule", photos: "Photos", rsvp: "RSVP", updates: "Guest notes" };
 export function getOccasion(id?: string) { return occasions.find(item => item.id === id) || occasions[0]; }
 export function isRemembrance(invitation: Invitation) { return invitation.occasion === "remembrance"; }

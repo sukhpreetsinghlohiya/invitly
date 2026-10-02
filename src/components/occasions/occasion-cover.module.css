@@ -1,163 +1,187 @@
 .cover {
-  --occasion-ink:#4b3434; --occasion-paper:#fbf0e9; --occasion-accent:#8e5059;
-  --cover-wash:#ead7cc; --cover-line:color-mix(in srgb,var(--occasion-accent) 30%,transparent);
-  position:relative; isolation:isolate; width:100%; max-width:100%; color:var(--occasion-ink);
-  background:var(--occasion-paper); font-family:var(--sans); text-align:center; overflow:clip;
+  --occasion-ink:#623945; --occasion-paper:#fbf1e9; --occasion-accent:#966454;
+  --cover-wash:#e8d3c5; --cover-line:color-mix(in srgb,var(--occasion-accent) 38%,transparent);
+  --cover-serif:"Cormorant Garamond",var(--serif);
+  position:relative; isolation:isolate; width:100%; min-width:0;
+  color:var(--occasion-ink); background:var(--occasion-paper); font-family:var(--sans); text-align:center;
 }
-.full { display:flex; flex-direction:column; justify-content:center; min-height:min(820px,calc(100svh - var(--cover-top-offset,0px))); padding:40px clamp(20px,5vw,80px) 28px; }
-.composition { width:100%; max-width:1060px; margin-inline:auto; position:relative; }
-.identity,.signatureMain,.signatureTop,.editorialCopy,.editorialVisual,.keepsakeVisual,.keepsakeCopy { min-width:0; }
-.coverText { font:500 12px/1.65 var(--sans); text-transform:uppercase; letter-spacing:.15em; max-width:38em; margin:0 auto 18px; overflow-wrap:anywhere; }
-.names { font:500 clamp(44px,7vw,84px)/1.03 var(--serif); letter-spacing:-.045em; margin:0; overflow-wrap:anywhere; }
-.names>span { display:block; }.names>span>i { display:block; font:italic .48em/1.3 var(--serif); letter-spacing:0; margin:7px 0; }
-.names[data-long=true] { font-size:clamp(34px,5vw,62px); line-height:1.1; }
-.occasionName { font:500 11px/1.5 var(--sans); letter-spacing:.16em; text-transform:uppercase; color:var(--occasion-accent); margin:18px 0 0; }
-.artwork { width:min(100%,360px); margin:auto; position:relative; }
+.full { padding:38px 24px 28px; background:color-mix(in srgb,var(--cover-wash) 36%,var(--occasion-paper)); }
+.canvas { container-type:inline-size; width:100%; max-width:480px; margin:auto; }
+.composition {
+  position:relative; isolation:isolate; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  min-height:142cqi; padding:9cqi 13cqi 10cqi; background:var(--occasion-paper);
+  box-shadow:0 1px 2px #48332118,0 14px 36px -15px #48332140; overflow:hidden;
+}
+.composition::before { content:""; position:absolute; inset:3cqi; border:1px solid var(--cover-line); pointer-events:none; z-index:-1; }
+.composition::after { content:""; position:absolute; inset:0; pointer-events:none; opacity:.25; z-index:5; background:repeating-linear-gradient(0deg,#fff8 0 .4px,transparent .4px 3px),repeating-linear-gradient(90deg,#50391b09 0 .5px,transparent .5px 4px); mix-blend-mode:multiply; }
+.identity,.signatureMain,.editorialCopy,.keepsakeCopy { width:100%; min-width:0; position:relative; z-index:2; }
+.coverText { font:500 2.45cqi/1.8 var(--sans); text-transform:uppercase; letter-spacing:.15em; margin:0 auto 3.5cqi; max-width:30em; white-space:pre-line; overflow-wrap:anywhere; text-wrap:balance; }
+.names { font:400 15cqi/1.02 var(--cover-serif); letter-spacing:-.035em; margin:0!important; overflow-wrap:anywhere; text-wrap:balance; }
+.names>span { display:block; }.names>span>i { display:block; font:italic .45em/1.2 var(--cover-serif); margin:1cqi 0; letter-spacing:0; }
+.names[data-long=true] { font-size:11.2cqi; line-height:1.12; }
+.occasionName { font:500 2.1cqi/1.5 var(--sans); text-transform:uppercase; letter-spacing:.24em; margin:0 0 3cqi; }
+.signatureVisual { width:72%; position:relative; margin:0 auto 3cqi; }
+.artwork { width:100%; position:relative; margin:auto; }
 .artwork img { display:block; width:100%; height:auto; object-fit:contain; }
-.photograph { aspect-ratio:4/3; overflow:hidden; border-radius:48% 48% 3px 3px; }.photograph img { width:100%; height:100%; object-fit:cover; }
-.details { display:flex; justify-content:center; flex-wrap:wrap; gap:14px 28px; margin:28px auto 0; padding:19px 0 0; border-top:1px solid var(--cover-line); max-width:600px; }
-.date,.location { display:flex; justify-content:center; align-items:flex-start; gap:9px; font:500 14px/1.5 var(--sans); min-width:0; }
-.details svg { color:var(--occasion-accent); flex-shrink:0; margin-top:2px; }.details small { display:block; font-size:12px; font-weight:400; opacity:.8; margin-top:2px; }.details span { overflow-wrap:anywhere; }
-.actions { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin:25px auto 0; width:100%; max-width:680px; position:relative; z-index:1; }
-.actions a { display:inline-flex; justify-content:center; align-items:center; min-height:46px; gap:9px; padding:10px 16px; border:1px solid var(--cover-line); border-radius:999px; font:600 13px/1.2 var(--sans); background:color-mix(in srgb,var(--occasion-paper) 82%,white); color:var(--occasion-ink); transition:transform 160ms,background 160ms; }
+.artwork:not(.photograph)>img { position:relative; z-index:1; filter:drop-shadow(0 1cqi .8cqi #3c302414); }
+.artAccents { position:absolute; z-index:2; inset:0; display:block; width:100%; height:100%; color:var(--occasion-accent); pointer-events:none; overflow:visible; }
+.leafMotion { transform-box:fill-box; transform-origin:50% 100%; }.glimmerMotion { transform-box:fill-box; transform-origin:center; }
+.balloonMotion { width:30.75cqi; height:41cqi; display:block; }.balloonMotion>span { width:100%; height:100%; }
+.photograph { aspect-ratio:4/3; overflow:hidden; border-radius:50% 50% 3px 3px; }.photograph img { width:100%; height:100%; object-fit:cover; }
+.details { position:relative; z-index:2; width:100%; margin:3cqi auto 0; display:flex; flex-direction:column; align-items:center; gap:2cqi; }
+.date { font:500 2.9cqi/1.6 var(--sans); letter-spacing:.1em; text-transform:uppercase; }
+.location { font:400 4cqi/1.35 var(--cover-serif); text-wrap:balance; }
+.details span { overflow-wrap:anywhere; }.details small { display:block; font:400 2.6cqi/1.7 var(--sans); letter-spacing:.03em; margin-top:1cqi; }
+.divider { width:26cqi; color:var(--occasion-accent); margin:5cqi auto 1cqi; opacity:.8; }
+.paperTrim { position:absolute; inset:0; pointer-events:none; z-index:-1; color:var(--occasion-accent); }
+.branchLeft,.branchRight { position:absolute; width:35cqi; opacity:.45; }
+.branchLeft { top:8cqi; left:-16cqi; transform:rotate(26deg); }.branchRight { right:-16cqi; bottom:9cqi; transform:rotate(206deg); }
+.actions { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin:24px auto 0; position:relative; }
+.actions a { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:46px; padding:10px 16px; border:1px solid var(--cover-line); border-radius:4px; background:var(--occasion-paper); color:var(--occasion-ink); font:500 12px/1.4 var(--sans); }
 .actions a.rsvp { background:var(--occasion-ink); border-color:var(--occasion-ink); color:var(--occasion-paper); }
-.actions a:focus-visible { outline:3px solid var(--occasion-accent); outline-offset:4px; }.actions a:active { transform:scale(.97); }
-.signatureTop .artwork { max-height:260px; }.signatureTop .artwork img { max-height:260px; }.signatureMain { margin-top:10px; }
+.actions a:focus-visible { outline:3px solid var(--occasion-accent); outline-offset:4px; }
 
-/* Each signature is designed around its occasion, including its paper shape and reading order. */
-.cover[data-occasion=birthday] { --occasion-ink:#762b26; --occasion-paper:#fff2c9; --occasion-accent:#a5392c; --cover-wash:#f5cf7e; }
-.cover[data-occasion=birthday][data-layout=signature] { background:repeating-linear-gradient(90deg,#fae3a4 0 22px,#fff3cd 22px 44px); padding-top:34px; }
-[data-occasion=birthday][data-layout=signature] .composition { max-width:720px; background:#fff5d9; border:2px solid var(--occasion-accent); border-radius:22px; padding:30px 34px 24px; box-shadow:7px 7px 0 #e8b557; }
-[data-occasion=birthday][data-layout=signature] .names { font-family:var(--sans); font-weight:800; letter-spacing:-.075em; font-size:clamp(55px,8vw,105px); }
-[data-occasion=birthday][data-layout=signature] .coverText { transform:rotate(-2deg); margin-bottom:12px; }
-[data-occasion=birthday][data-layout=signature] .artwork { width:240px; margin-top:0; }
-[data-occasion=birthday][data-layout=signature] .details { border-top:2px dashed var(--cover-line); margin-top:0; }
-.cover[data-occasion=baby-shower] { --occasion-ink:#3e554b; --occasion-paper:#eff2e7; --occasion-accent:#54735f; --cover-wash:#dbe4cd; }
-[data-occasion=baby-shower][data-layout=signature] .composition { max-width:650px; padding:22px 25px 30px; border-radius:160px 160px 16px 16px; background:#fffbf1; box-shadow:0 8px 30px #4c653c0a; }
-[data-occasion=baby-shower][data-layout=signature] .names { font-style:italic; font-size:clamp(43px,6vw,70px); }
-[data-occasion=baby-shower][data-layout=signature] .artwork { width:300px; }
-[data-occasion=baby-shower][data-layout=signature] .details { border-top-style:dashed; }
-.cover[data-occasion=housewarming] { --occasion-ink:#365141; --occasion-paper:#eef0df; --occasion-accent:#6b4a2f; --cover-wash:#dce2ca; }
-[data-occasion=housewarming][data-layout=signature] .composition { display:grid; grid-template-columns:1fr 1fr; gap:0 40px; text-align:left; align-items:center; }
-[data-occasion=housewarming][data-layout=signature] .signatureTop { grid-row:span 2; align-self:stretch; display:grid; place-items:center; border:1px solid var(--cover-line); border-radius:50% 50% 5px 5px; background:#f8f6e9; padding:50px 0 25px; }
-[data-occasion=housewarming][data-layout=signature] .artwork { width:100%; max-width:430px; max-height:none; }[data-occasion=housewarming][data-layout=signature] .artwork img { max-height:none; }
-[data-occasion=housewarming][data-layout=signature] .names { font-size:clamp(44px,5vw,72px); }
-[data-occasion=housewarming][data-layout=signature] .coverText { margin-left:0; }
-[data-occasion=housewarming][data-layout=signature] .details { flex-direction:column; margin:22px 0 0; width:100%; align-self:start; }.cover[data-occasion=housewarming][data-layout=signature] :is(.date,.location) { justify-content:flex-start; }
-.cover[data-occasion=naming] { --occasion-ink:#764951; --occasion-paper:#fff4ed; --occasion-accent:#9b5959; --cover-wash:#efd9d0; }
-[data-occasion=naming][data-layout=signature] .composition { max-width:730px; border:1px solid var(--cover-line); border-radius:8px; padding:30px 35px 22px; }
-[data-occasion=naming][data-layout=signature] .names { font-size:clamp(58px,9vw,104px); font-style:italic; color:var(--occasion-accent); }
-[data-occasion=naming][data-layout=signature] .artwork { width:320px; }.cover[data-occasion=naming][data-layout=signature] .details { margin-top:0; border-top:0; }
-.cover[data-occasion=anniversary] { --occasion-ink:#615035; --occasion-paper:#f5edde; --occasion-accent:#86642d; --cover-wash:#e9d8b9; }
-[data-occasion=anniversary][data-layout=signature] .composition { max-width:760px; padding:20px 30px 28px; border:1px solid var(--cover-line); outline:1px solid var(--cover-line); outline-offset:8px; }
-[data-occasion=anniversary][data-layout=signature] .artwork { width:280px; }
-[data-occasion=anniversary][data-layout=signature] .names>span { display:inline; }.cover[data-occasion=anniversary][data-layout=signature] .names>span>i { display:inline; margin:0 .2em; }
-.cover[data-occasion=remembrance] { --occasion-ink:#414d47; --occasion-paper:#f6f5ef; --occasion-accent:#546b5d; --cover-wash:#e9ece2; }
-[data-occasion=remembrance][data-layout=signature] .composition { max-width:780px; padding:15px 28px 24px; }
-[data-occasion=remembrance][data-layout=signature] .artwork { width:240px; }
-[data-occasion=remembrance][data-layout=signature] .names { font-size:clamp(42px,6vw,72px); font-weight:400; letter-spacing:-.02em; }
-[data-occasion=remembrance][data-layout=signature] .coverText { letter-spacing:.21em; }
-[data-occasion=remembrance][data-layout=signature] .details { margin-top:38px; padding-top:25px; border-color:#b6c0b4; }
-.cover[data-occasion=other] { --occasion-ink:#f7e5bd; --occasion-paper:#243545; --occasion-accent:#efd6a0; --cover-wash:#3b4c55; }
-[data-occasion=other][data-layout=signature] .composition { display:grid; grid-template-columns:1.3fr 1fr; align-items:center; gap:28px; text-align:left; border-block:1px solid var(--cover-line); padding-block:30px; }
-[data-occasion=other][data-layout=signature] .names { font-size:clamp(48px,7vw,94px); }.cover[data-occasion=other][data-layout=signature] .coverText { margin-left:0; }
-[data-occasion=other][data-layout=signature] .details { grid-column:1/-1; width:100%; max-width:none; justify-content:space-between; margin-top:0; }
-[data-occasion=engagement][data-layout=signature] .composition { max-width:700px; padding:10px 38px 30px; border-radius:3px; background:#fff8f2; border:1px solid #dfc5bc; box-shadow:8px 8px 0 #e7cebf; }
-[data-occasion=engagement][data-layout=signature] .artwork { width:280px; }
-[data-occasion=engagement][data-layout=signature] .names>span { display:inline; }.cover[data-occasion=engagement][data-layout=signature] .names>span>i { display:inline; margin:0 .2em; }
+/* Eight signature stationery compositions. The artwork has its own space, away from editable text. */
+.cover[data-occasion=engagement][data-layout=signature] .composition { border-inline:2.6cqi solid var(--occasion-ink); padding-inline:12cqi; }
+.cover[data-occasion=engagement][data-layout=signature] .composition::before { border:1px solid var(--cover-line); border-radius:44cqi 44cqi 0 0; inset:4cqi 3cqi; }
+.cover[data-occasion=engagement][data-layout=signature] .signatureVisual { width:85%; margin-top:3cqi; }
+.cover[data-occasion=engagement][data-layout=signature] .names { font-style:italic; }
+.cover[data-occasion=birthday] { --occasion-ink:#8b3429; --occasion-paper:#fff0cd; --occasion-accent:#ab6139; --cover-wash:#efcf98; }
+.cover[data-occasion=birthday][data-layout=signature] .composition { padding:9cqi 11cqi; background:repeating-linear-gradient(90deg,transparent 0 5cqi,#c4692710 5cqi 10cqi),var(--occasion-paper); border-block:2cqi solid var(--occasion-ink); }
+.cover[data-occasion=birthday][data-layout=signature] .composition::before { inset:3cqi; border:1px solid var(--occasion-ink); outline:1px solid var(--cover-line); outline-offset:1cqi; }
+.cover[data-occasion=birthday][data-layout=signature] .signatureMain { order:-1; margin:2cqi 0 4cqi; }
+.cover[data-occasion=birthday][data-layout=signature] .occasionName { order:-2; }
+.cover[data-occasion=birthday][data-layout=signature] .names { font-size:23cqi; font-style:italic; }
+.cover[data-occasion=birthday][data-layout=signature] .names[data-long=true] { font-size:13cqi; }
+.cover[data-occasion=birthday][data-layout=signature] .signatureVisual { width:79%; margin-bottom:0; }
+.cover[data-occasion=birthday][data-layout=signature] .divider { display:none; }
+.cover[data-occasion=birthday][data-layout=signature] .details { border-top:1px dashed var(--occasion-accent); padding-top:5cqi; margin-top:5cqi; }
+.cover[data-occasion=baby-shower] { --occasion-ink:#435c51; --occasion-paper:#f6f4e8; --occasion-accent:#788769; --cover-wash:#dce3cf; }
+.cover[data-occasion=baby-shower][data-layout=signature] .composition { background:radial-gradient(circle at 50% 28%,#fffdf6 0 26%,transparent 26.2%),var(--occasion-paper); border:3cqi solid var(--cover-wash); }
+.cover[data-occasion=baby-shower][data-layout=signature] .composition::before { inset:2.2cqi; border-radius:45cqi 45cqi 0 0; }
+.cover[data-occasion=baby-shower][data-layout=signature] .signatureVisual { width:91%; margin-block:6cqi 3cqi; }
+.cover[data-occasion=baby-shower][data-layout=signature] .names { font-size:13cqi; font-style:italic; }
+.cover[data-occasion=housewarming] { --occasion-ink:#3e5946; --occasion-paper:#f6f1df; --occasion-accent:#7f7a47; --cover-wash:#d9dfc6; }
+.cover[data-occasion=housewarming][data-layout=signature] .composition { border:3cqi solid var(--occasion-ink); padding:8cqi 12cqi; }
+.cover[data-occasion=housewarming][data-layout=signature] .composition::before { border-radius:45cqi 45cqi 0 0; inset:3cqi; }
+.cover[data-occasion=housewarming][data-layout=signature] .signatureVisual { width:100%; margin-top:4cqi; }
+.cover[data-occasion=housewarming][data-layout=signature] .names { font-size:12.5cqi; }
+.cover[data-occasion=housewarming][data-layout=signature] .branchLeft { top:32cqi; }.cover[data-occasion=housewarming][data-layout=signature] .branchRight { top:32cqi; bottom:auto; transform:scaleX(-1) rotate(26deg); }
+.cover[data-occasion=naming] { --occasion-ink:#85545a; --occasion-paper:#fcf0e8; --occasion-accent:#a17b63; --cover-wash:#edd5c8; }
+.cover[data-occasion=naming][data-layout=signature] .composition { border:2cqi solid var(--cover-wash); }
+.cover[data-occasion=naming][data-layout=signature] .composition::before { border-style:double; border-width:3px; }
+.cover[data-occasion=naming][data-layout=signature] .signatureMain { order:-1; }
+.cover[data-occasion=naming][data-layout=signature] .occasionName { order:-2; margin-bottom:7cqi; }
+.cover[data-occasion=naming][data-layout=signature] .names { font-style:italic; font-size:21cqi; }
+.cover[data-occasion=naming][data-layout=signature] .signatureVisual { width:92%; margin-top:5cqi; }
+.cover[data-occasion=naming][data-layout=signature] .divider { display:none; }
+.cover[data-occasion=anniversary] { --occasion-ink:#6c542e; --occasion-paper:#f7edda; --occasion-accent:#a1864c; --cover-wash:#e6d6b6; }
+.cover[data-occasion=anniversary][data-layout=signature] { --occasion-ink:#f3e3bf; --occasion-paper:#333c38; --occasion-accent:#cfb577; --cover-wash:#59614e; }
+.cover[data-occasion=anniversary][data-layout=signature] .composition::before { inset:4cqi; outline:1px solid var(--cover-line); outline-offset:1.8cqi; }
+.cover[data-occasion=anniversary][data-layout=signature] .signatureVisual { width:82%; }
+.cover[data-occasion=anniversary][data-layout=signature] .branchLeft,.cover[data-occasion=anniversary][data-layout=signature] .branchRight { opacity:.28; }
+.cover[data-occasion=remembrance] { --occasion-ink:#414e46; --occasion-paper:#f7f6ef; --occasion-accent:#778572; --cover-wash:#e6e8dc; }
+.cover[data-occasion=remembrance][data-layout=signature] .composition { border-top:1.5cqi solid var(--occasion-ink); padding-block:12cqi; }
+.cover[data-occasion=remembrance][data-layout=signature] .composition::before { border:0; }
+.cover[data-occasion=remembrance][data-layout=signature] .signatureVisual { width:77%; margin-block:7cqi 5cqi; }
+.cover[data-occasion=remembrance][data-layout=signature] .names { font-size:14cqi; }
+.cover[data-occasion=remembrance] .paperTrim { display:none; }
+.cover[data-occasion=remembrance] .divider { width:18cqi; opacity:.55; }
+.cover[data-occasion=other] { --occasion-ink:#f3dfb6; --occasion-paper:#283e46; --occasion-accent:#d9b879; --cover-wash:#4a6267; }
+.cover[data-occasion=other][data-layout=signature] .composition { border:2.5cqi solid var(--cover-wash); }
+.cover[data-occasion=other][data-layout=signature] .signatureMain { order:-1; margin-top:2cqi; }.cover[data-occasion=other][data-layout=signature] .occasionName { order:-2; }
+.cover[data-occasion=other][data-layout=signature] .signatureVisual { width:65%; margin-top:5cqi; }
+.cover[data-occasion=other][data-layout=signature] .names { font-size:14cqi; font-style:italic; }
 
-/* The editorial route is a real two-column announcement, with its own date rail. */
-.cover[data-layout=editorial] { text-align:left; --occasion-paper:#f6f2e8; }
-.cover[data-layout=editorial] .composition { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:30px 55px; align-items:center; }
-.editionRail { grid-column:1/-1; display:flex; justify-content:space-between; align-items:center; gap:20px; padding-bottom:16px; border-bottom:1px solid var(--occasion-ink); text-transform:uppercase; font:600 11px/1.4 var(--sans); letter-spacing:.18em; }
-.editorialCopy .coverText { margin-left:0; font-size:11px; }.editorialCopy .names { font-family:var(--sans); font-weight:600; font-size:clamp(43px,5.6vw,78px); letter-spacing:-.065em; }
-.editorialCopy .names[data-long=true] { font-size:clamp(35px,4.5vw,62px); }.editorialCopy .names>span>i { display:inline; font-family:var(--serif); margin:0 .13em 0 0; }
-.intro { font:400 16px/1.7 var(--serif); margin:26px 0 0; max-width:25em; overflow-wrap:anywhere; }.editorialCopy .details { justify-content:flex-start; flex-direction:column; gap:14px; margin-top:25px; }.editorialCopy :is(.date,.location) { justify-content:flex-start; }
-.editorialVisual { background:var(--cover-wash); padding:30px 0 65px; position:relative; border-radius:2px; }.editorialVisual .artwork { width:100%; max-width:480px; }.editorialVisual .photograph { aspect-ratio:4/5; border-radius:0; width:calc(100% - 40px); }
-.dateStamp { position:absolute; bottom:-14px; right:22px; min-width:88px; padding:13px 17px; border:1px solid var(--occasion-accent); background:var(--occasion-paper); color:var(--occasion-ink); text-align:center; box-shadow:4px 4px 0 var(--cover-wash); }
-.dateStamp strong { display:block; font:500 41px/1 var(--serif); }.dateStamp span { display:block; font:600 10px/1.6 var(--sans); text-transform:uppercase; letter-spacing:.15em; margin-top:5px; }
-.cover[data-layout=editorial][data-occasion=other] { --occasion-ink:#703628; --occasion-paper:#f7e5be; --occasion-accent:#974b2c; --cover-wash:#efd298; }
-.cover[data-layout=editorial][data-occasion=housewarming] { --occasion-ink:#683b2e; --occasion-paper:#f7e9d7; --occasion-accent:#8d4e36; --cover-wash:#e8c5a7; }
-.cover[data-layout=editorial][data-occasion=birthday] { --occasion-ink:#323e39; --occasion-paper:#f2f2e5; --occasion-accent:#465845; --cover-wash:#dae0c7; }
+/* Editorial editions: a masthead, assertive typography and an illustrated date column. */
+.cover[data-layout=editorial] { --occasion-paper:#f8f1e3; }
+.cover[data-layout=editorial] .composition { padding:7cqi 8cqi; justify-content:space-between; text-align:left; }
+.cover[data-layout=editorial] .composition::before { inset:2.5cqi; border-color:var(--cover-line); }
+.cover[data-layout=editorial] .paperTrim { display:none; }
+.editionRail { width:100%; display:flex; justify-content:space-between; align-items:center; gap:3cqi; padding-bottom:3cqi; border-bottom:1px solid currentColor; font:500 2.2cqi/1.5 var(--sans); text-transform:uppercase; letter-spacing:.12em; }
+.editorialCopy { padding-block:7cqi 5cqi; }
+.editorialCopy .coverText { margin-left:0; font-size:2.3cqi; max-width:25em; text-wrap:initial; }
+.editorialCopy .names { font-size:17cqi; letter-spacing:-.05em; }.editorialCopy .names[data-long=true] { font-size:12cqi; }
+.editorialCopy .names>span>i { display:inline; margin-right:2cqi; font-size:.7em; }
+.editorialVisual { display:grid; grid-template-columns:minmax(0,1fr) 25cqi; width:100%; align-items:stretch; border-block:1px solid var(--cover-line); background:var(--cover-wash); margin-top:auto; }
+.editorialVisual .artwork { padding:4cqi 2cqi; }.editorialVisual .photograph { padding:0; border-radius:0; aspect-ratio:1; }
+.engraved { height:48cqi; display:grid; place-items:center; }.engraved>span { height:41cqi; max-width:100%; color:var(--occasion-ink); }
+.visualCaption { border-left:1px solid var(--cover-line); padding:5cqi 2cqi; display:flex; flex-direction:column; align-items:center; justify-content:space-between; gap:4cqi; }
+.visualCaption:has(.dateStamp:only-child) { justify-content:center; }
+.visualCaption>span { font:italic 3.7cqi/1.4 var(--cover-serif); text-align:center; overflow-wrap:anywhere; }
+.dateStamp { text-align:center; color:var(--occasion-ink); }
+.dateStamp strong { display:block; font:400 12cqi/1 var(--cover-serif); letter-spacing:-.06em; }.dateStamp span { display:block; font:500 2.5cqi/1.6 var(--sans); text-transform:uppercase; letter-spacing:.16em; margin-top:1.5cqi; }
+.cover[data-layout=editorial] .details { align-items:flex-start; margin-top:5cqi; padding:0; gap:2cqi; }
+.cover[data-layout=editorial] .date { font-size:2.5cqi; }
+.cover[data-layout=editorial] .location { font-size:4.2cqi; }
+.cover[data-layout=editorial][data-occasion=engagement] { --occasion-ink:#713940; --occasion-accent:#a2695e; --cover-wash:#e8cabb; }
+.cover[data-layout=editorial][data-occasion=birthday] { --occasion-ink:#31555e; --occasion-accent:#59777b; --cover-wash:#d1dfd5; }
+.cover[data-layout=editorial][data-occasion=birthday] .names { font-size:25cqi; font-style:italic; }
+.cover[data-layout=editorial][data-occasion=baby-shower] { --occasion-ink:#84594c; --occasion-accent:#ac8770; --cover-wash:#ebd5bb; }
+.cover[data-layout=editorial][data-occasion=baby-shower] .names { font-style:italic; }
+.cover[data-layout=editorial][data-occasion=housewarming] { --occasion-ink:#84462e; --occasion-accent:#ae764f; --cover-wash:#efd3ad; }
+.cover[data-layout=editorial][data-occasion=housewarming] .editorialVisual { grid-template-columns:25cqi minmax(0,1fr); }.cover[data-layout=editorial][data-occasion=housewarming] .visualCaption { order:-1; border-left:0; border-right:1px solid var(--cover-line); }
+.cover[data-layout=editorial][data-occasion=naming] { --occasion-ink:#5a644f; --occasion-accent:#7f896d; --cover-wash:#dde1ce; }
+.cover[data-layout=editorial][data-occasion=naming] .names { font-size:23cqi; }
+.cover[data-layout=editorial][data-occasion=anniversary] { --occasion-ink:#734348; --occasion-accent:#99716b; --cover-wash:#ecd6ca; }
+.cover[data-layout=editorial][data-occasion=remembrance] { --occasion-ink:#495158; --occasion-accent:#7a8585; --cover-wash:#dfe4de; }.cover[data-layout=editorial][data-occasion=remembrance] .names { font-size:15cqi; }
+.cover[data-layout=editorial][data-occasion=other] { --occasion-ink:#683c2c; --occasion-accent:#9b7050; --cover-wash:#edd2a5; }
 
-/* A keepsake pairs a floated picture card and a personal letter; no editorial rail. */
-.cover[data-layout=keepsake] .composition { display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1fr); gap:60px; align-items:center; max-width:930px; padding:35px; border:1px solid var(--cover-line); background:color-mix(in srgb,var(--occasion-paper) 82%,white); box-shadow:0 16px 35px #362c1b0a; }
-.keepsakeVisual { position:relative; padding:14px 14px 48px; transform:rotate(-4deg); background:#fffaf0; box-shadow:0 8px 18px #443b231a; color:#493e2b; }.keepsakeVisual .artwork { min-height:220px; display:grid; align-items:center; }.keepsakeVisual .photograph { border-radius:0; aspect-ratio:1; }.keepsakeVisual .dateStamp { right:0; bottom:-18px; transform:rotate(6deg); min-width:70px; }
-.keepsakeCopy .coverText { font-size:11px; }.keepsakeCopy .names { font-size:clamp(42px,5vw,66px); }.keepsakeCopy .details { flex-direction:column; margin-top:28px; }
-.cover[data-layout=keepsake][data-occasion=birthday] { --occasion-ink:#28516b; --occasion-paper:#eaf3f2; --occasion-accent:#386a7f; --cover-wash:#c3dadc; }
-.cover[data-layout=keepsake][data-occasion=anniversary] { --occasion-ink:#f5e2b9; --occasion-paper:#263847; --occasion-accent:#e4c48e; --cover-wash:#43505a; }
-.cover[data-layout=keepsake][data-occasion=other] { --occasion-ink:#3e5047; --occasion-paper:#f4f1e7; --occasion-accent:#5d7164; --cover-wash:#dce1d2; }
+/* Keepsakes: a portrait mount, engraved corners and a small dated seal. */
+.cover[data-layout=keepsake] .composition { padding:8cqi 12cqi; border:2cqi solid var(--cover-wash); }
+.cover[data-layout=keepsake] .composition::before { inset:2cqi; }
+.keepsakeHeading { width:100%; display:flex; justify-content:space-between; gap:3cqi; font:500 2.2cqi/1.5 var(--sans); text-transform:uppercase; letter-spacing:.17em; padding-bottom:4cqi; }
+.keepsakeVisual { position:relative; width:84%; margin:3cqi auto 7cqi; padding:2cqi; border:1px solid var(--cover-line); border-radius:40cqi 40cqi 2px 2px; background:color-mix(in srgb,var(--cover-wash) 45%,var(--occasion-paper)); }
+.keepsakeVisual .artwork { overflow:hidden; border-radius:40cqi 40cqi 0 0; padding:5cqi 0; }.keepsakeVisual .photograph { padding:0; aspect-ratio:1; }
+.keepsakeVisual .dateStamp { position:absolute; right:-6cqi; bottom:-3cqi; width:17cqi; height:17cqi; padding:2cqi; display:flex; flex-direction:column; justify-content:center; border:1px solid var(--cover-line); outline:1px solid var(--cover-line); outline-offset:1cqi; border-radius:50%; background:var(--occasion-paper); }
+.keepsakeVisual .dateStamp strong { font-size:7.8cqi; font-weight:500; }.keepsakeVisual .dateStamp span { font-size:2.2cqi; font-weight:600; letter-spacing:.08em; margin-top:.2cqi; }
+.keepsakeCopy .names { font-size:13.5cqi; font-style:italic; }.keepsakeCopy .names[data-long=true] { font-size:11cqi; }
+.keepsakeCopy .coverText { font-size:2.3cqi; }.keepsakeCopy .divider { width:21cqi; margin-top:4cqi; }
+.cover[data-layout=keepsake] .branchLeft { top:21cqi; left:-13cqi; transform:rotate(20deg); opacity:.55; }.cover[data-layout=keepsake] .branchRight { top:21cqi; bottom:auto; right:-13cqi; transform:scaleX(-1) rotate(20deg); opacity:.55; }
+.cover[data-layout=keepsake][data-occasion=engagement] { --occasion-ink:#4f6049; --occasion-paper:#f5f3e6; --occasion-accent:#7a8967; --cover-wash:#dce2cc; }
+.cover[data-layout=keepsake][data-occasion=birthday] { --occasion-ink:#315978; --occasion-paper:#f0f4ee; --occasion-accent:#769399; --cover-wash:#ccdee0; }
+.cover[data-layout=keepsake][data-occasion=birthday] .composition { border-image:repeating-linear-gradient(135deg,var(--occasion-ink) 0 3cqi,var(--occasion-paper) 3cqi 6cqi,var(--cover-wash) 6cqi 9cqi,var(--occasion-paper) 9cqi 12cqi) 12; }
+.cover[data-layout=keepsake][data-occasion=birthday] .keepsakeVisual { border-radius:0; }.cover[data-layout=keepsake][data-occasion=birthday] .paperTrim { display:none; }
+.cover[data-layout=keepsake][data-occasion=baby-shower] { --occasion-ink:#6c6554; --occasion-paper:#fcf5e6; --occasion-accent:#9c9072; --cover-wash:#e7decb; }
+.cover[data-layout=keepsake][data-occasion=housewarming] { --occasion-ink:#526255; --occasion-paper:#f4f1e8; --occasion-accent:#82927b; --cover-wash:#d7e0d3; }
+.cover[data-layout=keepsake][data-occasion=naming] { --occasion-ink:#5b6a79; --occasion-paper:#f1f1e9; --occasion-accent:#8796a0; --cover-wash:#dce1e0; }
+.cover[data-layout=keepsake][data-occasion=anniversary] { --occasion-ink:#edddba; --occasion-paper:#293e4c; --occasion-accent:#c3ac79; --cover-wash:#4b5b60; }
+.cover[data-layout=keepsake][data-occasion=remembrance] { --occasion-ink:#695e4c; --occasion-paper:#faf6e9; --occasion-accent:#aa9979; --cover-wash:#e9e1cd; }
+.cover[data-layout=keepsake][data-occasion=remembrance] .keepsakeVisual { border-radius:0; }.cover[data-layout=keepsake][data-occasion=remembrance] .names { font-style:normal; }
+.cover[data-layout=keepsake][data-occasion=other] { --occasion-ink:#4b5c43; --occasion-paper:#f4f0e3; --occasion-accent:#8a9064; --cover-wash:#d9ddc7; }
 
+/* Editable names keep their proportions even in the oversized birthday and naming editions. */
+.cover[data-occasion][data-layout] .names[data-long=true] { font-size:10.8cqi; line-height:1.16; letter-spacing:-.025em; }
+.cover[data-occasion][data-layout] .names[data-indic=true][data-long=true] { line-height:1.5; letter-spacing:0; }
+
+/* Personalization wins over every collection's defaults. */
 .cover[data-palette=rose][data-occasion][data-layout] { --occasion-paper:#f8eae6; --occasion-ink:#603b47; --occasion-accent:#854f5a; --cover-wash:#edceca; }
 .cover[data-palette=sage][data-occasion][data-layout] { --occasion-paper:#edf0e5; --occasion-ink:#334b3d; --occasion-accent:#53654d; --cover-wash:#d6dfc8; }
 .cover[data-palette=indigo][data-occasion][data-layout] { --occasion-paper:#eeedf6; --occasion-ink:#343856; --occasion-accent:#565b84; --cover-wash:#d4d5e7; }
-.cover[data-typography=serif][data-occasion][data-layout] .names { font-family:var(--serif); font-weight:500; }
-.cover[data-typography=sans][data-occasion][data-layout] .names { font-family:var(--sans); font-weight:600; }
-.cover[data-typography=script][data-occasion][data-layout] .names { font-family:"Great Vibes",var(--serif); line-height:1.15; letter-spacing:0; }
-.cover[data-decoration=false] { background:var(--occasion-paper); }.cover[data-decoration=false] .artwork:not(.photograph) { display:none; }
-.cover[data-decoration=false] .signatureTop:has(.artwork:not(.photograph)),.cover[data-decoration=false] .signatureMain:has(.artwork:not(.photograph)) { display:none; }
-.cover[data-decoration=false] .composition { border:0; outline:0; box-shadow:none; background:none; border-radius:0; }
-.cover[data-decoration=false][data-layout=signature] .composition { display:block; }.cover[data-decoration=false][data-layout=signature] .details { margin-top:28px; }
-.cover[data-decoration=false] .editorialVisual:has(.artwork:not(.photograph)),.cover[data-decoration=false] .keepsakeVisual:has(.artwork:not(.photograph)) { display:none; }
-.cover[data-decoration=false][data-layout=editorial] .composition,.cover[data-decoration=false][data-layout=keepsake] .composition { grid-template-columns:1fr; max-width:760px; }
-
-@media(max-width:700px) {
- .full { padding:26px 20px 24px; min-height:min(760px,calc(100svh - var(--cover-top-offset,0px))); }
- .coverText { font-size:10px; margin-bottom:14px; }.names { font-size:clamp(42px,11vw,66px); }.names[data-long=true] { font-size:36px; }
- .artwork { width:250px; }.signatureTop .artwork,.signatureTop .artwork img { max-height:210px; }
- .details { gap:12px; flex-direction:column; margin-top:22px; padding-top:17px; }.date,.location { font-size:13px; }.details small { font-size:11px; }
- .actions { gap:8px; margin-top:22px; }.actions a { font-size:12px; padding:11px 12px; min-height:46px; gap:6px; }.actions a>svg:last-child:not(:first-child) { display:none; }
- [data-occasion=engagement][data-layout=signature] .composition { padding:5px 17px 25px; box-shadow:5px 5px 0 #e7cebf; }.cover[data-occasion=engagement][data-layout=signature] .artwork { width:240px; }
- [data-occasion=birthday][data-layout=signature] .composition { padding:25px 17px 20px; }.cover[data-occasion=birthday][data-layout=signature] .names { font-size:clamp(55px,15vw,80px); }.cover[data-occasion=birthday][data-layout=signature] .artwork { width:205px; }
- [data-occasion=baby-shower][data-layout=signature] .composition { padding:15px 16px 25px; border-radius:110px 110px 12px 12px; }.cover[data-occasion=baby-shower][data-layout=signature] .artwork { width:235px; }
- [data-occasion=housewarming][data-layout=signature] .composition { grid-template-columns:1fr; text-align:center; gap:24px; }.cover[data-occasion=housewarming][data-layout=signature] .signatureTop { grid-row:auto; width:min(100%,280px); margin-inline:auto; padding:20px 10px 0; }.cover[data-occasion=housewarming][data-layout=signature] .artwork { width:235px; }.cover[data-occasion=housewarming][data-layout=signature] .names { font-size:42px; }.cover[data-occasion=housewarming][data-layout=signature] .details { margin:0; gap:11px; }.cover[data-occasion=housewarming][data-layout=signature] :is(.date,.location) { justify-content:center; }
- [data-occasion=naming][data-layout=signature] .composition { padding:24px 16px 20px; }.cover[data-occasion=naming][data-layout=signature] .artwork { width:255px; }.cover[data-occasion=naming][data-layout=signature] .names { font-size:clamp(54px,17vw,84px); }
- [data-occasion=anniversary][data-layout=signature] .composition { padding:9px 17px 22px; }.cover[data-occasion=anniversary][data-layout=signature] .artwork { width:245px; }
- [data-occasion=remembrance][data-layout=signature] .composition { padding:15px 5px; }.cover[data-occasion=remembrance][data-layout=signature] .artwork { width:235px; }
- [data-occasion=other][data-layout=signature] .composition { grid-template-columns:1fr; text-align:center; gap:15px; padding-block:28px; }.cover[data-occasion=other][data-layout=signature] .names { font-size:48px; }.cover[data-occasion=other][data-layout=signature] .artwork { width:235px; }.cover[data-occasion=other][data-layout=signature] .details { grid-column:auto; }
- .cover[data-layout=editorial] .composition { grid-template-columns:1fr; gap:25px; }.editionRail { font-size:9px; padding-bottom:13px; }.editorialVisual { order:2; width:min(100%,290px); margin:auto; padding:5px 0 30px; }.editorialVisual .artwork { width:235px; }.editorialVisual .photograph { aspect-ratio:3/2; width:calc(100% - 30px); }.editorialCopy .names { font-size:48px; }.editorialCopy .names[data-long=true] { font-size:38px; }.editorialCopy .names>span { display:inline; }.editorialCopy .names>span>i { margin-left:.12em; }.editorialCopy .details { margin-top:16px; }.intro { margin-top:15px; font-size:15px; }.dateStamp { min-width:70px; padding:8px 14px; right:12px; }.dateStamp strong { font-size:33px; }
- .cover[data-layout=keepsake] .composition { grid-template-columns:1fr; gap:35px; padding:27px 17px 25px; }.keepsakeVisual { width:min(100%,230px); margin:auto; padding:8px 8px 30px; }.keepsakeVisual .artwork { min-height:0; width:100%; }.keepsakeVisual .photograph { aspect-ratio:3/2; }.keepsakeCopy .names { font-size:44px; }.keepsakeCopy .names>span { display:inline; }.keepsakeCopy .names>span>i { display:inline; margin:0 .18em; }.keepsakeCopy .details { margin-top:19px; }
-}
-@media(max-width:359px) { .full { padding-inline:16px; }.actions a { padding-inline:10px; gap:5px; font-size:11px; }.names[data-long=true],.editorialCopy .names[data-long=true] { font-size:33px; } }
-@media(max-width:700px) and (max-height:850px) {
- .full[data-layout=editorial] { padding-block:20px; }
- .cover[data-layout=editorial] .composition { gap:18px; }
- .editorialVisual { width:min(100%,250px); padding:4px 0 26px; }
- .editorialVisual .artwork { width:180px; }
- .editorialVisual .photograph { width:calc(100% - 30px); max-height:155px; }
- .editorialCopy .names { font-size:42px; }
- .editorialCopy .intro { margin-top:10px; font-size:14px; }
- .editorialCopy .details { margin-top:14px; padding-top:14px; gap:10px; }
-}
-@media(max-height:700px) and (max-width:700px) { .full { padding-block:20px; }.signatureTop .artwork,.signatureTop .artwork img { max-height:175px; }.coverText { margin-bottom:9px; }.occasionName { margin-top:12px; }.details { margin-top:17px; }.actions { margin-top:18px; } }
-
-/* Fixed miniature canvas uses the exact guest markup, with layout-specific scaling. */
-.cover.compact { min-height:0; padding:13px; font-size:8px; display:flex; align-items:center; justify-content:center; }
-.compact .composition { max-width:100%; padding:10px 8px!important; box-shadow:none!important; outline-offset:3px!important; gap:10px!important; }
-.compact .coverText { font-size:5.7px!important; line-height:1.6; letter-spacing:.13em; margin:0 auto 9px; }
-.compact .names,.compact .names[data-long=true] { font-size:30px!important; line-height:1.03; }.compact .names[data-long=true] { font-size:24px!important; }
-.compact .names>span>i { margin-block:3px; }.compact .occasionName { font-size:5.5px; letter-spacing:.13em; margin-top:8px; }
-.compact .artwork { width:125px!important; max-height:105px!important; }.compact .artwork img { max-height:105px!important; }
-.compact .photograph { height:100px; }.compact .photograph img { object-fit:cover; height:100%; }
-.compact .details { font-size:7px; gap:6px!important; margin-top:12px!important; padding-top:9px; flex-direction:column; }.compact .date,.compact .location { font-size:6.5px; line-height:1.4; gap:4px; }.compact .details svg { width:8px; height:8px; margin-top:0; }.compact .details small { font-size:5.5px; }
-.compact .signatureMain { margin-top:3px; }.compact .signatureTop { padding:0!important; }.compact[data-occasion=housewarming][data-layout=signature] .composition { display:flex; flex-direction:column; text-align:center; }.compact[data-occasion=housewarming][data-layout=signature] .signatureTop { width:145px; flex-shrink:0; }.compact[data-occasion=housewarming][data-layout=signature] .details { align-items:center; width:100%; }.compact[data-occasion=housewarming][data-layout=signature] .coverText { margin-left:auto; }
-.compact[data-occasion=other][data-layout=signature] .composition { display:flex; flex-direction:column; text-align:center; }.compact[data-occasion=other][data-layout=signature] .details { width:100%; }
-.compact[data-layout=editorial] .composition { display:grid; grid-template-columns:1fr; gap:12px; text-align:left; align-items:start; padding:0!important; }.compact .editionRail { font-size:5px; letter-spacing:.1em; gap:8px; padding-bottom:6px; }.compact .editorialCopy { order:1; }.compact .editorialCopy .names { font-size:27px!important; }.compact .editorialCopy .coverText { text-align:left; margin-left:0; }.compact .editorialCopy .names>span { display:inline; }.compact .editorialVisual { order:2; padding:0 0 14px; width:100%; max-width:170px; margin:0 0 0 auto; }.compact .editorialVisual .artwork { width:115px!important; max-height:85px!important; }.compact .editorialVisual .artwork img { max-height:85px!important; }.compact .editorialCopy .details { margin-top:9px!important; padding-top:7px; }.compact .dateStamp { min-width:34px; padding:4px 7px; right:7px; bottom:-7px; box-shadow:2px 2px 0 var(--cover-wash); }.compact .dateStamp strong { font-size:18px; }.compact .dateStamp span { font-size:5px; margin-top:2px; }
-.compact[data-layout=keepsake] .composition { display:flex; flex-direction:column; padding:13px 8px!important; gap:16px!important; }.compact .keepsakeVisual { width:125px; padding:6px 6px 18px; }.compact .keepsakeVisual .artwork { width:100%!important; min-height:0; max-height:75px!important; }.compact .keepsakeVisual .artwork img { max-height:75px!important; }.compact .keepsakeVisual .photograph { aspect-ratio:3/2; height:auto; }.compact .keepsakeVisual .dateStamp { min-width:35px; right:-7px; bottom:-5px; }.compact .keepsakeCopy .names { font-size:27px!important; }.compact .keepsakeCopy .names>span { display:inline; }.compact .keepsakeCopy .names>span>i { display:inline; margin:0 .12em; }.compact .keepsakeCopy .details { margin-top:10px!important; }
-.compact[data-decoration=false] .composition { display:block!important; }
+.cover[data-typography=serif] .names { font-family:var(--cover-serif); }
+.cover[data-typography=sans] .names { font-family:var(--sans); font-size:12cqi; font-weight:500; font-style:normal; line-height:1.2; letter-spacing:-.05em; }
+.cover[data-typography=script] .names { font-family:"Great Vibes",var(--serif); line-height:1.2; font-style:normal; letter-spacing:0; }
+.cover .names[data-indic=true] { font-family:var(--serif); letter-spacing:0; font-style:normal; line-height:1.45; }
+.cover[data-typography=sans] .names[data-indic=true] { font-family:var(--sans); }
+.cover [data-indic=true]:not(.names) { letter-spacing:0; text-transform:none; line-height:1.7; }
+.cover[data-artwork=off] :is(.paperTrim,.divider,.signatureVisual:not(:has(.photograph)),.editorialVisual:not(:has(.photograph)),.keepsakeVisual:not(:has(.photograph))) { display:none; }
+.cover[data-artwork=off] .composition { background:var(--occasion-paper); border:0; justify-content:center; gap:6cqi; }.cover[data-artwork=off] .composition::before,.cover[data-artwork=off] .composition::after { display:none; }
+.cover.full .coverText { font-size:max(10px,2.45cqi); }.cover.full .occasionName,.full .editionRail,.full .keepsakeHeading { font-size:max(9px,2.2cqi); }
+.cover.full .date { font-size:max(11px,2.7cqi); }.cover.full .dateStamp span { font-size:max(9px,2.2cqi); }.cover.full .visualCaption>span { font-size:max(11px,3.7cqi); }.cover.full .location { font-size:max(15px,4cqi); }.cover.full .details small { font-size:max(11px,2.6cqi); }
+.compact { padding:0!important; min-height:0!important; }.compact .composition { box-shadow:none; }.compact .canvas { max-width:none; }
+@media(max-width:600px) { .full { padding:22px 16px 24px; }.actions { gap:7px; margin-top:20px; }.actions a { padding:10px 12px; font-size:11px; gap:6px; }.actions a>svg:last-child:not(:first-child) { display:none; } }
 @media(prefers-reduced-motion:no-preference) {
- .full:not([data-motion=none]) .identity { animation:cover-arrive 440ms ease-out both; }
- .full:not([data-motion=none]) .artwork { animation:cover-art-arrive 650ms cubic-bezier(.2,.7,.2,1) both; }
- .full[data-motion=expressive] .artwork { animation-duration:850ms; }
- .full[data-occasion=remembrance] .artwork,.full[data-occasion=remembrance] .identity { animation-duration:380ms; }
- .actions a:hover { transform:translateY(-2px); }
+  .actions a:hover { transform:translateY(-2px); }
+  .full:not([data-motion=none]) .leafMotion { animation:leaf-sway 8s ease-in-out infinite alternate; animation-play-state:paused; }
+  .full:not([data-motion=none]) .glimmerMotion { animation:illustration-glimmer 6s ease-in-out infinite alternate; animation-play-state:paused; }
+  .full:not([data-motion=none]) .balloonMotion { animation:balloon-float 8s ease-in-out infinite alternate; animation-play-state:paused; }
+  .full:not([data-motion=none]) .paperTrim>span { transform-origin:50% 100%; animation:trim-sway 10s ease-in-out infinite alternate; animation-play-state:paused; }
+  .full .composition[data-cover-art-active=true] [data-cover-motion],.full .composition[data-cover-art-active=true] .paperTrim>span { animation-play-state:running; }
+  .full[data-motion=expressive] { --leaf-angle:4deg; --float-distance:2cqi; --trim-angle:1.5deg; }
 }
-@keyframes cover-arrive { from { opacity:.65; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-@keyframes cover-art-arrive { from { opacity:.5; transform:translateY(14px) scale(.97); } to { opacity:1; transform:translateY(0) scale(1); } }
-@media(prefers-reduced-motion:reduce) { .cover * { animation:none!important; transition:none!important; }.actions a { transform:none!important; } }
+@keyframes leaf-sway { from { transform:rotate(calc(-1 * var(--leaf-angle,1.5deg))); } to { transform:rotate(var(--leaf-angle,1.5deg)); } }
+@keyframes illustration-glimmer { from { opacity:.35; transform:scale(.9); } to { opacity:.9; transform:scale(1.07); } }
+@keyframes balloon-float { from { transform:translateY(var(--float-distance,.7cqi)) rotate(-1deg); } to { transform:translateY(calc(-1 * var(--float-distance,.7cqi))) rotate(1deg); } }
+@keyframes trim-sway { from { rotate:calc(-1 * var(--trim-angle,.7deg)); } to { rotate:var(--trim-angle,.7deg); } }
+@media(prefers-reduced-motion:reduce) { .cover * { animation:none!important; transition:none!important; } }
 .cover[data-motion=none] * { animation:none!important; transition:none!important; }
-
-/* Custom controls take precedence over the original occasion composition. */
-.cover[data-palette]:not([data-palette=original])[data-occasion][data-layout] { background:var(--occasion-paper); }
-.cover[data-palette]:not([data-palette=original])[data-occasion][data-layout=signature] .composition { background:color-mix(in srgb,var(--occasion-paper) 80%,white); }
-.cover[data-decoration=false][data-occasion][data-layout] { background:var(--occasion-paper); }

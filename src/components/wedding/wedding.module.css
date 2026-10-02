@@ -118,3 +118,11 @@
 .heroCopy h1[data-long-names=true] { font-size:clamp(38px,5vw,76px); overflow-wrap:anywhere; }
 @media(max-width:650px) { .openingTop { position:absolute; }.openingToran { margin-top:12px; }.envelopeLetter>.letterArt { width:65px; }.envelopeLetter>strong { font-size:28px; }.envelopeLetter>span { font-size:10px; letter-spacing:.08em; }.envelopeLetter { gap:6px; }.hero { height:100svh; min-height:580px; }.heroScroll { margin-top:22px; }.heroQuickLinks { margin-top:19px; gap:8px; }.heroQuickLinks a { font-size:12px; padding:8px 12px; }.heroCopy h1[data-long-names=true] { font-size:clamp(36px,10vw,52px); } }
 @media(max-height:650px) and (max-width:650px) { .heroCopy h1 { font-size:55px; margin:12px 0; }.heroCopy { bottom:22px; }.heroScroll { display:none; }.hero { min-height:100svh; } }
+
+/* The shared slideshow controls remain above the photo shading. */
+.heroShade { z-index:1; pointer-events:none; }.heroTop,.heroCopy { z-index:2; }.heroSideNote { display:none; }.hero [data-photo-slideshow] { isolation:auto; }.hero [data-photo-slideshow]>div:last-child { z-index:3; }
+.memories { width:100%; min-width:0; }
+@media(max-width:650px) {
+  .hero:has([data-photo-slideshow] button) .heroCopy { bottom:92px; }
+  .hero:has([data-photo-slideshow] button) .heroScroll { display:none; }
+}

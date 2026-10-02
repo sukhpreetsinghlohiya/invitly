@@ -74,10 +74,11 @@ export async function saveInvitation(input: { eventId?: string; themeId: string;
         if (complete.error) return { error: "This invitation is live. Complete its details or unpublish it before saving an incomplete draft. " + complete.error };
       }
     }
-    if (invitation.coverPhotoId) {
-      if (!eventId) return { error: "Upload a cover photo to this invitation before selecting it." };
-      const { data: cover } = await supabase.from("media").select("id").eq("event_id", eventId).eq("id", invitation.coverPhotoId).maybeSingle();
-      if (!cover) return { error: "Choose a cover photo uploaded to this invitation." };
+    const selectedPhotoIds = [...new Set([invitation.coverPhotoId, ...(invitation.personProfiles || []).map(profile => profile.photoId)].filter((id): id is string => Boolean(id)))];
+    if (selectedPhotoIds.length) {
+      if (!eventId) return { error: "Upload photos to this invitation before selecting them." };
+      const { data: selectedPhotos, error: photoError } = await supabase.from("media").select("id").eq("event_id", eventId).in("id", selectedPhotoIds);
+      if (photoError || selectedPhotos?.length !== selectedPhotoIds.length) return { error: "Choose cover and portrait photos uploaded to this invitation." };
     }
     const uploadedAudio = selectedUploadedAudio(invitation);
     if (uploadedAudio) {

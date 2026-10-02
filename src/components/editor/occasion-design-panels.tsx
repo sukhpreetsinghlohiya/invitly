@@ -10,6 +10,7 @@ import type { InvitationDesign, ThemeId, TraditionId } from "@/types/invitation"
 import { defaultMusic } from "@/data/music";
 import type { AudioUploadContext } from "./custom-audio-upload";
 import { MusicPicker } from "./music-picker";
+import { InvitationDesignOptions } from "./invitation-options";
 
 type PanelProps = { draft: InvitationDraft; change: (draft: InvitationDraft) => void };
 
@@ -34,6 +35,7 @@ export function DesignPanel({ draft, change, chooseTheme, ...uploadContext }: Pa
     <div className="editor-field-pair"><label className="form-field">Colour palette<select value={design.palette} onChange={event => update({ palette: event.target.value as InvitationDesign["palette"] })}><option value="original">Theme original</option><option value="rose">Rose & ivory</option><option value="sage">Sage & paper</option><option value="indigo">Indigo & pearl</option></select></label><label className="form-field">Typography<select value={design.typography} onChange={event => update({ typography: event.target.value as InvitationDesign["typography"] })}><option value="original">Theme original</option><option value="serif">Classic serif</option><option value="sans">Modern sans</option><option value="script">Soft calligraphy</option></select></label></div>
     <label className="form-field">Cover text<input maxLength={160} value={draft.invitation.coverText ?? ""} onChange={event => change({ ...draft, invitation: { ...draft.invitation, coverText: event.target.value } })} /><small>Leave blank for a quieter cover.</small></label>
     <label className="editor-toggle"><input type="checkbox" checked={design.decoration} onChange={event => update({ decoration: event.target.checked })} /><span><strong>Decorative artwork</strong><small>Original flowers, frames, and abstract motifs. Turn off for a simpler invitation.</small></span></label>
+    <InvitationDesignOptions design={design} onChange={update} />
     {draft.invitation.occasion !== "remembrance" && <label className="editor-toggle"><input type="checkbox" checked={design.countdown} onChange={event => update({ countdown: event.target.checked })} /><span><strong>Show a countdown</strong><small>Count down to the event date you choose.</small></span></label>}
     <label className="form-field">Movement & transitions<select value={design.motion || "gentle"} onChange={event => update({ motion: event.target.value as InvitationDesign["motion"] })}><option value="gentle">Gentle · quiet, quick reveals</option><option value="expressive">Expressive · a little more theatre</option><option value="none">Still · no decorative animation</option></select><small>Your guests’ reduced-motion setting always takes priority.</small></label>
     <div className="editor-music"><label className="editor-toggle"><input type="checkbox" checked={draft.musicEnabled} onChange={event => change({ ...draft, musicEnabled: event.target.checked })} /><span><strong>A soundtrack for your story</strong><small>Guests choose when to listen. Nothing plays automatically.</small></span></label>

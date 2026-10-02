@@ -26,3 +26,5 @@
 [data-invitation-root][data-motion="none"] *,[data-invitation-root][data-motion="none"] *::before,[data-invitation-root][data-motion="none"] *::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
 .demo-modern .venue-card { margin:0; border-radius:0; }.demo-modern .venue-card-heading strong { font-family:var(--sans); font-size:17px; }
 @media(max-width:760px) { .demo-modern .venue-card { grid-column:2; margin-top:8px; } }
+
+[data-invitation-root] [data-section="video"] { order:calc(var(--photos-order) + 1); }

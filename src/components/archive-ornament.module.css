@@ -1,0 +1,4 @@
+.ornament { display:block; flex-shrink:0; color:inherit; background:currentColor; mask-size:contain; mask-position:center; mask-repeat:no-repeat; pointer-events:none; }
+.branch { mask-image:url('/images/art/engraved-branch.svg'); aspect-ratio:396.13 / 497.1; }
+.flourish { mask-image:url('/images/art/floral-divider.svg'); aspect-ratio:347.51 / 74.067; }
+.balloon { mask-image:url('/images/art/vintage-balloon.svg'); aspect-ratio:3 / 4; }
