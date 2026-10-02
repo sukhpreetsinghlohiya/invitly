@@ -4,11 +4,17 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getSupabaseConfig } from "@/lib/env";
 import { themes } from "@/data/themes";
+import { getOccasion, invitationNames } from "@/data/occasions";
 import { validateInvitationDraft } from "@/lib/invitation-draft";
 import type { Invitation } from "@/types/invitation";
 import type { Json } from "@/types/database";
+import { getInvitationAllowance } from "@/lib/invitation-allowance";
+import { ALLOWANCE_UNAVAILABLE_MESSAGE, INVITATION_LIMIT_MESSAGE, isInvitationLimitError } from "@/lib/invitation-plan";
+import { EVENT_AUDIO_BUCKET, selectedUploadedAudio, uploadedAudioPath } from "@/lib/audio";
+import { validateMp3 } from "@/lib/audio-file";
+import { createMediaServiceClient } from "@/lib/supabase/media-server";
 
-export type EventFormState = { error?: string; success?: string };
+export type EventFormState = { error?: string; success?: string; upgradeRequired?: boolean };
 
 export async function createEvent(_previous: EventFormState, formData: FormData): Promise<EventFormState> {
   if (!getSupabaseConfig()) return { error: "Connect Supabase before creating an event." };
@@ -29,7 +35,11 @@ export async function createEvent(_previous: EventFormState, formData: FormData)
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) return { error: "Your session expired. Sign in again before creating an event." };
+    const allowance = await getInvitationAllowance(supabase, user.id).catch(() => null);
+    if (!allowance) return { error: ALLOWANCE_UNAVAILABLE_MESSAGE };
+    if (allowance.limitReached) return { error: INVITATION_LIMIT_MESSAGE, upgradeRequired: true };
     const { error } = await supabase.from("events").insert({ owner_id: user.id, title, slug, venue, starts_at: new Date(`${date}:00+05:30`).toISOString(), theme_id: themeId });
+    if (isInvitationLimitError(error)) return { error: INVITATION_LIMIT_MESSAGE, upgradeRequired: true };
     if (error) return { error: error.code === "23505" ? "That link name is already taken. Try another." : "We couldn’t save this event. Check your Supabase migrations and try again." };
     revalidatePath("/dashboard");
     return { success: "Your event draft is saved. Publish it from your celebrations list when you’re ready to share." };
@@ -38,8 +48,8 @@ export async function createEvent(_previous: EventFormState, formData: FormData)
   }
 }
 
-export async function saveInvitation(input: { eventId?: string; themeId: string; invitation: Invitation; musicEnabled: boolean }): Promise<{ error?: string; eventId?: string; slug?: string; published?: boolean; publishedAt?: string | null }> {
-  const validation = validateInvitationDraft(input);
+export async function saveInvitation(input: { eventId?: string; themeId: string; invitation: Invitation; musicEnabled: boolean }): Promise<{ error?: string; upgradeRequired?: boolean; eventId?: string; slug?: string; published?: boolean; publishedAt?: string | null }> {
+  const validation = validateInvitationDraft(input, "draft");
   if (!validation.data) return { error: validation.error };
   if (!getSupabaseConfig()) return { error: "Your preview is ready. Connect Supabase to save and publish a permanent invitation link." };
   const eventId = input.eventId;
@@ -49,15 +59,36 @@ export async function saveInvitation(input: { eventId?: string; themeId: string;
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) return { error: "Sign in to save your invitation. Your browser preview is still available." };
+    if (!eventId) {
+      const allowance = await getInvitationAllowance(supabase, user.id).catch(() => null);
+      if (!allowance) return { error: ALLOWANCE_UNAVAILABLE_MESSAGE };
+      if (allowance.limitReached) return { error: INVITATION_LIMIT_MESSAGE, upgradeRequired: true };
+    }
     let previousSlug: string | undefined;
     if (eventId) {
-      const { data: existing, error: readError } = await supabase.from("events").select("slug").eq("id", eventId).eq("owner_id", user.id).maybeSingle();
+      const { data: existing, error: readError } = await supabase.from("events").select("slug,is_published").eq("id", eventId).eq("owner_id", user.id).maybeSingle();
       if (readError || !existing) return { error: "This invitation could not be found. You can only edit invitations you own." };
       previousSlug = existing.slug;
+      if (existing.is_published) {
+        const complete = validateInvitationDraft(input, "publish");
+        if (complete.error) return { error: "This invitation is live. Complete its details or unpublish it before saving an incomplete draft. " + complete.error };
+      }
+    }
+    if (invitation.coverPhotoId) {
+      if (!eventId) return { error: "Upload a cover photo to this invitation before selecting it." };
+      const { data: cover } = await supabase.from("media").select("id").eq("event_id", eventId).eq("id", invitation.coverPhotoId).maybeSingle();
+      if (!cover) return { error: "Choose a cover photo uploaded to this invitation." };
+    }
+    const uploadedAudio = selectedUploadedAudio(invitation);
+    if (uploadedAudio) {
+      if (!eventId || uploadedAudio.eventId !== eventId.toLowerCase()) return { error: "Upload audio to this invitation before selecting it." };
+      const { data: audio, error: audioError } = await createMediaServiceClient().storage.from(EVENT_AUDIO_BUCKET).download(uploadedAudioPath(uploadedAudio));
+      if (audioError || !audio) return { error: "Your uploaded audio is unavailable. Upload it again or choose another soundtrack." };
+      try { await validateMp3(audio); } catch (problem) { return { error: problem instanceof Error ? problem.message : "Choose a readable MP3." }; }
     }
     const values = {
-      title: `${invitation.couple[0]} & ${invitation.couple[1]}`,
-      slug: invitation.slug, description: invitation.message, starts_at: invitation.weddingAt,
+      title: invitationNames(invitation) || `Untitled ${getOccasion(invitation.occasion).name.toLowerCase()}`,
+      slug: invitation.slug, description: invitation.message, starts_at: invitation.weddingAt || null,
       venue: invitation.functions[0]?.venue || invitation.city, theme_id: themeId,
       invitation_content: invitation as unknown as Json, music_enabled: musicEnabled, timezone: invitation.timezone,
     };
@@ -65,6 +96,7 @@ export async function saveInvitation(input: { eventId?: string; themeId: string;
       ? supabase.from("events").update(values).eq("id", eventId).eq("owner_id", user.id)
       : supabase.from("events").insert({ ...values, owner_id: user.id, is_published: false });
     const { data, error } = await query.select("id,slug,is_published,published_at").maybeSingle();
+    if (isInvitationLimitError(error)) return { error: INVITATION_LIMIT_MESSAGE, upgradeRequired: true };
     if (error || !data) return { error: error?.code === "23505" ? "That invitation link is already taken. Choose another link name." : "We couldn’t save your invitation. Check that the latest database migrations are applied and try again." };
     revalidatePath("/dashboard");
     revalidatePath("/customize");

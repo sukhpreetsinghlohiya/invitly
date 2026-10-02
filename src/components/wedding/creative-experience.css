@@ -1,0 +1,9 @@
+/* The illustrated cover is the first chapter; the host's story follows below. */
+.demo-page .invite-hero.invite-story-without-photo { display:block; max-width:760px; padding-block:80px; }
+.invite-story-without-photo .invite-welcome { text-align:center; max-width:600px; margin:auto; }
+.invite-story-without-photo :is(.family-names,.invite-location,.countdown,.invite-hero-actions) { justify-content:center; }
+.demo-mehfil:has([data-signature-cover]) { --theme-accent:#204a40; --theme-light:#edf0e5; }
+.demo-mehfil:has([data-signature-cover]) .invite-hero { background:transparent; }
+.demo-page:has([data-signature-cover]) .theme-switcher { margin-top:24px; }
+.demo-page:has([data-signature-cover]) [data-signature-cover] { width:100%; }
+@media(max-width:650px) { .demo-page .invite-hero.invite-story-without-photo { padding:55px 24px; }.invite-story-without-photo .invite-welcome h1 { font-size:clamp(38px,11vw,56px); } }

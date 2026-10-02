@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Brand, Footer } from "@/components/brand";
+import { Brand } from "@/components/brand";
+import { Footer } from "@/components/footer";
 import { getSupabaseConfig } from "@/lib/env";
 import { createClient } from "@/lib/supabase/server";
 import { SignOutForm } from "./sign-out-form";

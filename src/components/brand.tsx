@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export function Flower({ className = "" }: { className?: string }) {
   return <svg className={className} viewBox="0 0 80 80" fill="none" aria-hidden="true">
@@ -7,10 +8,10 @@ export function Flower({ className = "" }: { className?: string }) {
   </svg>;
 }
 
-export function Brand() {
-  return <Link href="/" className="brand" aria-label="Invitly home"><Flower /><span>invitly<span className="brand-dot">.</span></span></Link>;
+export function BrandMark() {
+  return <Image className="brand-mark" src="/images/brand/invitly-mark.png" width={90} height={160} alt="" aria-hidden="true" unoptimized />;
 }
 
-export function Footer() {
-  return <footer className="site-footer container"><Brand /><p>A little link. A lot of togetherness.</p><span>Made by Sukhpreet</span></footer>;
+export function Brand() {
+  return <Link href="/" className="brand" aria-label="Invitly home"><BrandMark /><span>invitly<span className="brand-dot">.</span></span></Link>;
 }

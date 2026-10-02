@@ -1,3 +1,4 @@
+import { mediaResponse } from "@/lib/media-response";
 import { isUuid } from "@/lib/host-event";
 import { createPublicClient } from "@/lib/supabase/public";
 import { EVENT_MEDIA_BUCKET } from "@/lib/supabase/storage";
@@ -5,7 +6,7 @@ import { createMediaServiceClient } from "@/lib/supabase/media-server";
 import { safePublishedMedia } from "@/lib/media-path";
 
 export const dynamic = "force-dynamic";
-export async function GET(_request: Request, { params }: { params: Promise<{ mediaId: string }> }) {
+export async function GET(request: Request, { params }: { params: Promise<{ mediaId: string }> }) {
   const { mediaId } = await params;
   const headers = { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" };
   if (!isUuid(mediaId)) return new Response(null, { status: 404, headers });
@@ -16,6 +17,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ med
     if (error || !photo) return new Response(null, { status: 404, headers });
     const { data, error: downloadError } = await createMediaServiceClient().storage.from(EVENT_MEDIA_BUCKET).download(photo.storagePath);
     if (downloadError || !data) return new Response(null, { status: 404, headers });
-    return new Response(data, { headers: { ...headers, "Content-Type": photo.contentType } });
+    return mediaResponse(data, request, photo.contentType);
   } catch { return new Response(null, { status: 404, headers }); }
 }

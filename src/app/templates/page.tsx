@@ -1,30 +1,47 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Brand, Flower, Footer } from "@/components/brand";
+import { Brand, Flower } from "@/components/brand";
+import { Footer } from "@/components/footer";
 import { InvitationArt } from "@/components/invitation-art";
-import { demoInvitation } from "@/data/demo-invitation";
-import { themes } from "@/data/themes";
+import { IllustratedCover } from "@/components/wedding/illustrated-cover";
+import { occasionDemo, occasionCollections } from "@/data/occasion-demos";
+import { getOccasion, occasions, traditions } from "@/data/occasions";
+import { OccasionCardArt } from "@/components/occasion-card-art";
+import { getOccasionThemes } from "@/data/occasion-themes";
+import type { ThemeId } from "@/types/invitation";
 import { ThemeGallery } from "./theme-gallery";
 import "./gallery.css";
 
 export const metadata: Metadata = {
   title: "The invitation collection",
-  description: "Explore ten original Indian wedding invitation themes. Find your feeling, personalise the details, and share your celebration with Invitly.",
+  description: "Explore occasion-specific invitations with rich Indian artwork, editable layouts, venue directions, and music. Ten wedding designs and three for each of eight other occasions.",
 };
 
-export default function TemplatesPage() {
+export default async function TemplatesPage({ searchParams }: { searchParams: Promise<{ occasion?: string; tradition?: string }> }) {
+  const params = await searchParams;
+  const occasion = getOccasion(params.occasion);
+  const tradition = traditions.find(item => item.id === params.tradition)?.id || "neutral";
+  const traditionQuery = tradition === "neutral" ? "" : `&tradition=${tradition}`;
+  const demoInvitation = { ...occasionDemo(occasion.id), tradition };
+  const collectionThemes = getOccasionThemes(occasion.id);
+  const customizeUrl = `/customize?occasion=${occasion.id}&theme=${collectionThemes[0].id}${traditionQuery}`;
+  const artwork = (theme: ThemeId) => occasion.id === "wedding"
+    ? <IllustratedCover invitation={{ ...occasionDemo(occasion.id, theme), tradition }} theme={theme} compact />
+    : <InvitationArt invitation={demoInvitation} theme={theme} compact />;
+
   return <div className="collection-page">
-    <header className="collection-header container"><Brand /><nav aria-label="Collection navigation"><Link href="/" className="collection-home-link">Back to home</Link><Link href="/customize" className="button button-small">Customize invitation <span aria-hidden="true">↗</span></Link></nav></header>
+    <header className="collection-header container"><Brand /><nav aria-label="Collection navigation"><Link href="/" className="collection-home-link">Back to home</Link><Link href={customizeUrl} className="button button-small">Customize invitation <span aria-hidden="true">↗</span></Link></nav></header>
     <main id="main">
       <section className="collection-hero container" aria-labelledby="collection-title">
-        <div className="collection-hero-copy"><span className="eyebrow"><Flower /> THE INVITLY COLLECTION</span><h1 id="collection-title">A feeling.<br />Before a <em>single word.</em></h1><p>The first glimpse of your celebration should feel like you. Find your invitation in ten thoughtfully made worlds, from palace gardens to a little modern magic.</p><a href="#collection" className="collection-browse-link">Find your invitation <span aria-hidden="true">↓</span></a><div className="collection-hero-note"><span className="collection-note-line" />Original artwork. Made for your people.</div></div>
-        <div className="collection-hero-art" aria-hidden="true"><div className="collection-hero-orbit" /><span className="collection-hero-edition">THE WEDDING COLLECTION<br />NO. 001 — 010</span><div className="collection-hero-card collection-hero-card-back"><InvitationArt theme="pichwai" invitation={demoInvitation} compact /></div><div className="collection-hero-card collection-hero-card-front"><InvitationArt theme="royal" invitation={demoInvitation} compact /></div><Flower className="collection-hero-flower" /><span className="collection-hero-caption">For a celebration<br /><em>only you could have.</em></span></div>
+        <div className="collection-hero-copy"><span className="eyebrow"><Flower /> THE INVITLY DESIGN LIBRARY</span><h1 id="collection-title">Find your kind<br />of <em>beautiful.</em></h1><p>Considered details. A little Indian soul. Invitations that feel as special as the people opening them.</p><div className="collection-hero-links"><a href="#collection" className="collection-browse-link">Browse {occasion.name === "Other gathering" ? "gathering" : occasion.name.toLowerCase()} designs <span aria-hidden="true">↓</span></a><a href="#occasion-collections-title" className="collection-occasion-link">Choose another occasion <span aria-hidden="true">↗</span></a></div><div className="collection-hero-note"><span className="collection-note-line" />Live previews. Every detail editable.</div></div>
+        <div className="collection-hero-art" aria-hidden="true"><div className="collection-hero-orbit" /><span className="collection-hero-edition">{occasion.name.toUpperCase()}<br />THE INVITLY EDIT</span><div className="collection-hero-card collection-hero-card-back">{artwork(collectionThemes[1].id)}</div><div className="collection-hero-card collection-hero-card-front">{artwork(collectionThemes[0].id)}</div><Flower className="collection-hero-flower" /><span className="collection-hero-caption">A little tradition.<br /><em>A little you.</em></span></div>
       </section>
-      <section className="collection-process" aria-label="From choosing a theme to sharing your invitation"><ol className="container"><li><span>01</span><div><strong>Choose a feeling</strong><p>Find the design that feels like you.</p></div></li><li><span>02</span><div><strong>Make it yours</strong><p>Add your names, moments, and places.</p></div></li><li><span>03</span><div><strong>Publish & share</strong><p>One little link for all your people.</p></div></li></ol></section>
-      <section id="collection" className="collection-catalog container" aria-labelledby="collection-heading"><div className="collection-section-heading"><div><span className="eyebrow">TEN EXPRESSIONS OF TOGETHERNESS</span><h2 id="collection-heading">Which one feels <em>like you?</em></h2></div><p>Every style brings your story, celebrations, directions, and the little details together.</p></div>
-        <ThemeGallery items={themes.map((theme) => ({ theme, artwork: <InvitationArt key={theme.id} theme={theme.id} invitation={demoInvitation} compact /> }))} />
+      <section id="collection" className="collection-catalog container" aria-labelledby="collection-heading"><div className="collection-section-heading"><div><span className="eyebrow">MADE FOR YOUR MOMENT</span><h2 id="collection-heading">{occasion.name === "Other gathering" ? "Your gathering" : occasion.name} <em>invitations</em></h2></div><p>Open a design to experience it.<br />Then make it entirely yours.</p></div>
+        <ThemeGallery key={occasion.id} selectedOccasion={occasion.id} selectedTradition={tradition} items={collectionThemes.map(theme => ({ theme, artwork: artwork(theme.id) }))} />
       </section>
-      <section className="collection-closing container"><Flower /><span className="eyebrow">THE DESIGN IS ONLY THE BEGINNING</span><h2>Your names.<br /><em>Your kind of forever.</em></h2><p>Try your details in the live editor. Switch styles until it feels just right.</p><Link href="/customize" className="button">Make an invitation <span aria-hidden="true">↗</span></Link></section>
+      <section className="occasion-collections container" aria-labelledby="occasion-collections-title"><div><span className="eyebrow">EVERY KIND OF TOGETHERNESS</span><h2 id="occasion-collections-title">An invitation for <em>your moment.</em></h2><p>Each occasion has its own artwork, compositions, and thoughtful starting copy.</p></div><div className="occasion-collection-grid">{occasions.map(item => { const collection = occasionCollections[item.id]; return <Link key={item.id} href={`/templates?occasion=${item.id}${traditionQuery}#collection`} aria-current={occasion.id === item.id ? "page" : undefined} className={`occasion-collection occasion-collection-${item.id}`} prefetch={false}><OccasionCardArt occasion={item.id} /><div className="occasion-collection-copy"><span>{item.name}</span><strong>{collection.title}</strong><p>{collection.description}</p><span className="occasion-collection-action">Explore {getOccasionThemes(item.id).length} designs <span aria-hidden="true">↗</span></span></div></Link>; })}</div></section>
+      <section className="collection-process" aria-label="From choosing a theme to sharing your invitation"><ol className="container"><li><span>01</span><div><strong>Find your design</strong><p>Preview the real invitation.</p></div></li><li><span>02</span><div><strong>Tell your story</strong><p>Add your names, words, and moments.</p></div></li><li><span>03</span><div><strong>Bring everyone together</strong><p>Publish a link for your people.</p></div></li></ol></section>
+      <section className="collection-closing container"><Flower /><span className="eyebrow">THE DESIGN IS ONLY THE BEGINNING</span><h2>Your names.<br /><em>Your kind of together.</em></h2><p>Try your details in the live editor. Switch styles until it feels just right.</p><Link href={customizeUrl} className="button">Make an invitation <span aria-hidden="true">↗</span></Link></section>
     </main>
     <Footer />
   </div>;

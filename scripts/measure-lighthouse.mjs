@@ -4,8 +4,9 @@ import lighthouse from "lighthouse";
 import { launch } from "chrome-launcher";
 
 const baseUrl = process.env.LIGHTHOUSE_BASE_URL ?? "http://127.0.0.1:3000";
-const outputDirectory = path.resolve("artifacts/lighthouse");
+const outputDirectory = path.resolve(process.env.LIGHTHOUSE_OUTPUT_DIR || "artifacts/lighthouse");
 const availableRoutes = [
+  ...(process.env.LIGHTHOUSE_GUEST_PATH ? [{name:"guest",route:process.env.LIGHTHOUSE_GUEST_PATH}] : []),
   ...(process.env.LIGHTHOUSE_INVITE_PATH ? [{ name: "published", route: process.env.LIGHTHOUSE_INVITE_PATH }] : []),
   { name: "homepage", route: "/" },
   { name: "royal", route: "/demo?theme=royal" },
@@ -13,6 +14,8 @@ const availableRoutes = [
   { name: "floral", route: "/demo?theme=floral" },
   ...["mehfil", "kesar", "lotus", "pichwai", "ocean", "champagne", "sindoor"].map((theme) => ({ name: theme, route: `/demo?theme=${theme}` })),
   { name: "templates", route: "/templates" },
+  { name: "birthday", route: "/demo?occasion=birthday&theme=kesar" },
+  { name: "remembrance", route: "/demo?occasion=remembrance&theme=modern" },
   { name: "customize", route: "/customize" },
 ];
 const requestedRoutes = process.argv.slice(2);
@@ -28,14 +31,14 @@ const results = [];
 
 try {
   for (const { name, route } of routes) {
-    console.log(`Measuring ${new URL(route, baseUrl).href}`);
+    console.log(`Measuring ${name} on the local production server`);
     const result = await lighthouse(new URL(route, baseUrl).href, {
       port: browser.port,
       output: ["json", "html"],
       onlyCategories: ["performance", "accessibility"],
       formFactor: "mobile",
-      // Lighthouse's standard simulated mobile network and CPU throttling.
-      throttlingMethod: "simulate",
+      // Applied DevTools mobile network/CPU throttling, not estimated scores.
+      throttlingMethod: "devtools",
       logLevel: "error",
     });
     if (!result) throw new Error(`Lighthouse did not return a report for ${route}`);
@@ -44,13 +47,20 @@ try {
     await writeFile(path.join(outputDirectory, `${name}.html`), reports[1]);
     const { lhr } = result;
     const summary = {
-      route,
+      name,
+      route: name === "guest" ? "/g/[local-fixture-token]" : route,
       performance: Math.round(lhr.categories.performance.score * 100),
       accessibility: Math.round(lhr.categories.accessibility.score * 100),
       firstContentfulPaintMs: Math.round(lhr.audits["first-contentful-paint"].numericValue),
       largestContentfulPaintMs: Math.round(lhr.audits["largest-contentful-paint"].numericValue),
       totalBlockingTimeMs: Math.round(lhr.audits["total-blocking-time"].numericValue),
       cumulativeLayoutShift: lhr.audits["cumulative-layout-shift"].numericValue,
+      totalTransferBytes: lhr.audits["total-byte-weight"].numericValue,
+      javascriptTransferBytes: lhr.audits["resource-summary"].details.items.find(item => item.resourceType === "script")?.transferSize,
+      imageTransferBytes: lhr.audits["resource-summary"].details.items.find(item => item.resourceType === "image")?.transferSize,
+      throttling: lhr.configSettings.throttling,
+      screenEmulation: lhr.configSettings.screenEmulation,
+      environment: lhr.environment,
       lighthouseVersion: lhr.lighthouseVersion,
       measuredAt: lhr.fetchTime,
       failedAccessibilityAudits: Object.values(lhr.audits)
@@ -63,7 +73,7 @@ try {
   }
   if (requestedRoutes.length) {
     const previous = await readFile(path.join(outputDirectory, "summary.json"), "utf8").then(JSON.parse).catch(() => []);
-    const merged = availableRoutes.map(({ route }) => results.find((result) => result.route === route) ?? previous.find((result) => result.route === route)).filter(Boolean);
+    const merged = availableRoutes.map(({ route, name }) => results.find((result) => result.name === name || result.route === route) ?? previous.find((result) => result.route === route)).filter(Boolean);
     await writeFile(path.join(outputDirectory, "summary.json"), `${JSON.stringify(merged, null, 2)}\n`);
   }
   if (results.some((result) => result.performance < 90 || result.accessibility < 90 || result.cumulativeLayoutShift > 0.01)) {

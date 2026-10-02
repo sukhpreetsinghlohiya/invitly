@@ -1,0 +1,7 @@
+.how-help { position:relative; flex:0 0 44px; z-index:4; }
+.how-help>button { display:grid; place-items:center; width:44px; height:44px; padding:0; border:0; border-radius:50%; color:#805d44; background:transparent; cursor:help; }
+.how-help>button:hover,.how-help>button[aria-expanded="true"] { background:#f0e4d4; }
+.how-help>button:focus-visible { outline:2px solid var(--maroon); outline-offset:3px; }
+.how-tooltip { position:absolute; top:calc(100% + 6px); right:0; z-index:5; width:min(280px,100cqw); padding:16px 18px; border:1px solid #cdbda6; border-radius:8px; background:#fffaf0; color:#473a31; box-shadow:0 12px 28px #49332324; font:400 13px/1.8 var(--sans); text-align:left; }
+.how-tooltip::before { content:""; position:absolute; left:0; right:0; top:-7px; height:7px; }
+.how-tooltip[hidden] { display:none; }

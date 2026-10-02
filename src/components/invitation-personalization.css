@@ -1,0 +1,28 @@
+.invitation-ordered { display:flex; flex-direction:column; }
+[data-invitation-root] [data-section="opening"] { order:-30; }
+[data-invitation-root] [data-section="cover"] { order:-20; }
+[data-invitation-root] [data-section="portrait"] { order:calc(var(--story-order) - 1); }
+[data-invitation-root] [data-section="navigation"] { order:-10; }
+[data-invitation-root] [data-section="story"] { order:var(--story-order); }
+[data-invitation-root] [data-section="countdown"] { order:calc(var(--story-order) + 1); }
+[data-invitation-root] [data-section="people"] { order:calc(var(--story-order) + 2); }
+[data-invitation-root] [data-section="today"] { order:calc(var(--schedule-order) - 1); }
+[data-invitation-root] [data-section="schedule"] { order:var(--schedule-order); }
+[data-invitation-root] [data-section="photos"] { order:var(--photos-order); }
+[data-invitation-root] [data-section="rsvp"] { order:var(--rsvp-order); }
+[data-invitation-root] [data-section="updates"] { order:var(--updates-order); }
+[data-invitation-root] [data-section="signoff"] { order:100; }
+[data-invitation-root][data-palette]:not([data-palette="original"]) { --theme-accent:var(--custom-accent); --theme-light:var(--custom-light); --wine:var(--custom-accent); }
+[data-invitation-root][data-typography="serif"] :is(h1,h2,h3) { font-family:var(--serif); }
+[data-invitation-root][data-typography="sans"] :is(h1,h2,h3) { font-family:var(--sans); letter-spacing:-.04em; }
+[data-invitation-root][data-typography="script"] :is(h1,h2,h3) { font-family:"Great Vibes",var(--serif); letter-spacing:0; }
+[data-decorations="off"] :is([data-decoration],.collection-motif,.garland,.art-flower,.botanical,.minimal-orbit,.minimal-monogram,.art-divider,.signoff-botanical) { display:none!important; }
+[data-decorations="off"] :is(.invite-signoff,.rsvp-intro)>svg { display:none; }
+.invitation-blessing { white-space:pre-line; overflow-wrap:anywhere; font:18px/1.8 var(--serif); margin-block:20px; }
+.invitation-cover-photo { position:relative; width:100%; aspect-ratio:3/4; overflow:hidden; border-radius:130px 130px 5px 5px; }
+.invitation-cover-photo img { object-fit:cover; }
+.embedded-preview :is(.demo-toolbar,.private-preview-notice,[data-preview-notice]) { display:none; }
+.preview-waiting { padding:50px 25px; text-align:center; font:16px/1.8 var(--serif); }
+[data-invitation-root][data-motion="none"] *,[data-invitation-root][data-motion="none"] *::before,[data-invitation-root][data-motion="none"] *::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
+.demo-modern .venue-card { margin:0; border-radius:0; }.demo-modern .venue-card-heading strong { font-family:var(--sans); font-size:17px; }
+@media(max-width:760px) { .demo-modern .venue-card { grid-column:2; margin-top:8px; } }

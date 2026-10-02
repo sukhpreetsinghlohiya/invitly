@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { getSiteUrl } from "@/lib/env";
 import "./globals.css";
 import "./theme-collection.css";
+import "./design-system.css";
 
 export const metadata: Metadata = {
   metadataBase: getSiteUrl(),

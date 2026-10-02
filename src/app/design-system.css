@@ -1,0 +1,83 @@
+/* Shared product tokens. Theme artwork remains independently composed. */
+:root {
+  --surface:#fffdf8; --surface-muted:#f0e9dd; --primary:#58252f; --primary-hover:#743643;
+  --primary-foreground:#fffaf2; --border:#d8cdbd; --iv-radius-control:.5rem; --iv-radius-panel:1rem;
+  --iv-shadow-panel:0 12px 40px -24px #492e2b38; --space-page:clamp(20px,5vw,64px);
+}
+
+body { font-size:16px; }
+:where(main,section,article,nav,header,footer,form,fieldset) { min-width:0; }
+:where(p,h1,h2,h3,a,strong,span) { overflow-wrap:break-word; }
+.button { border-radius:var(--iv-radius-control); font-size:14px; min-height:48px; }
+.button-small { min-height:44px; font-size:13px; }
+.text-link { font-size:14px; }
+.eyebrow { font-size:11px; letter-spacing:.12em; }
+.site-header nav { font-size:14px; }
+.site-header nav a { min-height:44px; display:inline-flex; align-items:center; }
+.hero-description { font-size:16px; max-width:450px; }
+.hero-note p,.floating-note p { font-size:12px; }
+.hero-photo-card { height:460px; width:340px; overflow:hidden; border-radius:170px 170px 8px 8px; background:#cbbba5; }
+.hero-photo-card img { object-fit:cover; object-position:68%; }
+.hero-photo-copy { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:end; gap:12px; padding:30px 18px; background:linear-gradient(transparent 40%,#211715d9); color:#fff9ed; }
+.hero-photo-copy>span { font-size:10px; letter-spacing:.12em; }
+.hero-photo-copy strong { font:42px/1.1 var(--serif); }
+.hero-photo-copy i { font-size:27px; }
+.hero-caption { font-size:10px; letter-spacing:.1em; }
+.update-note { font-size:12px; }
+.occasion-picker { padding:64px 0; border-top:1px solid var(--line); display:grid; grid-template-columns:1fr 1.3fr; gap:48px; align-items:center; }
+.occasion-picker h2 { font-size:clamp(32px,4vw,48px); margin:16px 0; }
+.occasion-picker h2 em { color:var(--maroon); }
+.occasion-picker p { font-size:15px; color:var(--muted); max-width:330px; }
+.occasion-links { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.occasion-links a { display:flex; align-items:center; gap:12px; padding:14px 12px; border-bottom:1px solid var(--line); min-height:54px; font:19px var(--serif); }
+.occasion-links a>span { font:10px var(--sans); color:var(--muted); }
+.occasion-links a>svg { margin-left:auto; color:var(--maroon); }
+.occasion-links a:hover { background:var(--surface-muted); }
+.section-heading>p,.theme-card>p,.step p,.live-copy>p { font-size:15px; }
+.theme-title span,.theme-number,.theme-link { font-size:11px; }
+.foundation-note,.closing-cta p,.closing-account,.site-footer p,.site-footer>span { font-size:12px; }
+.closing-account { min-height:44px; }
+.occasion-strip .container>span:first-child { font-size:12px; }
+.occasion-strip .container>span:last-child { flex-wrap:wrap; justify-content:center; }
+.demo-page .invite-welcome>p,.demo-page .event-description,.demo-page .event-address,.demo-page .update-message { font-size:15px; }
+.demo-page .eyebrow,.demo-page .local-demo-note,.demo-page .demo-label { font-size:11px; }
+.demo-page .invite-nav { flex-wrap:wrap; }
+.demo-page .invite-nav a,.demo-page .theme-switcher a { min-height:44px; font-size:12px; }
+.demo-page .invite-section>p,.demo-page .rsvp-intro>p { font-size:15px; }
+.form-field input,.form-field textarea,.form-field select { font-size:16px; }
+.form-field>span,.form-field>label,.form-field { font-size:14px; }
+.dashboard-page .eyebrow { font-size:11px; }
+.dashboard-page :is(.dashboard-welcome p,.dashboard-empty p,.dashboard-help p) { font-size:15px; }
+.dashboard-page :is(.dashboard-account>span,.dashboard-overview dt,.dashboard-event-detail,.dashboard-event-tools a,.dashboard-event-primary .button,.dashboard-event-publication .button) { font-size:14px; }
+.dashboard-page :is(.dashboard-event-zone,.dashboard-event-theme,.dashboard-event-topline>span:last-child,.dashboard-status) { font-size:12px; }
+.dashboard-event-card { border-radius:var(--iv-radius-panel); box-shadow:var(--iv-shadow-panel); }
+.dashboard-event-primary { grid-template-columns:1fr 1fr; }
+@media(max-width:760px) {
+ .hero-description { font-size:15px; }.hero-actions :is(.button,.text-link) { font-size:13px; }
+ .hero-kicker { font-size:10px; }.hero-artwork { min-height:440px; }.hero-photo-card { width:280px; height:400px; }
+ .hero-photo-copy strong { font-size:36px; }.hero-caption { font-size:9px; }
+ .rsvp-note { bottom:32px; max-width:240px; }.rsvp-note p { font-size:11px; }.update-note { top:20px; font-size:10px; }
+ .occasion-picker { grid-template-columns:1fr; gap:24px; padding-block:48px; }.occasion-links { gap:4px 16px; }.occasion-links a { font-size:17px; padding-inline:0; }
+ .section-heading .eyebrow,.live-copy>.eyebrow,.closing-cta .eyebrow { font-size:10px; }
+ .theme-card>p,.step p,.live-copy>p { font-size:14px; }.theme-title span { font-size:10px; }.theme-link { min-height:44px; }
+ .dashboard-page .dashboard-header .button { font-size:12px; padding:10px; }
+ .dashboard-event-primary .button { padding-inline:8px; }
+}
+@media(max-width:360px) {
+ .container { width:calc(100% - 32px); }.hero h1 { font-size:44px; }
+ .hero-artwork { width:100%; }.hero-photo-card { width:255px; }.handwritten { font-size:16px; }
+ .occasion-links { grid-template-columns:1fr; }.hero-caption { letter-spacing:.03em; }
+ .dashboard-event-primary { grid-template-columns:1fr; }
+}
+@media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; scroll-behavior:auto!important; } }
+
+.public-rsvp-note { background:var(--surface); border:1px solid var(--border); border-radius:var(--iv-radius-panel); padding:28px; }
+.public-rsvp-note h3 { font:28px/1.2 var(--serif); margin-bottom:16px; }.public-rsvp-note p { font-size:15px; }
+@media(max-width:760px) { .hero-halo { width:88%; }.demo-lotus .invite-hero { grid-template-columns:minmax(0,1fr); }.demo-lotus .invite-hero-art { width:100%; max-width:min(310px,100%); }.invite-welcome { min-width:0; } }
+
+/* A small shared motion vocabulary. Only transform and opacity move. */
+:root { --motion-fast:140ms; --motion-standard:220ms; --motion-reveal:380ms; --ease-out:cubic-bezier(.2,.75,.25,1); }
+.button,.theme-card,.gallery-card,.occasion-links a,.editor-theme-choice,.editor-occasion-grid button,.editor-steps button { transition:transform var(--motion-standard) var(--ease-out),background-color var(--motion-fast),border-color var(--motion-fast),box-shadow var(--motion-standard); }
+.button:active,.editor-steps button:active,.venue-actions button:active,.music-button:active { transform:scale(.98); }
+@media(hover:hover) and (pointer:fine) { .theme-card:hover,.occasion-links a:hover { transform:translateY(-4px); }.button:hover { transform:translateY(-2px); }.editor-theme-choice:hover { transform:translateY(-3px); } }
+@media(prefers-reduced-motion:reduce) { .button,.theme-card,.gallery-card,.occasion-links a,.editor-theme-choice,.editor-steps button { transform:none!important; } }

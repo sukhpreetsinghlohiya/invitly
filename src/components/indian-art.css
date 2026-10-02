@@ -1,0 +1,15 @@
+.indian-toran { display:block; width:100%; height:auto; pointer-events:none; }.occasion-illustration { display:block; width:200px; max-width:100%; height:auto; margin-inline:auto; pointer-events:none; }
+.heritage-border { height:20px; background:#a67737 url('/images/art/paisley-public-domain.svg') center/105px; opacity:.2; }
+.occasion-cover-art { position:relative; z-index:2; margin:30px auto 0; width:115px; }
+.invitation-art[data-occasion]:not([data-occasion="wedding"]) .collection-motif { opacity:.2; }
+.invitation-art[data-occasion]:not([data-occasion="wedding"]) .art-copy { padding-top:10px; }
+.invitation-art[data-occasion]:not([data-occasion="wedding"]) .art-copy h2 { margin-top:12px; }
+.invitation-art[data-occasion]:not([data-occasion="wedding"]) { display:flex; flex-direction:column; justify-content:center; }
+.invitation-art[data-occasion]:not([data-occasion="wedding"]) .art-copy { position:relative; inset:auto; height:auto; flex:none; }
+.hero-indian-toran { position:absolute; top:12px; width:90%; max-width:450px; z-index:3; left:5%; pointer-events:none; }
+@media(max-width:760px) { .hero-indian-toran { top:-10px; left:8%; width:84%; } }
+.invitation-art.compact .occasion-cover-art { width:85px; margin:20px auto 0; }
+.invitation-art.compact[data-occasion]:not([data-occasion="wedding"]) .art-copy h2 { font-size:29px; overflow-wrap:anywhere; }
+.invitation-art.compact[data-occasion]:not([data-occasion="wedding"]) .art-copy .eyebrow { font-size:6px; }
+.invitation-art[data-occasion="remembrance"] .occasion-cover-art { opacity:.85; }
+[data-decorations="off"] .occasion-illustration,[data-decorations="off"] .indian-toran { display:none; }

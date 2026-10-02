@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Brand, Footer } from "@/components/brand";
+import { Brand } from "@/components/brand";
+import { Footer } from "@/components/footer";
 import { getSupabaseConfig } from "@/lib/env";
 
 export const metadata = { title: "Connect your installation", robots: { index: false, follow: false } };

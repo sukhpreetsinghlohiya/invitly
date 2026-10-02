@@ -19,5 +19,5 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function PublicInvitationPage({ params }: { params: Promise<{ slug: string }> }) {
   const event = await getPublicInvitation((await params).slug);
   if (!event) notFound();
-  return <InvitationView invitation={event.invitation} theme={event.themeId} mode="published" musicEnabled={event.musicEnabled} photos={event.photos} calendarHref={`/i/${event.slug}/calendar`} liveUpdates={{ eventId: event.id, endpoint: `/i/${event.slug}/updates`, initial: event.announcements }} />;
+  return <InvitationView invitation={event.invitation} theme={event.themeId} mode="published" musicEnabled={event.musicEnabled} photos={event.photos} rsvpContent={<div className="public-rsvp-note"><h3>Reply to your hosts</h3><p>Use the personal invitation link your host sent you to submit or update your RSVP. If you have this shared link, contact your host for your personal invitation.</p></div>} calendarHref={`/i/${event.slug}/calendar`} liveUpdates={{ eventId: event.id, endpoint: `/i/${event.slug}/updates`, initial: event.announcements }} />;
 }

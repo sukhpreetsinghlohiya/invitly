@@ -79,6 +79,18 @@ reset role;
 do $$ begin
  if (select count(*) from public.guest_responses where event_id='f4000000-0000-4000-a000-000000000001')<>1 then raise exception 'RSVP upsert duplicated rows'; end if;
 end; $$;
+-- Explicitly hidden schedule items must stay hidden even when a group selects them.
+update public.events set invitation_content=jsonb_set(invitation_content,'{functions,1,visibility}','"hidden"') || '{"occasion":"remembrance","tradition":"neutral","blessing":"A shared memory","coverText":"In loving memory","design":{"palette":"sage","typography":"sans","decoration":false,"countdown":false,"sectionOrder":["story","schedule","photos","rsvp","updates"]}}'::jsonb
+where id='f4000000-0000-4000-a000-000000000001';
+set local role anon;
+do $$ declare payload jsonb; begin
+ payload:=public.get_guest_invitation(repeat('a',64));
+ if jsonb_array_length(payload#>'{invitation,invitation_content,functions}') is distinct from 0 then raise exception 'Hidden function leaked to its assigned group'; end if;
+ if payload#>>'{invitation,invitation_content,occasion}' is distinct from 'remembrance' then raise exception 'Occasion lost in public projection'; end if;
+ if payload#>>'{invitation,invitation_content,design,palette}' is distinct from 'sage' then raise exception 'Design lost in public projection'; end if;
+ if payload#>>'{invitation,invitation_content,blessing}' is distinct from 'A shared memory' then raise exception 'Editable blessing lost in projection'; end if;
+end; $$;
+reset role;
 update public.events set is_published=false where id='f4000000-0000-4000-a000-000000000001';
 set local role anon;
 do $$ begin

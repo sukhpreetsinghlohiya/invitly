@@ -1,0 +1,24 @@
+.occasion-marquee { position:relative; padding-block:23px; border-bottom:1px solid #dfd0bb; background:#f0e6d7; color:#652d37; }
+.occasion-marquee-viewport { overflow:hidden; mask-image:linear-gradient(to right,transparent,#000 5%,#000 calc(100% - 85px),transparent calc(100% - 40px)); }
+.occasion-marquee-track { display:flex; width:max-content; animation:occasion-marquee-scroll 48s linear infinite; }
+.occasion-marquee-group { display:flex; align-items:center; justify-content:space-around; flex-shrink:0; min-width:100vw; gap:36px; list-style:none; margin:0; padding:0 36px 0 0; }
+.occasion-marquee-group li { display:flex; align-items:center; gap:36px; white-space:nowrap; }
+.occasion-marquee-group li > span { font:400 clamp(25px,2.5vw,34px)/1.2 var(--serif); letter-spacing:-.025em; }
+.occasion-marquee-group li:nth-child(even) > span { font-style:italic; }
+.occasion-marquee-group svg { width:17px; height:17px; flex-shrink:0; color:#ae724d; }
+.occasion-marquee-toggle { position:absolute; top:50%; right:20px; transform:translateY(-50%); width:44px; height:44px; display:grid; place-items:center; border:1px solid #cbb69b; border-radius:50%; background:#faf7ef; color:#652d37; cursor:pointer; }
+.occasion-marquee-toggle:hover { background:#e6d6c2; }
+.occasion-marquee-toggle:focus-visible { outline:2px solid #652d37; outline-offset:4px; }
+.occasion-marquee[data-paused="true"] .occasion-marquee-track { animation-play-state:paused; }
+@keyframes occasion-marquee-scroll { to { transform:translateX(-50%); } }
+@media(hover:hover) { .occasion-marquee-viewport:hover .occasion-marquee-track { animation-play-state:paused; } }
+@media(max-width:600px) { .occasion-marquee { padding-block:19px; }.occasion-marquee-group,.occasion-marquee-group li { gap:24px; }.occasion-marquee-group { padding-right:24px; }.occasion-marquee-toggle { right:12px; }.occasion-marquee-group svg { width:14px; height:14px; } }
+@media(prefers-reduced-motion:reduce) {
+  .occasion-marquee { padding:18px 24px; }
+  .occasion-marquee-viewport { mask-image:none; overflow:visible; }
+  .occasion-marquee-track { animation:none; width:100%; }
+  .occasion-marquee-group { min-width:0; width:100%; padding:0; flex-wrap:wrap; justify-content:center; gap:12px 20px; }
+  .occasion-marquee-group li { gap:20px; }
+  .occasion-marquee-group li > span { font-size:22px; }
+  .occasion-marquee-group li:last-child svg,.occasion-marquee-group[aria-hidden="true"],.occasion-marquee-toggle { display:none; }
+}

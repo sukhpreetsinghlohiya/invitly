@@ -2,6 +2,7 @@
 import { useActionState } from "react";
 import { createEvent, type EventFormState } from "./actions";
 import { themes } from "@/data/themes";
+import { InvitationLimitNotice } from "@/components/invitation-plan-notice";
 
 export function EventForm() {
   const [state, action, pending] = useActionState<EventFormState, FormData>(createEvent, {});
@@ -13,5 +14,6 @@ export function EventForm() {
     <label className="form-field" htmlFor="theme">Invitation style<select id="theme" name="theme" defaultValue="royal">{themes.map(theme => <option key={theme.id} value={theme.id}>{theme.name}</option>)}</select></label>
     <button className="button" type="submit" disabled={pending}>{pending ? "Saving your event…" : "Save event draft"}</button>
     <div aria-live="polite" aria-atomic="true">{state.error && <p className="form-error" role="alert">{state.error}</p>}{state.success && <p className="form-success">{state.success}</p>}</div>
+    {state.upgradeRequired && <InvitationLimitNotice />}
   </form>;
 }

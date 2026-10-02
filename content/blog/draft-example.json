@@ -1,0 +1,21 @@
+{
+  "title": "Draft example: your next journal note",
+  "slug": "draft-example",
+  "topic": "wedding",
+  "excerpt": "An unpublished starter for a new Invitly journal article. Replace this copy before publishing.",
+  "date": "2026-09-30",
+  "status": "draft",
+  "sections": [
+    {
+      "heading": "Begin with a useful idea",
+      "paragraphs": ["This is the private draft starter body. Replace it with an original introduction that tells readers what the article will help them do.", "Duplicate this file, choose a unique lowercase slug, select an existing topic and update the date. Keep the status as draft while you write and review the article."],
+      "quote": "Replace this example with optional invitation wording, or remove the quote fields.",
+      "quoteLang": "en-IN"
+    },
+    {
+      "heading": "Add practical details",
+      "paragraphs": ["Use this section for concrete advice that fits the occasion. Add more sections as needed, and keep names, dates, customs and commercial claims accurate."],
+      "list": ["Replace these sample checklist items with useful advice.", "Preview the finished article at phone and desktop widths.", "Change status to published only when the content is ready."]
+    }
+  ]
+}

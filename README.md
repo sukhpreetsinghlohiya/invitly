@@ -1,6 +1,6 @@
 # Invitly
 
-A mobile-first Indian digital invitation platform for **invitly.co.in**. An original celebration identity, ten invitation themes, a complete fictional wedding demo, a mobile editor, and Supabase-backed host workflows. Made by Sukhpreet.
+A mobile-first Indian digital invitation platform for **invitly.co.in**. An Indian celebration identity, ten wedding themes, three curated designs for each of eight other occasions, a mobile editor, and Supabase-backed host workflows. Made by Sukhpreet.
 
 ## Run locally
 
@@ -31,7 +31,8 @@ The scripts use Next.js's supported Webpack builder; Turbopack's CSS worker coul
 | --- | --- |
 | `/` | Marketing homepage and interactive theme previews |
 | `/demo` | Complete Royal Indian sample invitation |
-| `/templates` | Ten original invitation themes with style filters and preview/customize links |
+| `/templates` | Nine occasions, searchable curated designs, style/tradition filters and real preview/customize links |
+| `/demo?occasion=birthday&theme=kesar` | Birthday ticket; change occasion/theme for the other curated designs |
 | `/demo?theme=royal` | Royal Indian theme |
 | `/demo?theme=modern` | Modern Minimal theme |
 | `/demo?theme=floral` | Floral Celebration theme |
@@ -57,7 +58,7 @@ Guests do not need an account to view public invitations. Host pages authenticat
 
 ## Host workflow
 
-Choose a theme at `/templates`, then personalize it at `/customize`. The editor has five steps: Design, Details, Functions, Photos, and Share. Names, family messages, functions, venues, dates, optional music, and all ten themes use one validated invitation document. Unsaved edits trigger a warning when leaving or reloading. Anonymous drafts can be saved on the current device; account saving and publication require Supabase and sign-in.
+Choose a theme at `/templates`, then personalize it at `/customize`. The editor has six steps: Occasion, Details, Schedule, Photos, Design, and Share. Occasion-aware names, family messages, schedule, Google Maps links, dates, optional music, and theme choices use one validated invitation document. The gallery, editor preview and guest page share their actual cover renderer. Unsaved edits trigger a warning when leaving or reloading. Anonymous drafts can be saved on the current device; account saving and publication require Supabase and sign-in.
 
 Choose the event's IANA time zone in Details. Date fields show local wall time in that zone; changing the zone preserves the entered wall time. The server stores explicit instants and the event zone. Invalid calendar dates and ambiguous or nonexistent daylight-saving times return errors instead of guessing. Public schedules display the event zone, regardless of the guest's device location.
 
@@ -70,6 +71,26 @@ The full preview opens the last saved invitation. Publish from Share to create `
 Manage guest-facing messages under Announcements. Posts can be edited, pinned, hidden as private drafts, or removed. Private drafts are excluded from guest delivery. The demo's local RSVP and simulated updates remain clearly labelled previews; use a published invitation and its guest links to exercise connected workflows.
 
 Under Guests, add guests individually or import a validated CSV, assign groups and party limits, and choose which functions each group can see. Newly generated `/g/[token]` links appear once for copying or download; only their hashes are retained in the database. Replacing a link revokes the old one. Guests can respond Attending, Maybe, or Declined without an account and update their response, subject to a short server-enforced update limit. The host list shows responses, party sizes, notes, and totals and supports CSV export. Treat each private link as a credential for that guest's response. Set **Functions on the public link** to selected functions or no schedule when functions must stay private to assigned groups; anything enabled on the public link is visible to anyone who has that link.
+
+## Invitation audio
+
+In **Design → A soundtrack for your story**, choose a wedding song, an original instrumental, a YouTube link, or **Upload your audio**. New wedding starters and demos feature the supplied “Dulhe Ki Behen Brigade” recording. Four Bollywood presets use official T-Series/Zee Music Company YouTube uploads; they remain in the visible YouTube player. Existing saved music choices are preserved.
+
+Custom MP3 uploads require a signed-in host and a saved invitation. Files are limited to 10 MB and 15 minutes, uploaded directly to private storage with a signed upload token, then checked as actual MPEG Layer 3 audio. Save the invitation after uploading, replacing or removing a recording. Playback starts only after a guest presses Play, with pause/resume and volume controls. Removing a previously saved track detaches it; its private storage object is retained. Unused failed uploads are cleaned up.
+
+Run `node scripts/setup-audio-storage.mjs --local` for the isolated local project or `node scripts/setup-audio-storage.mjs --hosted` for the project configured in `.env.local`. This idempotent Storage API setup creates a private `event-audio` bucket restricted to `audio/mpeg` and 10 MB. `SUPABASE_SECRET_KEY` is required server-side. No new SQL migration is required for audio. Upload actions check event ownership before issuing a token; direct authenticated bucket access is denied. The `/audio/[eventId]/[audioId]` proxy permits owner previews and otherwise serves only the currently selected track of a published, music-enabled invitation, with private/no-store byte-range responses.
+
+Verify with `npm run test:e2e -- tests/music-venue.unit.spec.ts --project=data-validation`, and `INVITLY_LOCAL_PORT=3002 node scripts/local-integration.mjs audio` against a production preview on port 3002. The browser suite creates disposable local accounts and removes their files afterwards.
+
+## Free invitation allowance
+
+Each account can save its first **two invitations** free, using any template. A slot is consumed on the first successful account save, including private drafts. Editing, changing themes, publishing, and sharing existing invitations remain available. Deleting or unpublishing an invitation does not refund a slot. Anonymous previews and device-only drafts do not consume slots.
+
+The dashboard shows usage; a third invitation opens `/dashboard/plan` with **Payments coming soon**. Checkout is disabled: no price, charge, paid entitlement, or payment-provider integration exists yet. A stale editor receives the same message on save and retains its device backup.
+
+Apply `20260930171100_free_invitation_allowance.sql` after the previous migrations. It backfills existing saved invitations without deleting or restricting edits to them. Existing accounts above two cannot create more. A protected allowance table and an atomic database trigger enforce the limit, including direct API calls and concurrent requests. Missing allowance configuration blocks new account saves rather than granting unlimited usage.
+
+Run `node scripts/local-integration.mjs allowance` for the SQL and real HTTP concurrency checks against disposable local Supabase. No hosted fixtures are created by these checks.
 
 ## Connect your Supabase project
 
@@ -91,6 +112,9 @@ Under Guests, add guests individually or import a validated CSV, assign groups a
    - `supabase/migrations/202609270002_host_foundation.sql`
    - `supabase/migrations/202609270003_invitation_customization.sql`
    - `supabase/migrations/20260928184855_guest_management_and_publication.sql`
+
+   - `supabase/migrations/20260930073714_occasion_aware_invitations.sql`
+   - `supabase/migrations/20260930171100_free_invitation_allowance.sql`
 
    Apply only migrations not already applied. These are one-time migrations; do not rerun successful files. The latest migration supports guest management, publication-aware delivery, event time zones, photo dimensions, and announcement visibility.
 4. In **Authentication → Providers / Sign In**, enable Email and password sign-in. Keep email confirmation enabled. Configure custom SMTP for real deliveries; Supabase's default mail service has delivery restrictions and rate limits.
@@ -182,9 +206,11 @@ supabase/migrations/    Versioned database, RLS, Storage, and Realtime setup
 supabase/tests/         Transactional database policy integration checks
 ```
 
-Edit `src/data/demo-invitation.ts` to change the couple, family names, dates, functions, venues, dress codes, and sample updates across all themes. `src/data/themes.ts` holds the theme catalog. Theme layouts use shared typed data rather than duplicated customer pages. Dates include explicit offsets and render in the invitation's selected time zone; the fictional demo uses India Standard Time. Hindi/Punjabi use self-hosted, script-subset Noto Sans with optional font display and native fallbacks. Motifs and music are original code-created assets. There are no third-party wedding photos or autoplay audio. See [design tokens and asset licenses](docs/design-system.md).
+Edit `src/data/demo-invitation.ts` to change the couple, family names, dates, functions, venues, dress codes, and sample updates across all themes. `src/data/themes.ts` holds wedding themes and `src/data/occasion-themes.ts` defines the curated occasion collections. Theme layouts use shared typed data rather than duplicated customer pages. Dates include explicit offsets and render in the invitation's selected time zone; the fictional demo uses India Standard Time. Hindi, Marathi, Punjabi and Gujarati use self-hosted Noto Sans script subsets with swap font display and native fallbacks. Motifs include original SVG artwork and the supplied occasion illustrations; shared branding uses the supplied coral logo. Original instrumental moods and optional YouTube song embeds load only after a guest action. Fictional generated wedding photos are limited to demos/marketing. There is no autoplay audio. See [design tokens and asset licenses](docs/design-system.md).
 
 ## Current milestone and limits
+
+The journal at `/blog` includes six topic collections and editable, file-based articles. Add posts from `content/blog/draft-example.json`, connect footer profiles in `src/data/site-socials.ts`, and choose invitation wording in **Details → Say it your way**. See [blog, social links and wording instructions](docs/blog-and-socials.md).
 
 The demo supports function details, directions, countdown, optional user-initiated music, and RSVP preview. Host workflows include account authentication, saved invitation editing, time zones, original themes, photo uploads, private previews, publication controls, and announcement management. Public links use `/i/[slug]`; individual guest links use `/g/[token]`. Saving and publishing require a configured Supabase project and a signed-in host. Payments and customer-owned domains are outside this milestone.
 

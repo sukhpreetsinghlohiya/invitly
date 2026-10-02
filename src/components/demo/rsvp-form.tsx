@@ -14,8 +14,8 @@ function subscribe(callback: () => void) {
     window.removeEventListener(CHANGE_EVENT, callback);
   };
 }
-function getSnapshot() {
-  try { return localStorage.getItem(STORAGE_KEY) ?? ""; } catch { return ""; }
+function getSnapshot(key: string = STORAGE_KEY) {
+  try { return localStorage.getItem(key) ?? ""; } catch { return ""; }
 }
 function readResponse(raw: string): Response | null {
   try {
@@ -27,8 +27,9 @@ function readResponse(raw: string): Response | null {
   } catch { return null; }
 }
 
-export function RsvpForm() {
-  const stored = useSyncExternalStore(subscribe, getSnapshot, () => "");
+export function RsvpForm({ quiet = false, scope }: { quiet?: boolean; scope?: string }) {
+  const storageKey = scope ? `${STORAGE_KEY}:${scope}` : STORAGE_KEY;
+  const stored = useSyncExternalStore(subscribe, () => getSnapshot(storageKey), () => "");
   const saved = readResponse(stored);
   const [editing, setEditing] = useState(false);
   const [attendance, setAttendance] = useState("yes");
@@ -41,7 +42,7 @@ export function RsvpForm() {
     if (!name) { setFeedback("Please enter your name."); return; }
     const response: Response = { name, attendance: attendance === "yes" ? "yes" : "no", guests: attendance === "yes" ? Number(data.get("guests") ?? 1) : 0 };
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(response));
+      localStorage.setItem(storageKey, JSON.stringify(response));
       window.dispatchEvent(new Event(CHANGE_EVENT));
       setEditing(false);
       setFeedback("Your preview response is saved on this device. Nothing was sent to the hosts.");
@@ -56,7 +57,7 @@ export function RsvpForm() {
       {saved && !editing ? (
         <div className="rsvp-success">
           <span className="rsvp-success-mark" aria-hidden="true">✓</span>
-          <h3>{saved.attendance === "yes" ? `We saved your yes, ${saved.name}!` : `Thank you, ${saved.name}.`}</h3>
+          <h3>{saved.attendance === "yes" ? quiet ? `Your response is saved, ${saved.name}.` : `We saved your yes, ${saved.name}!` : `Thank you, ${saved.name}.`}</h3>
           <p>{saved.attendance === "yes" ? `${saved.guests} ${saved.guests === 1 ? "guest" : "guests"}, including you.` : "You selected “Unable to attend”."} Saved on this device only.</p>
           <button className="button button-secondary" type="button" onClick={() => { setAttendance(saved.attendance); setEditing(true); setFeedback(""); }}>Edit my response</button>
         </div>
@@ -70,7 +71,7 @@ export function RsvpForm() {
             <legend>Will you be joining us?</legend>
             <label className={`radio-option ${attendance === "yes" ? "is-selected" : ""}`}>
               <input type="radio" name="attendance" value="yes" checked={attendance === "yes"} onChange={() => setAttendance("yes")} />
-              <span>Joyfully accepts</span>
+              <span>{quiet ? "Will attend" : "Joyfully accepts"}</span>
             </label>
             <label className={`radio-option ${attendance === "no" ? "is-selected" : ""}`}>
               <input type="radio" name="attendance" value="no" checked={attendance === "no"} onChange={() => setAttendance("no")} />

@@ -16,6 +16,8 @@ export default defineConfig({
   },
   projects: [
     { name: "data-validation", testMatch: /.*\.unit\.spec\.ts/ },
+    { name: "mobile-320", testIgnore: /.*\.unit\.spec\.ts/, use: { ...devices["Pixel 5"], viewport: { width: 320, height: 740 }, channel: "chrome" } },
+    { name: "mobile-390", testIgnore: /.*\.unit\.spec\.ts/, use: { ...devices["Pixel 5"], viewport: { width: 390, height: 844 }, channel: "chrome" } },
     { name: "mobile-360", testIgnore: /.*\.unit\.spec\.ts/, use: { ...devices["Pixel 5"], viewport: { width: 360, height: 800 }, channel: "chrome" } },
     { name: "tablet", testIgnore: /.*\.unit\.spec\.ts/, use: { viewport: { width: 768, height: 1024 }, isMobile: true, hasTouch: true } },
     { name: "desktop", testIgnore: /.*\.unit\.spec\.ts/, use: { viewport: { width: 1440, height: 1000 } } },

@@ -1,0 +1,7 @@
+{
+  "tool": "Built-in image_gen",
+  "intent": "Original transparent botanical asset for the reference-inspired homepage",
+  "prompt": "Use case: illustration-story. Asset type: original decorative botanical border for a premium Indian invitation website on warm ivory paper. Create one tall, elegant marigold plant branch, three full layered saffron-gold marigold blooms and one small bud, finely carved dark sage green serrated leaves, gently curving slender stems. A sophisticated traditional Indian hand block-print / botanical woodcut illustration: rich irregular petal linework, cream fine vein cutouts, subtle natural ink grain, refined editorial stationery quality. Warm mustard-gold and burnt orange flowers, muted forest/sage leaves. Narrow vertical composition, full plant from stem base to top leaves, asymmetric graceful silhouette, generous transparent space around it; not a bouquet in a vase. Background must be fully transparent with clean true alpha edges. No cream rectangular background, no shadow, no paper rectangle, no text, no logo, no sacred or religious symbols, no photographic 3D rendering, no emoji/cartoon outline. Illustration only, no website mockup. Portrait aspect ratio 2:3.",
+  "source": "/Users/sukhpreetsinghlohiya/.codex/generated_images/01a0f12d-747f-7be2-ab9d-30090078c793/exec-5048e788-9bbe-4ba4-81cc-ffb902a6470d.png",
+  "output": "public/images/marketing/marigold-branch.webp"
+}

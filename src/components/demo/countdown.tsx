@@ -25,7 +25,7 @@ export function Countdown({ date, initialRemaining }: { date: string; initialRem
   return (
     <div className="countdown-wrap">
       <p className="eyebrow">{remaining === 0 ? "The celebration has begun" : "Counting the moments"}</p>
-      <div className="countdown" aria-label="Time until the wedding">
+      <div className="countdown" aria-label="Time until the event">
         {["Days", "Hours", "Minutes", "Seconds"].map((label, index) => (
           <div className="countdown-unit" key={label}>
             <span className="countdown-number">{values[index] === null ? "—" : String(values[index]).padStart(2, "0")}</span>

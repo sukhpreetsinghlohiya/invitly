@@ -1,0 +1,163 @@
+.cover {
+  --occasion-ink:#4b3434; --occasion-paper:#fbf0e9; --occasion-accent:#8e5059;
+  --cover-wash:#ead7cc; --cover-line:color-mix(in srgb,var(--occasion-accent) 30%,transparent);
+  position:relative; isolation:isolate; width:100%; max-width:100%; color:var(--occasion-ink);
+  background:var(--occasion-paper); font-family:var(--sans); text-align:center; overflow:clip;
+}
+.full { display:flex; flex-direction:column; justify-content:center; min-height:min(820px,calc(100svh - var(--cover-top-offset,0px))); padding:40px clamp(20px,5vw,80px) 28px; }
+.composition { width:100%; max-width:1060px; margin-inline:auto; position:relative; }
+.identity,.signatureMain,.signatureTop,.editorialCopy,.editorialVisual,.keepsakeVisual,.keepsakeCopy { min-width:0; }
+.coverText { font:500 12px/1.65 var(--sans); text-transform:uppercase; letter-spacing:.15em; max-width:38em; margin:0 auto 18px; overflow-wrap:anywhere; }
+.names { font:500 clamp(44px,7vw,84px)/1.03 var(--serif); letter-spacing:-.045em; margin:0; overflow-wrap:anywhere; }
+.names>span { display:block; }.names>span>i { display:block; font:italic .48em/1.3 var(--serif); letter-spacing:0; margin:7px 0; }
+.names[data-long=true] { font-size:clamp(34px,5vw,62px); line-height:1.1; }
+.occasionName { font:500 11px/1.5 var(--sans); letter-spacing:.16em; text-transform:uppercase; color:var(--occasion-accent); margin:18px 0 0; }
+.artwork { width:min(100%,360px); margin:auto; position:relative; }
+.artwork img { display:block; width:100%; height:auto; object-fit:contain; }
+.photograph { aspect-ratio:4/3; overflow:hidden; border-radius:48% 48% 3px 3px; }.photograph img { width:100%; height:100%; object-fit:cover; }
+.details { display:flex; justify-content:center; flex-wrap:wrap; gap:14px 28px; margin:28px auto 0; padding:19px 0 0; border-top:1px solid var(--cover-line); max-width:600px; }
+.date,.location { display:flex; justify-content:center; align-items:flex-start; gap:9px; font:500 14px/1.5 var(--sans); min-width:0; }
+.details svg { color:var(--occasion-accent); flex-shrink:0; margin-top:2px; }.details small { display:block; font-size:12px; font-weight:400; opacity:.8; margin-top:2px; }.details span { overflow-wrap:anywhere; }
+.actions { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin:25px auto 0; width:100%; max-width:680px; position:relative; z-index:1; }
+.actions a { display:inline-flex; justify-content:center; align-items:center; min-height:46px; gap:9px; padding:10px 16px; border:1px solid var(--cover-line); border-radius:999px; font:600 13px/1.2 var(--sans); background:color-mix(in srgb,var(--occasion-paper) 82%,white); color:var(--occasion-ink); transition:transform 160ms,background 160ms; }
+.actions a.rsvp { background:var(--occasion-ink); border-color:var(--occasion-ink); color:var(--occasion-paper); }
+.actions a:focus-visible { outline:3px solid var(--occasion-accent); outline-offset:4px; }.actions a:active { transform:scale(.97); }
+.signatureTop .artwork { max-height:260px; }.signatureTop .artwork img { max-height:260px; }.signatureMain { margin-top:10px; }
+
+/* Each signature is designed around its occasion, including its paper shape and reading order. */
+.cover[data-occasion=birthday] { --occasion-ink:#762b26; --occasion-paper:#fff2c9; --occasion-accent:#a5392c; --cover-wash:#f5cf7e; }
+.cover[data-occasion=birthday][data-layout=signature] { background:repeating-linear-gradient(90deg,#fae3a4 0 22px,#fff3cd 22px 44px); padding-top:34px; }
+[data-occasion=birthday][data-layout=signature] .composition { max-width:720px; background:#fff5d9; border:2px solid var(--occasion-accent); border-radius:22px; padding:30px 34px 24px; box-shadow:7px 7px 0 #e8b557; }
+[data-occasion=birthday][data-layout=signature] .names { font-family:var(--sans); font-weight:800; letter-spacing:-.075em; font-size:clamp(55px,8vw,105px); }
+[data-occasion=birthday][data-layout=signature] .coverText { transform:rotate(-2deg); margin-bottom:12px; }
+[data-occasion=birthday][data-layout=signature] .artwork { width:240px; margin-top:0; }
+[data-occasion=birthday][data-layout=signature] .details { border-top:2px dashed var(--cover-line); margin-top:0; }
+.cover[data-occasion=baby-shower] { --occasion-ink:#3e554b; --occasion-paper:#eff2e7; --occasion-accent:#54735f; --cover-wash:#dbe4cd; }
+[data-occasion=baby-shower][data-layout=signature] .composition { max-width:650px; padding:22px 25px 30px; border-radius:160px 160px 16px 16px; background:#fffbf1; box-shadow:0 8px 30px #4c653c0a; }
+[data-occasion=baby-shower][data-layout=signature] .names { font-style:italic; font-size:clamp(43px,6vw,70px); }
+[data-occasion=baby-shower][data-layout=signature] .artwork { width:300px; }
+[data-occasion=baby-shower][data-layout=signature] .details { border-top-style:dashed; }
+.cover[data-occasion=housewarming] { --occasion-ink:#365141; --occasion-paper:#eef0df; --occasion-accent:#6b4a2f; --cover-wash:#dce2ca; }
+[data-occasion=housewarming][data-layout=signature] .composition { display:grid; grid-template-columns:1fr 1fr; gap:0 40px; text-align:left; align-items:center; }
+[data-occasion=housewarming][data-layout=signature] .signatureTop { grid-row:span 2; align-self:stretch; display:grid; place-items:center; border:1px solid var(--cover-line); border-radius:50% 50% 5px 5px; background:#f8f6e9; padding:50px 0 25px; }
+[data-occasion=housewarming][data-layout=signature] .artwork { width:100%; max-width:430px; max-height:none; }[data-occasion=housewarming][data-layout=signature] .artwork img { max-height:none; }
+[data-occasion=housewarming][data-layout=signature] .names { font-size:clamp(44px,5vw,72px); }
+[data-occasion=housewarming][data-layout=signature] .coverText { margin-left:0; }
+[data-occasion=housewarming][data-layout=signature] .details { flex-direction:column; margin:22px 0 0; width:100%; align-self:start; }.cover[data-occasion=housewarming][data-layout=signature] :is(.date,.location) { justify-content:flex-start; }
+.cover[data-occasion=naming] { --occasion-ink:#764951; --occasion-paper:#fff4ed; --occasion-accent:#9b5959; --cover-wash:#efd9d0; }
+[data-occasion=naming][data-layout=signature] .composition { max-width:730px; border:1px solid var(--cover-line); border-radius:8px; padding:30px 35px 22px; }
+[data-occasion=naming][data-layout=signature] .names { font-size:clamp(58px,9vw,104px); font-style:italic; color:var(--occasion-accent); }
+[data-occasion=naming][data-layout=signature] .artwork { width:320px; }.cover[data-occasion=naming][data-layout=signature] .details { margin-top:0; border-top:0; }
+.cover[data-occasion=anniversary] { --occasion-ink:#615035; --occasion-paper:#f5edde; --occasion-accent:#86642d; --cover-wash:#e9d8b9; }
+[data-occasion=anniversary][data-layout=signature] .composition { max-width:760px; padding:20px 30px 28px; border:1px solid var(--cover-line); outline:1px solid var(--cover-line); outline-offset:8px; }
+[data-occasion=anniversary][data-layout=signature] .artwork { width:280px; }
+[data-occasion=anniversary][data-layout=signature] .names>span { display:inline; }.cover[data-occasion=anniversary][data-layout=signature] .names>span>i { display:inline; margin:0 .2em; }
+.cover[data-occasion=remembrance] { --occasion-ink:#414d47; --occasion-paper:#f6f5ef; --occasion-accent:#546b5d; --cover-wash:#e9ece2; }
+[data-occasion=remembrance][data-layout=signature] .composition { max-width:780px; padding:15px 28px 24px; }
+[data-occasion=remembrance][data-layout=signature] .artwork { width:240px; }
+[data-occasion=remembrance][data-layout=signature] .names { font-size:clamp(42px,6vw,72px); font-weight:400; letter-spacing:-.02em; }
+[data-occasion=remembrance][data-layout=signature] .coverText { letter-spacing:.21em; }
+[data-occasion=remembrance][data-layout=signature] .details { margin-top:38px; padding-top:25px; border-color:#b6c0b4; }
+.cover[data-occasion=other] { --occasion-ink:#f7e5bd; --occasion-paper:#243545; --occasion-accent:#efd6a0; --cover-wash:#3b4c55; }
+[data-occasion=other][data-layout=signature] .composition { display:grid; grid-template-columns:1.3fr 1fr; align-items:center; gap:28px; text-align:left; border-block:1px solid var(--cover-line); padding-block:30px; }
+[data-occasion=other][data-layout=signature] .names { font-size:clamp(48px,7vw,94px); }.cover[data-occasion=other][data-layout=signature] .coverText { margin-left:0; }
+[data-occasion=other][data-layout=signature] .details { grid-column:1/-1; width:100%; max-width:none; justify-content:space-between; margin-top:0; }
+[data-occasion=engagement][data-layout=signature] .composition { max-width:700px; padding:10px 38px 30px; border-radius:3px; background:#fff8f2; border:1px solid #dfc5bc; box-shadow:8px 8px 0 #e7cebf; }
+[data-occasion=engagement][data-layout=signature] .artwork { width:280px; }
+[data-occasion=engagement][data-layout=signature] .names>span { display:inline; }.cover[data-occasion=engagement][data-layout=signature] .names>span>i { display:inline; margin:0 .2em; }
+
+/* The editorial route is a real two-column announcement, with its own date rail. */
+.cover[data-layout=editorial] { text-align:left; --occasion-paper:#f6f2e8; }
+.cover[data-layout=editorial] .composition { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:30px 55px; align-items:center; }
+.editionRail { grid-column:1/-1; display:flex; justify-content:space-between; align-items:center; gap:20px; padding-bottom:16px; border-bottom:1px solid var(--occasion-ink); text-transform:uppercase; font:600 11px/1.4 var(--sans); letter-spacing:.18em; }
+.editorialCopy .coverText { margin-left:0; font-size:11px; }.editorialCopy .names { font-family:var(--sans); font-weight:600; font-size:clamp(43px,5.6vw,78px); letter-spacing:-.065em; }
+.editorialCopy .names[data-long=true] { font-size:clamp(35px,4.5vw,62px); }.editorialCopy .names>span>i { display:inline; font-family:var(--serif); margin:0 .13em 0 0; }
+.intro { font:400 16px/1.7 var(--serif); margin:26px 0 0; max-width:25em; overflow-wrap:anywhere; }.editorialCopy .details { justify-content:flex-start; flex-direction:column; gap:14px; margin-top:25px; }.editorialCopy :is(.date,.location) { justify-content:flex-start; }
+.editorialVisual { background:var(--cover-wash); padding:30px 0 65px; position:relative; border-radius:2px; }.editorialVisual .artwork { width:100%; max-width:480px; }.editorialVisual .photograph { aspect-ratio:4/5; border-radius:0; width:calc(100% - 40px); }
+.dateStamp { position:absolute; bottom:-14px; right:22px; min-width:88px; padding:13px 17px; border:1px solid var(--occasion-accent); background:var(--occasion-paper); color:var(--occasion-ink); text-align:center; box-shadow:4px 4px 0 var(--cover-wash); }
+.dateStamp strong { display:block; font:500 41px/1 var(--serif); }.dateStamp span { display:block; font:600 10px/1.6 var(--sans); text-transform:uppercase; letter-spacing:.15em; margin-top:5px; }
+.cover[data-layout=editorial][data-occasion=other] { --occasion-ink:#703628; --occasion-paper:#f7e5be; --occasion-accent:#974b2c; --cover-wash:#efd298; }
+.cover[data-layout=editorial][data-occasion=housewarming] { --occasion-ink:#683b2e; --occasion-paper:#f7e9d7; --occasion-accent:#8d4e36; --cover-wash:#e8c5a7; }
+.cover[data-layout=editorial][data-occasion=birthday] { --occasion-ink:#323e39; --occasion-paper:#f2f2e5; --occasion-accent:#465845; --cover-wash:#dae0c7; }
+
+/* A keepsake pairs a floated picture card and a personal letter; no editorial rail. */
+.cover[data-layout=keepsake] .composition { display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1fr); gap:60px; align-items:center; max-width:930px; padding:35px; border:1px solid var(--cover-line); background:color-mix(in srgb,var(--occasion-paper) 82%,white); box-shadow:0 16px 35px #362c1b0a; }
+.keepsakeVisual { position:relative; padding:14px 14px 48px; transform:rotate(-4deg); background:#fffaf0; box-shadow:0 8px 18px #443b231a; color:#493e2b; }.keepsakeVisual .artwork { min-height:220px; display:grid; align-items:center; }.keepsakeVisual .photograph { border-radius:0; aspect-ratio:1; }.keepsakeVisual .dateStamp { right:0; bottom:-18px; transform:rotate(6deg); min-width:70px; }
+.keepsakeCopy .coverText { font-size:11px; }.keepsakeCopy .names { font-size:clamp(42px,5vw,66px); }.keepsakeCopy .details { flex-direction:column; margin-top:28px; }
+.cover[data-layout=keepsake][data-occasion=birthday] { --occasion-ink:#28516b; --occasion-paper:#eaf3f2; --occasion-accent:#386a7f; --cover-wash:#c3dadc; }
+.cover[data-layout=keepsake][data-occasion=anniversary] { --occasion-ink:#f5e2b9; --occasion-paper:#263847; --occasion-accent:#e4c48e; --cover-wash:#43505a; }
+.cover[data-layout=keepsake][data-occasion=other] { --occasion-ink:#3e5047; --occasion-paper:#f4f1e7; --occasion-accent:#5d7164; --cover-wash:#dce1d2; }
+
+.cover[data-palette=rose][data-occasion][data-layout] { --occasion-paper:#f8eae6; --occasion-ink:#603b47; --occasion-accent:#854f5a; --cover-wash:#edceca; }
+.cover[data-palette=sage][data-occasion][data-layout] { --occasion-paper:#edf0e5; --occasion-ink:#334b3d; --occasion-accent:#53654d; --cover-wash:#d6dfc8; }
+.cover[data-palette=indigo][data-occasion][data-layout] { --occasion-paper:#eeedf6; --occasion-ink:#343856; --occasion-accent:#565b84; --cover-wash:#d4d5e7; }
+.cover[data-typography=serif][data-occasion][data-layout] .names { font-family:var(--serif); font-weight:500; }
+.cover[data-typography=sans][data-occasion][data-layout] .names { font-family:var(--sans); font-weight:600; }
+.cover[data-typography=script][data-occasion][data-layout] .names { font-family:"Great Vibes",var(--serif); line-height:1.15; letter-spacing:0; }
+.cover[data-decoration=false] { background:var(--occasion-paper); }.cover[data-decoration=false] .artwork:not(.photograph) { display:none; }
+.cover[data-decoration=false] .signatureTop:has(.artwork:not(.photograph)),.cover[data-decoration=false] .signatureMain:has(.artwork:not(.photograph)) { display:none; }
+.cover[data-decoration=false] .composition { border:0; outline:0; box-shadow:none; background:none; border-radius:0; }
+.cover[data-decoration=false][data-layout=signature] .composition { display:block; }.cover[data-decoration=false][data-layout=signature] .details { margin-top:28px; }
+.cover[data-decoration=false] .editorialVisual:has(.artwork:not(.photograph)),.cover[data-decoration=false] .keepsakeVisual:has(.artwork:not(.photograph)) { display:none; }
+.cover[data-decoration=false][data-layout=editorial] .composition,.cover[data-decoration=false][data-layout=keepsake] .composition { grid-template-columns:1fr; max-width:760px; }
+
+@media(max-width:700px) {
+ .full { padding:26px 20px 24px; min-height:min(760px,calc(100svh - var(--cover-top-offset,0px))); }
+ .coverText { font-size:10px; margin-bottom:14px; }.names { font-size:clamp(42px,11vw,66px); }.names[data-long=true] { font-size:36px; }
+ .artwork { width:250px; }.signatureTop .artwork,.signatureTop .artwork img { max-height:210px; }
+ .details { gap:12px; flex-direction:column; margin-top:22px; padding-top:17px; }.date,.location { font-size:13px; }.details small { font-size:11px; }
+ .actions { gap:8px; margin-top:22px; }.actions a { font-size:12px; padding:11px 12px; min-height:46px; gap:6px; }.actions a>svg:last-child:not(:first-child) { display:none; }
+ [data-occasion=engagement][data-layout=signature] .composition { padding:5px 17px 25px; box-shadow:5px 5px 0 #e7cebf; }.cover[data-occasion=engagement][data-layout=signature] .artwork { width:240px; }
+ [data-occasion=birthday][data-layout=signature] .composition { padding:25px 17px 20px; }.cover[data-occasion=birthday][data-layout=signature] .names { font-size:clamp(55px,15vw,80px); }.cover[data-occasion=birthday][data-layout=signature] .artwork { width:205px; }
+ [data-occasion=baby-shower][data-layout=signature] .composition { padding:15px 16px 25px; border-radius:110px 110px 12px 12px; }.cover[data-occasion=baby-shower][data-layout=signature] .artwork { width:235px; }
+ [data-occasion=housewarming][data-layout=signature] .composition { grid-template-columns:1fr; text-align:center; gap:24px; }.cover[data-occasion=housewarming][data-layout=signature] .signatureTop { grid-row:auto; width:min(100%,280px); margin-inline:auto; padding:20px 10px 0; }.cover[data-occasion=housewarming][data-layout=signature] .artwork { width:235px; }.cover[data-occasion=housewarming][data-layout=signature] .names { font-size:42px; }.cover[data-occasion=housewarming][data-layout=signature] .details { margin:0; gap:11px; }.cover[data-occasion=housewarming][data-layout=signature] :is(.date,.location) { justify-content:center; }
+ [data-occasion=naming][data-layout=signature] .composition { padding:24px 16px 20px; }.cover[data-occasion=naming][data-layout=signature] .artwork { width:255px; }.cover[data-occasion=naming][data-layout=signature] .names { font-size:clamp(54px,17vw,84px); }
+ [data-occasion=anniversary][data-layout=signature] .composition { padding:9px 17px 22px; }.cover[data-occasion=anniversary][data-layout=signature] .artwork { width:245px; }
+ [data-occasion=remembrance][data-layout=signature] .composition { padding:15px 5px; }.cover[data-occasion=remembrance][data-layout=signature] .artwork { width:235px; }
+ [data-occasion=other][data-layout=signature] .composition { grid-template-columns:1fr; text-align:center; gap:15px; padding-block:28px; }.cover[data-occasion=other][data-layout=signature] .names { font-size:48px; }.cover[data-occasion=other][data-layout=signature] .artwork { width:235px; }.cover[data-occasion=other][data-layout=signature] .details { grid-column:auto; }
+ .cover[data-layout=editorial] .composition { grid-template-columns:1fr; gap:25px; }.editionRail { font-size:9px; padding-bottom:13px; }.editorialVisual { order:2; width:min(100%,290px); margin:auto; padding:5px 0 30px; }.editorialVisual .artwork { width:235px; }.editorialVisual .photograph { aspect-ratio:3/2; width:calc(100% - 30px); }.editorialCopy .names { font-size:48px; }.editorialCopy .names[data-long=true] { font-size:38px; }.editorialCopy .names>span { display:inline; }.editorialCopy .names>span>i { margin-left:.12em; }.editorialCopy .details { margin-top:16px; }.intro { margin-top:15px; font-size:15px; }.dateStamp { min-width:70px; padding:8px 14px; right:12px; }.dateStamp strong { font-size:33px; }
+ .cover[data-layout=keepsake] .composition { grid-template-columns:1fr; gap:35px; padding:27px 17px 25px; }.keepsakeVisual { width:min(100%,230px); margin:auto; padding:8px 8px 30px; }.keepsakeVisual .artwork { min-height:0; width:100%; }.keepsakeVisual .photograph { aspect-ratio:3/2; }.keepsakeCopy .names { font-size:44px; }.keepsakeCopy .names>span { display:inline; }.keepsakeCopy .names>span>i { display:inline; margin:0 .18em; }.keepsakeCopy .details { margin-top:19px; }
+}
+@media(max-width:359px) { .full { padding-inline:16px; }.actions a { padding-inline:10px; gap:5px; font-size:11px; }.names[data-long=true],.editorialCopy .names[data-long=true] { font-size:33px; } }
+@media(max-width:700px) and (max-height:850px) {
+ .full[data-layout=editorial] { padding-block:20px; }
+ .cover[data-layout=editorial] .composition { gap:18px; }
+ .editorialVisual { width:min(100%,250px); padding:4px 0 26px; }
+ .editorialVisual .artwork { width:180px; }
+ .editorialVisual .photograph { width:calc(100% - 30px); max-height:155px; }
+ .editorialCopy .names { font-size:42px; }
+ .editorialCopy .intro { margin-top:10px; font-size:14px; }
+ .editorialCopy .details { margin-top:14px; padding-top:14px; gap:10px; }
+}
+@media(max-height:700px) and (max-width:700px) { .full { padding-block:20px; }.signatureTop .artwork,.signatureTop .artwork img { max-height:175px; }.coverText { margin-bottom:9px; }.occasionName { margin-top:12px; }.details { margin-top:17px; }.actions { margin-top:18px; } }
+
+/* Fixed miniature canvas uses the exact guest markup, with layout-specific scaling. */
+.cover.compact { min-height:0; padding:13px; font-size:8px; display:flex; align-items:center; justify-content:center; }
+.compact .composition { max-width:100%; padding:10px 8px!important; box-shadow:none!important; outline-offset:3px!important; gap:10px!important; }
+.compact .coverText { font-size:5.7px!important; line-height:1.6; letter-spacing:.13em; margin:0 auto 9px; }
+.compact .names,.compact .names[data-long=true] { font-size:30px!important; line-height:1.03; }.compact .names[data-long=true] { font-size:24px!important; }
+.compact .names>span>i { margin-block:3px; }.compact .occasionName { font-size:5.5px; letter-spacing:.13em; margin-top:8px; }
+.compact .artwork { width:125px!important; max-height:105px!important; }.compact .artwork img { max-height:105px!important; }
+.compact .photograph { height:100px; }.compact .photograph img { object-fit:cover; height:100%; }
+.compact .details { font-size:7px; gap:6px!important; margin-top:12px!important; padding-top:9px; flex-direction:column; }.compact .date,.compact .location { font-size:6.5px; line-height:1.4; gap:4px; }.compact .details svg { width:8px; height:8px; margin-top:0; }.compact .details small { font-size:5.5px; }
+.compact .signatureMain { margin-top:3px; }.compact .signatureTop { padding:0!important; }.compact[data-occasion=housewarming][data-layout=signature] .composition { display:flex; flex-direction:column; text-align:center; }.compact[data-occasion=housewarming][data-layout=signature] .signatureTop { width:145px; flex-shrink:0; }.compact[data-occasion=housewarming][data-layout=signature] .details { align-items:center; width:100%; }.compact[data-occasion=housewarming][data-layout=signature] .coverText { margin-left:auto; }
+.compact[data-occasion=other][data-layout=signature] .composition { display:flex; flex-direction:column; text-align:center; }.compact[data-occasion=other][data-layout=signature] .details { width:100%; }
+.compact[data-layout=editorial] .composition { display:grid; grid-template-columns:1fr; gap:12px; text-align:left; align-items:start; padding:0!important; }.compact .editionRail { font-size:5px; letter-spacing:.1em; gap:8px; padding-bottom:6px; }.compact .editorialCopy { order:1; }.compact .editorialCopy .names { font-size:27px!important; }.compact .editorialCopy .coverText { text-align:left; margin-left:0; }.compact .editorialCopy .names>span { display:inline; }.compact .editorialVisual { order:2; padding:0 0 14px; width:100%; max-width:170px; margin:0 0 0 auto; }.compact .editorialVisual .artwork { width:115px!important; max-height:85px!important; }.compact .editorialVisual .artwork img { max-height:85px!important; }.compact .editorialCopy .details { margin-top:9px!important; padding-top:7px; }.compact .dateStamp { min-width:34px; padding:4px 7px; right:7px; bottom:-7px; box-shadow:2px 2px 0 var(--cover-wash); }.compact .dateStamp strong { font-size:18px; }.compact .dateStamp span { font-size:5px; margin-top:2px; }
+.compact[data-layout=keepsake] .composition { display:flex; flex-direction:column; padding:13px 8px!important; gap:16px!important; }.compact .keepsakeVisual { width:125px; padding:6px 6px 18px; }.compact .keepsakeVisual .artwork { width:100%!important; min-height:0; max-height:75px!important; }.compact .keepsakeVisual .artwork img { max-height:75px!important; }.compact .keepsakeVisual .photograph { aspect-ratio:3/2; height:auto; }.compact .keepsakeVisual .dateStamp { min-width:35px; right:-7px; bottom:-5px; }.compact .keepsakeCopy .names { font-size:27px!important; }.compact .keepsakeCopy .names>span { display:inline; }.compact .keepsakeCopy .names>span>i { display:inline; margin:0 .12em; }.compact .keepsakeCopy .details { margin-top:10px!important; }
+.compact[data-decoration=false] .composition { display:block!important; }
+@media(prefers-reduced-motion:no-preference) {
+ .full:not([data-motion=none]) .identity { animation:cover-arrive 440ms ease-out both; }
+ .full:not([data-motion=none]) .artwork { animation:cover-art-arrive 650ms cubic-bezier(.2,.7,.2,1) both; }
+ .full[data-motion=expressive] .artwork { animation-duration:850ms; }
+ .full[data-occasion=remembrance] .artwork,.full[data-occasion=remembrance] .identity { animation-duration:380ms; }
+ .actions a:hover { transform:translateY(-2px); }
+}
+@keyframes cover-arrive { from { opacity:.65; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+@keyframes cover-art-arrive { from { opacity:.5; transform:translateY(14px) scale(.97); } to { opacity:1; transform:translateY(0) scale(1); } }
+@media(prefers-reduced-motion:reduce) { .cover * { animation:none!important; transition:none!important; }.actions a { transform:none!important; } }
+.cover[data-motion=none] * { animation:none!important; transition:none!important; }
+
+/* Custom controls take precedence over the original occasion composition. */
+.cover[data-palette]:not([data-palette=original])[data-occasion][data-layout] { background:var(--occasion-paper); }
+.cover[data-palette]:not([data-palette=original])[data-occasion][data-layout=signature] .composition { background:color-mix(in srgb,var(--occasion-paper) 80%,white); }
+.cover[data-decoration=false][data-occasion][data-layout] { background:var(--occasion-paper); }

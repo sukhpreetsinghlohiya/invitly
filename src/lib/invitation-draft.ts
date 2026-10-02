@@ -1,5 +1,8 @@
 import { themes } from "@/data/themes";
-import type { Invitation, ThemeId } from "@/types/invitation";
+import { defaultDesign, getOccasion, occasions, traditions } from "@/data/occasions";
+import { defaultMusic, musicMoods, recordedTrack, youtubeVideoId } from "@/data/music";
+import { parseUploadedAudio } from "@/lib/audio";
+import type { Invitation, InvitationDesign, OccasionId, SectionId, ThemeId, TraditionId } from "@/types/invitation";
 
 export type InvitationDraft = { themeId: ThemeId; invitation: Invitation; musicEnabled: boolean };
 export type InvitationDraftResult = { data: InvitationDraft; error?: never } | { error: string; data?: never };
@@ -43,34 +46,74 @@ function date(value: unknown, label: string) {
   return new Date(clean).toISOString();
 }
 
-function pair(value: unknown, label: string, max: number): [string, string] {
+function pair(value: unknown, label: string, max: number, firstMin = 0, secondMin = 0): [string, string] {
   if (!Array.isArray(value) || value.length !== 2) throw new Error(`Enter both ${label.toLowerCase()}.`);
-  return [text(value[0], `${label} (first)`, max, 1), text(value[1], `${label} (second)`, max, 1)];
+  return [text(value[0], `${label} (first)`, max, firstMin), text(value[1], `${label} (second)`, max, secondMin)];
+}
+
+export function validateMapUrl(value: unknown) {
+  const clean = text(value ?? "", "Map link", 2000);
+  if (!clean) return "";
+  try { const url = new URL(clean); if (url.protocol === "https:" && !url.username && !url.password) return url.href; } catch {}
+  throw new Error("Map links must be a complete HTTPS URL without a username or password.");
+}
+
+function design(value: unknown, allowIncompleteMusic: boolean): InvitationDesign {
+  if (value === undefined) return { ...defaultDesign, sectionOrder: [...defaultDesign.sectionOrder] };
+  const source = record(value, "Design settings");
+  if (!["original", "rose", "sage", "indigo"].includes(String(source.palette)) || !["original", "serif", "sans", "script"].includes(String(source.typography))) throw new Error("Choose an available colour palette and typography style.");
+  if (typeof source.decoration !== "boolean" || typeof source.countdown !== "boolean") throw new Error("Choose valid decoration and countdown settings.");
+  const order = source.sectionOrder;
+  if (!Array.isArray(order) || order.length !== 5 || new Set(order).size !== 5 || !order.every(item => defaultDesign.sectionOrder.includes(item))) throw new Error("Each invitation section must appear once in the section order.");
+  const motion = source.motion ?? "gentle";
+  if (!["gentle", "expressive", "none"].includes(String(motion))) throw new Error("Choose an available motion style.");
+  const music = source.music === undefined ? defaultMusic : record(source.music, "Music settings");
+  if (!["original", "youtube", "library", "upload"].includes(String(music.source))) throw new Error("Choose an available music source.");
+  const track = musicMoods.find(item => item.id === music.track);
+  if (!track) throw new Error("Choose an available instrumental mood.");
+  const youtubeUrl = text(music.youtubeUrl ?? "", "YouTube song link", 500);
+  const videoId = youtubeVideoId(youtubeUrl);
+  if (youtubeUrl && !videoId) throw new Error("Paste a complete HTTPS YouTube video link, not a playlist or embed code.");
+  if (music.source === "youtube" && !videoId && !allowIncompleteMusic) throw new Error("Add your YouTube song link, choose an instrumental, or turn music off before publishing.");
+  const audioTrack = typeof music.audioTrack === "string" ? recordedTrack(music.audioTrack) : undefined;
+  if (music.source === "library" && !audioTrack) throw new Error("Choose an available wedding song.");
+  const uploadedAudio = music.source === "upload" ? parseUploadedAudio(music.uploadedAudio) : null;
+  if (music.source === "upload" && !uploadedAudio) throw new Error("Upload your MP3 before selecting custom audio.");
+  return { palette: source.palette as InvitationDesign["palette"], typography: source.typography as InvitationDesign["typography"], decoration: source.decoration, countdown: source.countdown, sectionOrder: order as SectionId[], motion: motion as InvitationDesign["motion"], music: { source: music.source as NonNullable<InvitationDesign["music"]>["source"], track: track.id, youtubeUrl: videoId ? `https://www.youtube.com/watch?v=${videoId}` : "", ...(audioTrack ? { audioTrack: audioTrack.id } : {}), ...(uploadedAudio ? { uploadedAudio } : {}) } };
 }
 
 /** Shared client/server validation. Copies an allowlist of fields as plain text. */
-export function validateInvitationDraft(input: unknown): InvitationDraftResult {
+export function validateInvitationDraft(input: unknown, mode: "draft" | "publish" = "publish"): InvitationDraftResult {
   try {
     const draft = record(input, "Invitation");
     const theme = themes.find(item => item.id === draft.themeId);
     if (!theme) throw new Error("Choose an available invitation theme.");
     if (typeof draft.musicEnabled !== "boolean") throw new Error("Choose whether to offer the optional music button.");
     const source = record(draft.invitation, "Invitation details");
+    const occasion = source.occasion ?? "wedding";
+    const tradition = source.tradition ?? "neutral";
+    if (!occasions.some(item => item.id === occasion)) throw new Error("Choose an available occasion.");
+    if (!traditions.some(item => item.id === tradition)) throw new Error("Choose a tradition or the neutral option.");
+    const required = mode === "publish" ? 1 : 0;
+    const checkDate = (value: unknown, label: string) => mode === "draft" && value === "" ? "" : date(value, label);
     const timezone = text(source.timezone, "Timezone", 80, 1);
     try { new Intl.DateTimeFormat("en-IN", { timeZone: timezone }).format(0); } catch { throw new Error("Choose a valid timezone."); }
-    if (!Array.isArray(source.functions) || source.functions.length < 1 || source.functions.length > 12) throw new Error("Add between 1 and 12 functions.");
+    if (!Array.isArray(source.functions) || source.functions.length > 100) throw new Error("Use up to 100 schedule items per invitation.");
     const functions: Invitation["functions"] = source.functions.map((value, index) => {
       const item = record(value, `Function ${index + 1}`);
       const icon = item.icon;
+      const itemRequired = item.visibility === "hidden" ? 0 : required;
       if (icon !== "sun" && icon !== "music" && icon !== "heart" && icon !== "sparkles") throw new Error(`Choose an icon for function ${index + 1}.`);
       return {
         id: identifier(item.id, `Function ${index + 1} ID`),
-        name: text(item.name, `Function ${index + 1} name`, 80, 1),
+        name: text(item.name, `Function ${index + 1} name`, 80, itemRequired),
         description: text(item.description, `Function ${index + 1} description`, 1000),
-        startsAt: date(item.startsAt, `Function ${index + 1} date`),
-        venue: text(item.venue, `Function ${index + 1} venue`, 200, 1),
-        address: text(item.address, `Function ${index + 1} address`, 500, 1),
+        startsAt: item.visibility === "hidden" && item.startsAt === "" ? "" : checkDate(item.startsAt, `Function ${index + 1} date`),
+        venue: text(item.venue, `Function ${index + 1} venue`, 200, itemRequired),
+        address: text(item.address, `Function ${index + 1} address`, 500, itemRequired),
         dressCode: text(item.dressCode, `Function ${index + 1} dress code`, 100), icon,
+        mapUrl: validateMapUrl(item.mapUrl),
+        visibility: item.visibility === undefined || item.visibility === "public" ? "public" : item.visibility === "hidden" ? "hidden" : (() => { throw new Error("Choose a valid schedule visibility."); })(),
       };
     });
     if (new Set(functions.map(item => item.id)).size !== functions.length) throw new Error("Each function needs a unique ID.");
@@ -81,15 +124,23 @@ export function validateInvitationDraft(input: unknown): InvitationDraftResult {
     });
     if (new Set(updates.map(item => item.id)).size !== updates.length) throw new Error("Each update needs a unique ID.");
     const invitation: Invitation = {
+      occasion: occasion as OccasionId, tradition: tradition as TraditionId,
+      traditionLabel: text(source.traditionLabel ?? "", "Custom tradition", 100),
+      blessing: text(source.blessing ?? "", "Optional blessing", 1000),
+      coverText: text(source.coverText ?? getOccasion(String(occasion)).cover, "Cover text", 160),
+      closingText: text(source.closingText ?? getOccasion(String(occasion)).signoff, "Closing message", 300),
+      design: { ...design(source.design, mode === "draft" || !draft.musicEnabled), ...(occasion === "remembrance" ? { countdown: false } : {}) },
+      coverPhotoId: source.coverPhotoId === undefined || source.coverPhotoId === "" ? "" : text(source.coverPhotoId, "Cover photo", 36),
       slug: identifier(source.slug, "Link name", 100, 3),
-      couple: pair(source.couple, "Couple names", 60),
-      initials: text(source.initials, "Initials", 8, 1),
-      intro: text(source.intro, "Opening line", 160, 1),
-      message: text(source.message, "Invitation message", 5000, 1),
+      couple: pair(source.couple, "Names", 60, required, getOccasion(String(occasion)).people === 2 ? required : 0),
+      initials: text(source.initials, "Initials", 8),
+      intro: text(source.intro, "Opening line", 160),
+      message: text(source.message, "Invitation message", 5000),
       families: pair(source.families, "Family names", 120),
-      city: text(source.city, "City", 160, 1),
-      weddingAt: date(source.weddingAt, "Wedding date"), timezone, functions, updates,
+      city: text(source.city, "City", 160),
+      weddingAt: checkDate(source.weddingAt, "Event date"), timezone, functions, updates,
     };
+    if (invitation.coverPhotoId && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(invitation.coverPhotoId)) throw new Error("Choose a valid uploaded cover photo.");
     if (new TextEncoder().encode(JSON.stringify(invitation)).length > 60000) throw new Error("This invitation is too long. Shorten descriptions or guest updates.");
     return { data: { themeId: theme.id, invitation, musicEnabled: draft.musicEnabled } };
   } catch (error) {

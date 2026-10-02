@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, Megaphone } from "lucide-react";
-import { Brand, Footer } from "@/components/brand";
+import { Brand } from "@/components/brand";
+import { Footer } from "@/components/footer";
 import { getSupabaseConfig } from "@/lib/env";
 import { requireHostEvent } from "@/lib/host-event";
 import { AnnouncementManager } from "./announcement-manager";

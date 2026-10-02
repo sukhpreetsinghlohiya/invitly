@@ -1,13 +1,14 @@
-import type { ThemeId } from "@/types/invitation";
+import type { OccasionId, ThemeId, TraditionId } from "@/types/invitation";
+import { occasions, traditions } from "@/data/occasions";
 
 export type ThemeFamily = "Indian" | "Minimal" | "Floral" | "Contemporary";
-export type InvitationTheme = { id: ThemeId; name: string; category: string; description: string; number: string; family: ThemeFamily; accent: string };
+export type InvitationTheme = { id: ThemeId; name: string; category: string; description: string; number: string; family: ThemeFamily; accent: string; occasions?: OccasionId[]; traditions?: TraditionId[]; collection?: string };
 
 export const themes: InvitationTheme[] = [
   { id: "royal", name: "Royal Indian", category: "THE GULMOHAR EDIT", description: "A maroon arch, marigold warmth, and a celebration with a little grandeur.", number: "01", family: "Indian", accent: "#58252f" },
   { id: "modern", name: "Modern Minimal", category: "THE NOOR EDIT", description: "Room to breathe, thoughtful type, and your story at the centre.", number: "02", family: "Minimal", accent: "#33473f" },
   { id: "floral", name: "Floral Celebration", category: "THE MOGRA EDIT", description: "Soft petals. Sage leaves. A love that blooms in its own time.", number: "03", family: "Floral", accent: "#3f624d" },
-  { id: "mehfil", name: "Midnight Mehfil", category: "UNDER A VELVET SKY", description: "Indigo evenings, golden jaali, and a gathering written in the stars.", number: "04", family: "Indian", accent: "#283650" },
+  { id: "mehfil", name: "Midnight Mehfil", category: "UNDER A VELVET SKY", description: "Deep green, golden jaali, and a gathering written in the stars.", number: "04", family: "Indian", accent: "#163e36" },
   { id: "kesar", name: "Kesar & Sunshine", category: "A LITTLE GOLDEN JOY", description: "Saffron skies, folk flowers, and the unmistakable warmth of home.", number: "05", family: "Indian", accent: "#995020" },
   { id: "lotus", name: "The Lotus Letter", category: "LOVE, SOFTLY SPOKEN", description: "Blush petals, a delicate oval, and a little poetry on the water.", number: "06", family: "Floral", accent: "#864954" },
   { id: "pichwai", name: "Pichwai Garden", category: "IN THE PALACE GARDEN", description: "A sage-green courtyard, painted peacocks, and a garden in celebration.", number: "07", family: "Indian", accent: "#435947" },
@@ -19,3 +20,6 @@ export const themes: InvitationTheme[] = [
 export function resolveTheme(value?: string): ThemeId {
   return themes.find((theme) => theme.id === value)?.id ?? "royal";
 }
+
+// Adaptable compositions, not a claim of separate religious collections.
+export const themeCatalog = themes.map(theme => ({ ...theme, collection: "Wedding collection · adaptable design", occasions: occasions.map(item => item.id), traditions: traditions.map(item => item.id) }));

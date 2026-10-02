@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Brand, Footer } from "@/components/brand";
+import { Brand } from "@/components/brand";
+import { Footer } from "@/components/footer";
 import { getSupabaseConfig } from "@/lib/env";
 import { AuthForm } from "./auth-form";
 import type { AuthMode } from "./actions";

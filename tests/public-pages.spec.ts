@@ -150,3 +150,40 @@ test.describe("server-rendered invitation", () => {
     await expectNoHorizontalOverflow(page);
   });
 });
+
+
+test("real published invitation: opening, readable schedule, responsive photo and keyboard gallery", async ({ page }, testInfo) => {
+  test.skip(process.env.INVITLY_INTEGRATION !== "1", "Local published fixture required");
+  await page.goto('/i/invitly-local-preview');
+  await expect(page.getByRole('navigation',{name:'Quick invitation details'}).getByRole('link',{name:'RSVP',exact:true})).toBeVisible();
+  await expectNoHorizontalOverflow(page);
+  await page.screenshot({path:`artifacts/screenshots/published-opening-${testInfo.project.name}.png`});
+  await page.getByRole('button',{name:'Open invitation',exact:true}).click();
+  const cover = page.locator('#invitation');
+  await expect(cover).toBeFocused();
+  await expect(cover).toBeInViewport();
+  await page.screenshot({path:`artifacts/screenshots/published-cover-${testInfo.project.name}.png`});
+  const hero = page.locator('#portrait');
+  await hero.scrollIntoViewIfNeeded();
+  await expect.poll(()=>hero.getByRole('img').evaluate(image=>(image as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  expect(await hero.getByRole('img').evaluate(image=>(image as HTMLImageElement).currentSrc)).toMatch(/\?w=(320|640|960|1600)$/);
+  await page.screenshot({path:`artifacts/screenshots/published-portrait-${testInfo.project.name}.png`});
+  await page.getByRole('navigation',{name:'Invitation sections'}).getByRole('link',{name:'Schedule & directions',exact:true}).click();
+  await page.screenshot({path:`artifacts/screenshots/published-schedule-${testInfo.project.name}.png`});
+  await expectNoHorizontalOverflow(page);
+  await page.getByRole('button',{name:/^View photo 1:/}).click();
+  await expect(page.getByRole('dialog',{name:'Invitation photo gallery'})).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog',{name:'Invitation photo gallery'})).not.toBeVisible();
+});
+
+test("personal guest RSVP fits the viewport and keeps its submit control reachable", async ({ page }, testInfo) => {
+  test.skip(!process.env.LIGHTHOUSE_GUEST_PATH, 'Requires the isolated local guest fixture');
+  await page.goto(`${process.env.LIGHTHOUSE_GUEST_PATH}#rsvp`);
+  const form = page.locator('.rsvp-form');
+  await expect(form.getByRole('combobox',{name:'Your response',exact:true})).toBeVisible();
+  await expect(form.getByRole('button',{name:'Send RSVP',exact:true})).toBeVisible();
+  expect((await form.getByRole('button',{name:'Send RSVP',exact:true}).boundingBox())?.height).toBeGreaterThanOrEqual(44);
+  await expectNoHorizontalOverflow(page);
+  await page.screenshot({path:`artifacts/screenshots/guest-rsvp-${testInfo.project.name}.png`});
+});

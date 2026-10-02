@@ -8,7 +8,7 @@ type Event = {
   slug: string;
   title: string;
   description: string;
-  starts_at: string;
+  starts_at: string | null;
   venue: string;
   is_published: boolean;
   theme_id: string;
@@ -42,6 +42,7 @@ type Table<Row, Required extends keyof Row, Relationships = []> = { Row: Row; In
 export type Database = {
   public: {
     Tables: {
+      invitation_allowances: Table<{ user_id: string; invitations_used: number }, "user_id">;
       profiles: Table<Profile, "id">;
       themes: Table<Theme, "id" | "name">;
       event_segments: Table<Segment, "event_id" | "title" | "starts_at", EventRelationship<"event_segments_event_id_fkey">>;

@@ -1,12 +1,12 @@
 import type { Invitation } from "@/types/invitation";
+import { getWordingPreset } from "./invitation-wording";
 
 // A fictional celebration. Change this data to edit every theme together.
 export const demoInvitation: Invitation = {
   slug: "aanya-and-kabir",
   couple: ["Aanya", "Kabir"],
   initials: "AK",
-  intro: "Two hearts. A hundred happy moments.",
-  message: "From our first hello to a lifetime of together. Join us, our families, and a very enthusiastic dance floor as we begin our next chapter.",
+  ...getWordingPreset("wedding", "hinglish"),
   families: ["The Sharma family", "The Mehta family"],
   city: "Jaipur, Rajasthan",
   weddingAt: "2027-02-14T18:00:00+05:30",
@@ -24,5 +24,6 @@ export const demoInvitation: Invitation = {
 };
 
 export function formatEventDate(date: string, timezone: string, options: Intl.DateTimeFormatOptions) {
+  if (!Number.isFinite(Date.parse(date))) return "Date to be confirmed";
   return new Intl.DateTimeFormat("en-IN", { ...options, timeZone: timezone }).format(new Date(date));
 }

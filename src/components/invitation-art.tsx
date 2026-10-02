@@ -1,5 +1,8 @@
+import { OccasionCover } from "./occasions/occasion-cover";
 import { Flower } from "@/components/brand";
 import type { Invitation, ThemeId } from "@/types/invitation";
+import { getDesign, getOccasion } from "@/data/occasions";
+import { formatEventDate } from "@/data/demo-invitation";
 
 export function Botanical({ className = "" }: { className?: string }) {
   return <svg className={className} viewBox="0 0 180 280" fill="none" aria-hidden="true">
@@ -9,7 +12,7 @@ export function Botanical({ className = "" }: { className?: string }) {
   </svg>;
 }
 
-// Original vector compositions. No external images, icon packs, or font downloads.
+// Original vector compositions, with source credits for the separate public-domain paisley texture.
 function JaaliCanopy() {
   return <svg className="collection-motif mehfil-canopy" viewBox="0 0 300 435" preserveAspectRatio="none" fill="none" aria-hidden="true">
     <path d="M24 406V151C24 109 55 76 91 67C111 62 118 36 150 25C182 36 189 62 209 67C245 76 276 109 276 151V406Z" stroke="currentColor" strokeWidth="1.4" />
@@ -37,7 +40,7 @@ function FolkSun() {
 function LotusDrawing() {
   return <svg className="collection-motif lotus-drawing" viewBox="0 0 300 435" preserveAspectRatio="none" fill="none" aria-hidden="true">
     <ellipse cx="150" cy="214" rx="117" ry="183" stroke="currentColor" opacity=".38" /><ellipse cx="150" cy="214" rx="110" ry="176" stroke="currentColor" opacity=".2" />
-    <path d="M156 52a12 12 0 1 0 8 20a10 10 0 0 1-8-20Z" transform="translate(0 -22)" fill="currentColor" opacity=".8" />
+    <g transform="translate(150 39)" fill="currentColor" opacity=".6"><ellipse rx="3" ry="9" /><ellipse rx="3" ry="9" transform="rotate(60)" /><ellipse rx="3" ry="9" transform="rotate(120)" /></g>
     <g transform="translate(150 395)"><path d="M0 0C-31-19-28-44 0-69C28-44 31-19 0 0Z" fill="#d69298" stroke="currentColor" /><path d="M0 0C-47-3-67-24-61-49C-23-49-8-25 0 0Z" fill="#e2a6aa" stroke="currentColor" /><path d="M0 0C47-3 67-24 61-49C23-49 8-25 0 0Z" fill="#e2a6aa" stroke="currentColor" /><path d="M0 0C-43 16-77 2-84-18C-50-30-19-11 0 0ZM0 0C43 16 77 2 84-18C50-30 19-11 0 0Z" fill="#efc4c3" stroke="currentColor" /><path d="M-71 19H71M-48 27H48M-22 34H22" stroke="currentColor" opacity=".6" /></g>
   </svg>;
 }
@@ -100,9 +103,10 @@ function ThemeArtwork({ theme, initials }: { theme: ThemeId; initials: string })
 }
 
 export function InvitationArt({ theme, invitation, compact = false }: { theme: ThemeId; invitation: Invitation; compact?: boolean }) {
-  return <div className={`invitation-art theme-${theme} ${compact ? "compact" : ""}`}>
+  if (invitation.occasion && invitation.occasion !== "wedding") return <OccasionCover invitation={invitation} theme={theme} compact={compact} />;
+  return <div data-occasion={invitation.occasion || "wedding"} className={`invitation-art theme-${theme} ${compact ? "compact" : ""}`}>
     <div className="art-border" />
-    <ThemeArtwork theme={theme} initials={invitation.initials} />
-    <div className="art-copy"><span className="eyebrow">Together with our families</span><h2><span>{invitation.couple[0]}</span><i>&</i><span>{invitation.couple[1]}</span></h2><span className="art-divider">✦</span><p>We&apos;re getting married</p><span className="art-date">{new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "long", year: "numeric", timeZone: invitation.timezone }).format(new Date(invitation.weddingAt))}</span><span className="art-city">{invitation.city}</span></div>
+    {getDesign(invitation).decoration && <ThemeArtwork theme={theme} initials={invitation.initials} />}
+    <div className="art-copy"><span className="eyebrow">{invitation.coverText ?? getOccasion(invitation.occasion).cover}</span><h2><span>{invitation.couple[0] || "Your invitation"}</span>{invitation.couple[1] && <><i>&</i><span>{invitation.couple[1]}</span></>}</h2>{getDesign(invitation).decoration && <span className="art-divider">✦</span>}<p>{getOccasion(invitation.occasion).name}</p><span className="art-date">{formatEventDate(invitation.weddingAt, invitation.timezone, { day: "2-digit", month: "long", year: "numeric" })}</span><span className="art-city">{invitation.city}</span></div>
   </div>;
 }

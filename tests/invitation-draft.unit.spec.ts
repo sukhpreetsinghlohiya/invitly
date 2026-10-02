@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { demoInvitation } from "../src/data/demo-invitation";
+import { applyOccasion, createOccasionInvitation } from "../src/data/occasions";
 import { themes } from "../src/data/themes";
 import { isValidInvitationDate, validateInvitationDraft, type InvitationDraft } from "../src/lib/invitation-draft";
 
@@ -57,9 +58,9 @@ test("duplicate IDs and oversized function/update collections are rejected", () 
   expect(validateInvitationDraft(duplicateUpdate).error).toContain("unique ID");
   const empty = makeDraft();
   empty.invitation.functions = [];
-  expect(validateInvitationDraft(empty).error).toBeTruthy();
+  expect(validateInvitationDraft(empty).error).toBeUndefined();
   const tooMany = makeDraft();
-  tooMany.invitation.functions = Array.from({ length: 13 }, (_, index) => ({ ...demoInvitation.functions[0], id: `function-${index}` }));
+  tooMany.invitation.functions = Array.from({ length: 101 }, (_, index) => ({ ...demoInvitation.functions[0], id: `function-${index}` }));
   expect(validateInvitationDraft(tooMany).error).toBeTruthy();
   const tooManyUpdates = makeDraft();
   tooManyUpdates.invitation.updates = Array.from({ length: 21 }, (_, index) => ({ ...demoInvitation.updates[0], id: `update-${index}` }));
@@ -78,4 +79,45 @@ test("saved data uses only allowed fields and enforces the UTF-8 payload budget"
   oversized.invitation.functions = Array.from({ length: 12 }, (_, index) => ({ ...demoInvitation.functions[0], id: `function-${index}`, description: "अ".repeat(1000) }));
   oversized.invitation.updates = Array.from({ length: 20 }, (_, index) => ({ ...demoInvitation.updates[0], id: `update-${index}`, message: "ਅ".repeat(1000) }));
   expect(validateInvitationDraft(oversized).error).toContain("too long");
+});
+
+
+test("incomplete drafts save but cannot publish, single-person occasions need only one name", () => {
+  const draft = makeDraft();
+  draft.invitation.couple = ["", ""]; draft.invitation.weddingAt = ""; draft.invitation.city = ""; draft.invitation.functions = [];
+  expect(validateInvitationDraft(draft, "draft").error).toBeUndefined();
+  expect(validateInvitationDraft(draft, "publish").error).toBeTruthy();
+  const birthday = makeDraft(); birthday.invitation.occasion = "birthday"; birthday.invitation.couple = ["Aanya", ""];
+  expect(validateInvitationDraft(birthday).error).toBeUndefined();
+  birthday.invitation.occasion = "wedding";
+  expect(validateInvitationDraft(birthday).error).toBeTruthy();
+});
+
+test("unsafe map URLs and arbitrary design values are rejected", () => {
+  for (const mapUrl of ["javascript:alert(1)", "http://example.com", "https://user:pass@example.com"]) {
+    const draft = makeDraft(); draft.invitation.functions[0].mapUrl = mapUrl;
+    expect(validateInvitationDraft(draft).error).toBeTruthy();
+  }
+  const draft = makeDraft(); draft.invitation.functions[0].mapUrl = "https://maps.google.com/?q=Jaipur";
+  expect(validateInvitationDraft(draft).error).toBeUndefined();
+  expect(validateInvitationDraft({...draft, invitation:{...draft.invitation, design:{palette:"url(evil)"}}}).error).toBeTruthy();
+});
+
+
+test("unfinished hidden schedule items may remain drafts when the invitation is published", () => {
+  const draft = makeDraft();
+  Object.assign(draft.invitation.functions[0], {name:"",startsAt:"",venue:"",address:"",visibility:"hidden"});
+  expect(validateInvitationDraft(draft).error).toBeUndefined();
+  draft.invitation.functions[0].visibility = "public";
+  expect(validateInvitationDraft(draft).error).toBeTruthy();
+});
+
+
+test("changing occasion preserves custom and deliberately removed wording", () => {
+  const invitation = createOccasionInvitation();
+  invitation.intro = ""; invitation.coverText = ""; invitation.message = "Our own words";
+  invitation.design!.countdown = false;
+  const birthday = applyOccasion(invitation, "birthday");
+  expect(birthday.intro).toBe(""); expect(birthday.coverText).toBe("");
+  expect(birthday.message).toBe("Our own words"); expect(birthday.design!.countdown).toBe(false);
 });

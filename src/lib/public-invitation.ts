@@ -19,7 +19,7 @@ function timestamp(value: unknown) { return text(value, 40).replace(/(\.\d{3})\d
 function validZone(value: unknown) { try { const zone = text(value, 80) || "Asia/Kolkata"; new Intl.DateTimeFormat("en", { timeZone: zone }).format(0); return zone; } catch { return "Asia/Kolkata"; } }
 
 /** Only consume the SQL projection; never query raw events to fill missing public fields. */
-export function parsePublicInvitation(value: unknown): PublicInvitation | null {
+export function parsePublicInvitation(value: unknown, mode: "draft" | "publish" = "publish"): PublicInvitation | null {
   const raw = object(value);
   if (!raw || typeof raw.id !== "string" || !uuid.test(raw.id) || typeof raw.slug !== "string" || !isInvitationSlug(raw.slug)) return null;
   const title = text(raw.title, 160);
@@ -35,7 +35,7 @@ export function parsePublicInvitation(value: unknown): PublicInvitation | null {
     const noFunctions = content.functions.length === 0;
     const placeholder = { id: "validation-only", name: "Validation", description: "", startsAt: timestamp(content.weddingAt), venue: "Validation", address: "Validation", dressCode: "", icon: "heart" };
     const functions = noFunctions ? [placeholder] : content.functions.map(item => { const event = object(item); return event ? { ...event, startsAt: timestamp(event.startsAt) } : item; });
-    const checked = validateInvitationDraft({ themeId, musicEnabled: Boolean(raw.music_enabled), invitation: { ...content, weddingAt: timestamp(content.weddingAt), timezone: zone, functions } });
+    const checked = validateInvitationDraft({ themeId, musicEnabled: Boolean(raw.music_enabled), invitation: { ...content, weddingAt: timestamp(content.weddingAt), timezone: zone, functions } }, mode);
     if (!checked.data) return null;
     invitation = { ...checked.data.invitation, slug: raw.slug, functions: noFunctions ? [] : checked.data.invitation.functions };
   } else {

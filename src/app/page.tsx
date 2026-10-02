@@ -1,25 +1,32 @@
 import Link from "next/link";
-import { ArrowDown, ArrowRight, ArrowUpRight, Check, Heart, Link2, MoveUpRight, Radio, Sparkles } from "lucide-react";
-import { Brand, Flower, Footer } from "@/components/brand";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { Brand, Flower } from "@/components/brand";
+import { Footer } from "@/components/footer";
 import { InvitationArt } from "@/components/invitation-art";
 import { SetupNotice } from "@/components/setup-notice";
 import { demoInvitation } from "@/data/demo-invitation";
 import { themes } from "@/data/themes";
+import { HowItWorks } from "@/components/marketing/how-it-works";
+import { CelebrationCompanion } from "@/components/marketing/celebration-companion";
+import { HomeHero } from "@/components/marketing/home-hero";
+import { OccasionMarquee } from "@/components/marketing/occasion-marquee";
+import { OccasionShowcase } from "@/components/marketing/occasion-showcase";
+import { FrequentlyAskedQuestions } from "@/components/marketing/faq";
+import "@/components/marketing/marketing.css";
 
 export default function Home() {
-  return <>
+  return <div className="stationery-home">
     <SetupNotice />
-    <header className="site-header container"><Brand /><nav aria-label="Main navigation"><Link href="/templates">The collection</Link><a href="#how-it-works">How it works</a></nav><Link className="button button-small" href="/demo">Try a demo <ArrowUpRight size={16} /></Link></header>
+    <header className="site-header home-header container"><Brand /><nav aria-label="Main navigation"><Link href="/templates">The collection</Link><a href="#how-it-works">How it works</a><a href="#faqs">FAQs</a></nav><div className="home-header-actions"><Link className="home-login" href="/login">Log in</Link><Link className="button button-small" href="/demo">Try a demo <ArrowUpRight size={16} aria-hidden="true" /></Link></div></header>
     <main id="main">
-      <section className="hero container">
-        <div className="hero-copy"><span className="eyebrow hero-kicker"><span /> FOR YOUR PEOPLE. FOR YOUR MOMENTS.</span><h1>A little link.<br />A lot of <em>togetherness.</em></h1><p className="hero-description">From the first happy announcement to the last song of the night. A beautiful invitation, and one place to bring your celebration together.</p><div className="hero-actions"><a href="#themes" className="button">Find your invitation <ArrowRight size={18} /></a><Link href="/demo" className="text-link">Experience the demo <MoveUpRight size={16} /></Link></div><div className="hero-note"><span className="tiny-flowers"><Flower /><Flower /><Flower /></span><p>Big Indian celebrations.<br /><strong>Thoughtfully small details.</strong></p></div></div>
-        <div className="hero-artwork"><div className="hero-halo" /><span className="handwritten">An invite that feels like you.</span><div className="hero-invitation"><InvitationArt theme="royal" invitation={demoInvitation} /></div><div className="floating-note rsvp-note"><span className="round-icon"><Check size={18} /></span><div><strong>Count us in! ♡</strong><p>An RSVP, a little closer to together.</p></div></div><div className="floating-note update-note"><span className="live-dot" /><span>One link. Every happy moment.</span></div><span className="hero-caption">THE GULMOHAR COLLECTION · A DEMO CELEBRATION</span></div>
-      </section>
-      <div className="occasion-strip"><div className="container"><span>For all your reasons to celebrate</span><span>Weddings <Flower /> Engagements <Flower /> Milestones <Flower /> Just because</span></div></div>
-      <section id="themes" className="section container"><div className="section-heading"><div><span className="eyebrow">THE INVITLY COLLECTION</span><h2>Your story. <em>Your kind of beautiful.</em></h2></div><p>Ten original designs. A thousand ways to make a moment your own.</p></div><div className="theme-grid">{themes.slice(0, 3).map((theme) => <Link href={`/demo?theme=${theme.id}`} key={theme.id} className="theme-card"><div className={`theme-preview preview-${theme.id}`}><span className="theme-number">N° {theme.number}</span><InvitationArt theme={theme.id} invitation={demoInvitation} compact /><span className="preview-open" aria-hidden="true"><ArrowUpRight size={20} /></span></div><div className="theme-title"><h3>{theme.name}</h3><span>{theme.category}</span></div><p>{theme.description}</p><span className="theme-link">Explore invitation <ArrowRight size={15} /></span></Link>)}</div><div className="homepage-collection-link"><Link className="button button-secondary" href="/templates">Explore all 10 designs <ArrowRight size={16} /></Link></div></section>
-      <section id="how-it-works" className="how-section"><div className="container"><div className="section-heading"><div><span className="eyebrow">LESS COORDINATING. MORE CELEBRATING.</span><h2>From “save the date”<br />to <em>“see you there.”</em></h2></div><Link href="/demo" className="text-link">Take a little look <ArrowDown size={18} /></Link></div><div className="steps-grid">{[{ icon: Sparkles, title: "Create your invitation", text: "Choose your look. Add your story, functions, and all the lovely little details." }, { icon: Link2, title: "Share a little joy", text: "One invitation link, ready for the family group or a personal WhatsApp message." }, { icon: Heart, title: "Bring everyone together", text: "Collect RSVPs and keep guests updated, from the first function to the final farewell." }].map((step, i) => <article key={step.title} className="step"><div className="step-top"><step.icon size={24} strokeWidth={1.4} /><span>0{i + 1}</span></div><h3>{step.title}</h3><p>{step.text}</p></article>)}</div><p className="foundation-note">Choose a design, make it yours, and publish one beautiful link for your people.</p></div></section>
-      <section className="live-section container"><div className="live-illustration"><span className="eyebrow"><Radio size={15} /> THE CELEBRATION CONTINUES</span><div className="message-card"><span className="message-avatar">A&K</span><div><strong>A little note from the hosts</strong><span>Just now · Sample update</span><p>The sangeet starts at 7. Bring your best moves — we&apos;ll bring the music. ✨</p></div></div><div className="message-card small-message"><Check size={18} /><span>All the details. Right where guests need them.</span></div></div><div className="live-copy"><span className="eyebrow">MORE THAN A SAVE-THE-DATE</span><h2>The invite is<br />only <em>the beginning.</em></h2><p>A celebration has a life of its own. Keep your schedule, directions, RSVPs, and event updates together, in a link your guests already have.</p><Link className="text-link" href="/demo#updates">Explore event updates <ArrowRight size={17} /></Link></div></section>
+      <HomeHero />
+      <OccasionMarquee />
+      <OccasionShowcase />
+      <section id="themes" className="section container"><div className="section-heading"><div><span className="eyebrow">THE INVITLY COLLECTION</span><h2>Your story. <em>Your kind of beautiful.</em></h2></div><p>Ten wedding designs, with separate collections for birthdays, new beginnings, and moments of remembrance.</p></div><div className="theme-grid">{themes.slice(0, 3).map((theme) => <Link href={`/demo?theme=${theme.id}`} key={theme.id} className="theme-card"><div className={`theme-preview preview-${theme.id}`}><span className="theme-number">N° {theme.number}</span><InvitationArt theme={theme.id} invitation={demoInvitation} compact /><span className="preview-open" aria-hidden="true"><ArrowUpRight size={20} /></span></div><div className="theme-title"><h3>{theme.name}</h3><span>{theme.category}</span></div><p>{theme.description}</p><span className="theme-link">Explore invitation <ArrowRight size={15} /></span></Link>)}</div><div className="homepage-collection-link"><Link className="button button-secondary" href="/templates">Explore every occasion <ArrowRight size={16} /></Link></div></section>
+      <HowItWorks />
+      <CelebrationCompanion />
+      <FrequentlyAskedQuestions />
       <section className="closing-cta container"><Flower /><span className="eyebrow">LET’S MAKE SOMETHING MEMORABLE</span><h2>Your people.<br /><em>One beautiful invitation.</em></h2><Link className="button button-light" href="/demo">Step inside the demo <ArrowUpRight size={18} /></Link><p>No sign-up needed. Just a little curiosity.</p><Link className="closing-account" href="/customize">Create your own invitation <ArrowRight size={14} /></Link></section>
     </main><Footer />
-  </>;
+  </div>;
 }

@@ -1,6 +1,29 @@
 export type ThemeId = "royal" | "floral" | "modern" | "mehfil" | "kesar" | "lotus" | "pichwai" | "ocean" | "champagne" | "sindoor";
+export type OccasionId = "wedding" | "engagement" | "birthday" | "baby-shower" | "housewarming" | "naming" | "anniversary" | "remembrance" | "other";
+export type TraditionId = "neutral" | "hindu" | "sikh" | "muslim" | "christian" | "jain" | "buddhist" | "parsi" | "interfaith" | "other";
+export type SectionId = "story" | "schedule" | "photos" | "rsvp" | "updates";
+export type MusicMood = "santoor" | "bansuri" | "celebration";
+export type UploadedAudio = { id: string; eventId: string; name: string };
+export type InvitationMusic = { source: "original" | "youtube" | "library" | "upload"; track: MusicMood; youtubeUrl: string; audioTrack?: string; uploadedAudio?: UploadedAudio };
+export type InvitationDesign = {
+  palette: "original" | "rose" | "sage" | "indigo";
+  typography: "original" | "serif" | "sans" | "script";
+  decoration: boolean;
+  countdown: boolean;
+  sectionOrder: SectionId[];
+  motion?: "gentle" | "expressive" | "none";
+  music?: InvitationMusic;
+};
 
 export type Invitation = {
+  occasion?: OccasionId;
+  tradition?: TraditionId;
+  traditionLabel?: string;
+  blessing?: string;
+  coverText?: string;
+  closingText?: string;
+  coverPhotoId?: string;
+  design?: InvitationDesign;
   slug: string;
   couple: [string, string];
   initials: string;
@@ -18,6 +41,8 @@ export type Invitation = {
     venue: string;
     address: string;
     dressCode: string;
+    mapUrl?: string;
+    visibility?: "public" | "hidden";
     icon: "sun" | "music" | "heart" | "sparkles";
   }[];
   updates: { id: string; time: string; message: string }[];
