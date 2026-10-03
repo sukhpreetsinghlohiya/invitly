@@ -26,7 +26,14 @@ test('journal topics lead to readable articles and working invitation links', as
     await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'article');
     await expect(page.locator('.journal-article-body>section')).toHaveCount(3);
     expect((await page.locator('.journal-article-body').innerText()).trim().split(/\s+/).length).toBeGreaterThan(250);
-    await expect(page.locator('.journal-article-cta').getByRole('link', { name: 'Find your design' })).toHaveAttribute('href', `/templates?occasion=${topic.occasion}#collection`);
+    const cta = page.locator('.journal-article-cta');
+    if (topic.occasion === 'wedding' || topic.occasion === 'engagement') {
+      await expect(cta.getByRole('link', { name: 'Find your design' })).toHaveAttribute('href', `/templates?occasion=${topic.occasion}#collection`);
+    } else {
+      await expect(cta.getByText('Coming soon', { exact: true })).toBeVisible();
+      await expect(cta.getByRole('link', { name: 'Explore available designs' })).toHaveAttribute('href', '/templates#occasion-collections-title');
+      await expect(cta.locator(`a[href*="occasion=${topic.occasion}"]`)).toHaveCount(0);
+    }
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
     await page.screenshot({ path: `artifacts/blog/${topic.slug}-${info.project.name}.png`, fullPage: true, scale: 'css' });
     await page.locator('.journal-related').getByRole('link', { name: 'All journal notes' }).click();

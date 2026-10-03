@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { isOccasionAvailable } from "@/data/occasion-availability";
 import { useRouter } from "next/navigation";
 import { useTransition, useState, type CSSProperties, type ReactNode } from "react";
 import { ArrowUpRight, ArrowRight, Search, Play } from "lucide-react";
@@ -24,7 +25,7 @@ export function ThemeGallery({ items, selectedOccasion, selectedTradition = "neu
   const occasionLabel = getOccasion(occasion).name;
 
   return <div className="collection-gallery" aria-busy={changingOccasion} data-gallery-occasion={occasion}>
-    <div className="collection-search-controls"><label className="form-field collection-search-field">Find a design<span className="collection-search-input"><Search size={17} aria-hidden="true" /><input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder="Search names, flowers, minimal…" /></span></label><label className="form-field">Occasion<select value={occasion} onChange={event => changeCollection(event.target.value, tradition)}>{occasions.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label><label className="form-field">Tradition (optional)<select value={tradition} onChange={event => changeCollection(occasion, event.target.value)}>{traditions.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label></div>
+    <div className="collection-search-controls"><label className="form-field collection-search-field">Find a design<span className="collection-search-input"><Search size={17} aria-hidden="true" /><input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder="Search names, flowers, minimal…" /></span></label><label className="form-field">Occasion<select value={occasion} onChange={event => changeCollection(event.target.value, tradition)}>{occasions.map(item => <option key={item.id} value={item.id} disabled={!isOccasionAvailable(item.id)}>{item.name}{!isOccasionAvailable(item.id) ? " · Coming soon" : ""}</option>)}</select></label><label className="form-field">Tradition (optional)<select value={tradition} onChange={event => changeCollection(occasion, event.target.value)}>{traditions.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label></div>
     {changingOccasion && <p className="collection-loading" role="status">Preparing your designs…</p>}
     <div className="collection-filter-bar"><div className="collection-filters" role="group" aria-label="Filter invitation styles">{filters.map(filter => <button type="button" key={filter} aria-label={filter} aria-pressed={activeFilter === filter} onClick={() => setActiveFilter(filter)}>{filter}<span>{filter === "All" ? items.length : items.filter(({ theme }) => theme.family === filter).length}</span></button>)}</div><p className="collection-count" role="status" aria-live="polite">{visible.length} {visible.length === 1 ? "invitation" : "invitations"}{activeFilter !== "All" ? ` · ${activeFilter}` : " to make your own"}</p></div>
     {!visible.length && <div className="collection-empty"><h3>No matching designs yet.</h3><p>Try another name or visual style.</p><button type="button" className="button button-secondary" onClick={() => { setQuery(""); setActiveFilter("All"); }}>Clear search and style</button></div>}

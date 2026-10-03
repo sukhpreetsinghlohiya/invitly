@@ -59,7 +59,7 @@ export default async function DashboardPage() {
           </article>;
         })}</div> : <div className="dashboard-empty"><Flower /><span className="eyebrow">YOUR FIRST INVITATION IS WAITING</span><h3>Make room for<br /><em>something wonderful.</em></h3><p>Choose a design, add your story, and bring everyone together with one little link.</p><Link className="button" href="/customize">Create your first invitation <ArrowRight size={15} /></Link><Link className="text-link" href="/templates">Explore the collection</Link></div>}
       </section>
-      <aside className="dashboard-help"><div><span className="eyebrow">A LITTLE INSPIRATION</span><h2>Find your kind of <em>beautiful.</em></h2><p>Thoughtful designs for your occasion, from a birthday to a new beginning.</p></div><Link className="button button-secondary" href="/templates">Browse themes <ArrowUpRight size={16} /></Link></aside>
+      <aside className="dashboard-help"><div><span className="eyebrow">A LITTLE INSPIRATION</span><h2>Find your kind of <em>beautiful.</em></h2><p>Thoughtful wedding and engagement designs, ready for your story. More occasions are coming soon.</p></div><Link className="button button-secondary" href="/templates">Browse themes <ArrowUpRight size={16} /></Link></aside>
     </main><Footer />
   </div>;
 }

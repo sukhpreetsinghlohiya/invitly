@@ -1,6 +1,6 @@
 # Invitly
 
-A mobile-first Indian digital invitation platform for **invitly.co.in**. An Indian celebration identity, ten wedding themes, three curated designs for each of eight other occasions, a mobile editor, and Supabase-backed host workflows. Made by Sukhpreet.
+A mobile-first Indian digital invitation platform for **invitly.co.in**. The current launch includes ten wedding designs and three engagement designs, a mobile editor, and Supabase-backed host workflows. Seven other occasion collections are marked **Coming soon**; their designs and existing saved invitations are retained for future polishing. Made by Sukhpreet.
 
 ## Run locally
 
@@ -31,8 +31,9 @@ The scripts use Next.js's supported Webpack builder; Turbopack's CSS worker coul
 | --- | --- |
 | `/` | Marketing homepage and interactive theme previews |
 | `/demo` | Complete Royal Indian sample invitation |
-| `/templates` | Nine occasions, searchable curated designs, style/tradition filters and real preview/customize links |
-| `/demo?occasion=birthday&theme=kesar` | Birthday ticket; change occasion/theme for the other curated designs |
+| `/templates` | Wedding and engagement collections with searchable designs; seven future occasions marked Coming soon |
+| `/demo?occasion=engagement&theme=lotus` | Engagement invitation preview |
+| `/demo?occasion=birthday` (and other future occasions) | Coming soon page with links to available collections |
 | `/demo?theme=royal` | Royal Indian theme |
 | `/demo?theme=modern` | Modern Minimal theme |
 | `/demo?theme=floral` | Floral Celebration theme |
@@ -115,6 +116,7 @@ Run `node scripts/local-integration.mjs allowance` for the SQL and real HTTP con
 
    - `supabase/migrations/20260930073714_occasion_aware_invitations.sql`
    - `supabase/migrations/20260930171100_free_invitation_allowance.sql`
+   - `supabase/migrations/20261002171500_invitation_story_options.sql`
 
    Apply only migrations not already applied. These are one-time migrations; do not rerun successful files. The latest migration supports guest management, publication-aware delivery, event time zones, photo dimensions, and announcement visibility.
 4. In **Authentication → Providers / Sign In**, enable Email and password sign-in. Keep email confirmation enabled. Configure custom SMTP for real deliveries; Supabase's default mail service has delivery restrictions and rate limits.

@@ -64,7 +64,7 @@ test('homepage login, keyboard FAQs and footer navigation work at every viewport
 
 test('guided editor steps, publishing checklist and previews preserve a local draft', async ({ page }, info) => {
   test.setTimeout(60000);
-  await page.goto('/customize?occasion=birthday&theme=kesar');
+  await page.goto('/customize?occasion=engagement&theme=lotus');
   const status = page.locator('.editor-workspace-status');
   const step = page.locator('.editor-current-step');
   const heading = page.locator('#editor-step-heading');
@@ -82,31 +82,32 @@ test('guided editor steps, publishing checklist and previews preserve a local dr
   await page.getByRole('button', { name: 'Continue to Details', exact: true }).click();
   await expect(step).toContainText('Step 2 of 6');
   await expect(heading).toBeFocused();
-  await page.getByLabel('Birthday person’s name', { exact: true }).fill('Anaya');
+  await page.getByLabel('First name', { exact: true }).fill('Anaya');
+  await page.getByLabel('Second name', { exact: true }).fill('Arjun');
   await expect(frame.locator('main')).toContainText('Anaya');
   await capturePage(page, `editor-details-${info.project.name}`);
-  await page.getByLabel('Birthday person’s name', { exact: true }).fill('ਪ੍ਰੀਤ · प्रीत');
-  await page.getByRole('textbox', { name: 'Your message', exact: true }).fill('A birthday lunch with our favourite people.');
+  await page.getByLabel('First name', { exact: true }).fill('ਪ੍ਰੀਤ · प्रीत');
+  await page.getByRole('textbox', { name: 'Your message', exact: true }).fill('An engagement lunch with our favourite people.');
   await expect(status).toHaveAttribute('data-save-state', 'unsaved');
   await page.getByRole('button', { name: 'Continue to Schedule', exact: true }).click();
   await expect(heading).toBeFocused();
   await page.getByRole('button', { name: 'Add function', exact: true }).click();
-  await page.getByLabel('Function name', { exact: true }).fill('Birthday lunch');
+  await page.getByLabel('Function name', { exact: true }).fill('Engagement lunch');
   await page.getByRole('button', { name: 'Continue to Photos', exact: true }).click();
   await expect(step).toContainText('Step 4 of 6');
   await expect(heading).toBeFocused();
   await page.getByRole('button', { name: 'Back to Schedule', exact: true }).click();
   await expect(heading).toBeFocused();
-  await expect(page.getByLabel('Function name', { exact: true })).toHaveValue('Birthday lunch');
+  await expect(page.getByLabel('Function name', { exact: true })).toHaveValue('Engagement lunch');
 
   await page.getByRole('button', { name: 'Share', exact: true }).click();
   const checklist = page.getByRole('region', { name: 'Publishing checklist', exact: true });
   await expect(checklist.locator('[data-readiness-status="missing"]').first()).toBeVisible();
-  await expect(frame.locator('main')).toContainText('Birthday lunch');
+  await expect(frame.locator('main')).toContainText('Engagement lunch');
   await capturePage(page, `editor-share-missing-${info.project.name}`);
   await checklist.getByRole('button', { name: 'Review event date', exact: true }).click();
   await expect(step).toContainText('Step 2 of 6');
-  await expect(page.getByLabel('Birthday person’s name', { exact: true })).toHaveValue('ਪ੍ਰੀਤ · प्रीत');
+  await expect(page.getByLabel('First name', { exact: true })).toHaveValue('ਪ੍ਰੀਤ · प्रीत');
   await page.getByLabel(/^Event date and time/).fill('2027-04-03T12:00');
   await page.getByLabel('City', { exact: true }).fill('Chandigarh');
   await page.getByRole('button', { name: 'Share', exact: true }).click();
@@ -128,8 +129,8 @@ test('guided editor steps, publishing checklist and previews preserve a local dr
   const preview = page.getByRole('dialog', { name: 'Live invitation preview', exact: true });
   await expect(preview).toBeVisible();
   await expect(frame.locator('main')).toContainText('ਪ੍ਰੀਤ · प्रीत');
-  await expect(frame.locator('main')).toContainText('Birthday lunch');
-  await expect(frame.locator('main')).toContainText('A birthday lunch with our favourite people.');
+  await expect(frame.locator('main')).toContainText('Engagement lunch');
+  await expect(frame.locator('main')).toContainText('An engagement lunch with our favourite people.');
   await page.getByRole('button', { name: 'Desktop · 1280px', exact: true }).click();
   await expect(page.locator('iframe[title="Actual guest invitation preview"]')).toHaveCSS('width', '1280px');
   await page.getByRole('button', { name: 'Phone · 360px', exact: true }).click();
@@ -138,25 +139,25 @@ test('guided editor steps, publishing checklist and previews preserve a local dr
   await expect(page.getByRole('button', { name: 'Preview invitation', exact: true })).toBeFocused();
   expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
 
-  await page.goto('/customize?occasion=birthday&theme=modern');
+  await page.goto('/customize?occasion=engagement&theme=royal');
   await expect(status).toHaveAttribute('data-save-state', 'unsaved');
   await expect(frame.locator('main')).toContainText('ਪ੍ਰੀਤ · प्रीत');
-  await expect(frame.locator('main')).toContainText('A birthday lunch with our favourite people.');
-  await expect(frame.locator('#invitation')).toHaveAttribute('data-theme', 'modern');
+  await expect(frame.locator('main')).toContainText('An engagement lunch with our favourite people.');
+  await expect(frame.locator('#invitation')).toHaveAttribute('data-theme', 'royal');
   await page.getByRole('button', { name: 'Save draft', exact: true }).click();
   await expect(status).toHaveAttribute('data-save-state', 'saved');
   await page.reload();
   await expect(status).toHaveAttribute('data-save-state', 'saved');
-  await expect(frame.locator('#invitation')).toHaveAttribute('data-theme', 'modern');
+  await expect(frame.locator('#invitation')).toHaveAttribute('data-theme', 'royal');
   await expect(frame.locator('main')).toContainText('ਪ੍ਰੀਤ · प्रीत');
 });
 
 test.describe('homepage account entry', () => {
   test('homepage login reaches the host dashboard and shows account draft status', async ({ page }, info) => {
     test.skip(info.project.name !== 'mobile-360' || process.env.INVITLY_INTEGRATION !== '1', 'Isolated authenticated entry journey at 360px');
-    await page.goto('/customize?occasion=birthday&theme=kesar');
+    await page.goto('/customize?occasion=engagement&theme=lotus');
     await page.getByRole('button', { name: 'Details', exact: true }).click();
-    await page.getByLabel('Birthday person’s name', { exact: true }).fill('Restored birthday');
+    await page.getByLabel('First name', { exact: true }).fill('Restored engagement');
     await page.getByRole('button', { name: 'Save draft', exact: true }).click();
     await expect(page.locator('.editor-workspace-status')).toContainText(/device|browser/i);
     await page.goto('/');
@@ -172,7 +173,7 @@ test.describe('homepage account entry', () => {
     await expect(status).toContainText('Saved on this device');
     await expect(status).toContainText('Available only in this browser');
     await page.getByRole('button', { name: 'Details', exact: true }).click();
-    await expect(page.getByLabel('Birthday person’s name', { exact: true })).toHaveValue('Restored birthday');
+    await expect(page.getByLabel('First name', { exact: true })).toHaveValue('Restored engagement');
     await page.getByRole('button', { name: 'Save draft', exact: true }).click();
     await expect(page).toHaveURL(/event=[a-f0-9-]{36}$/);
     await expect(status).toHaveAttribute('data-save-state', 'saved');

@@ -1,5 +1,6 @@
 "use server";
 
+import { isOccasionAvailable, occasionComingSoonMessage } from "@/data/occasion-availability";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getSupabaseConfig } from "@/lib/env";
@@ -51,6 +52,7 @@ export async function createEvent(_previous: EventFormState, formData: FormData)
 export async function saveInvitation(input: { eventId?: string; themeId: string; invitation: Invitation; musicEnabled: boolean }): Promise<{ error?: string; upgradeRequired?: boolean; eventId?: string; slug?: string; published?: boolean; publishedAt?: string | null }> {
   const validation = validateInvitationDraft(input, "draft");
   if (!validation.data) return { error: validation.error };
+  if (!input.eventId && !isOccasionAvailable(validation.data.invitation.occasion)) return { error: occasionComingSoonMessage };
   if (!getSupabaseConfig()) return { error: "Your preview is ready. Connect Supabase to save and publish a permanent invitation link." };
   const eventId = input.eventId;
   if (eventId !== undefined && (typeof eventId !== "string" || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(eventId))) return { error: "Choose a valid invitation to edit." };
@@ -66,8 +68,11 @@ export async function saveInvitation(input: { eventId?: string; themeId: string;
     }
     let previousSlug: string | undefined;
     if (eventId) {
-      const { data: existing, error: readError } = await supabase.from("events").select("slug,is_published").eq("id", eventId).eq("owner_id", user.id).maybeSingle();
+      const { data: existing, error: readError } = await supabase.from("events").select("slug,is_published,invitation_content").eq("id", eventId).eq("owner_id", user.id).maybeSingle();
       if (readError || !existing) return { error: "This invitation could not be found. You can only edit invitations you own." };
+      const content = existing.invitation_content;
+      const previousOccasion = content && typeof content === "object" && !Array.isArray(content) ? content.occasion || "wedding" : "other";
+      if (!isOccasionAvailable(invitation.occasion) && invitation.occasion !== previousOccasion) return { error: occasionComingSoonMessage };
       previousSlug = existing.slug;
       if (existing.is_published) {
         const complete = validateInvitationDraft(input, "publish");

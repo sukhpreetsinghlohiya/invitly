@@ -1,3 +1,5 @@
+import { isOccasionAvailable } from "@/data/occasion-availability";
+import { OccasionComingSoon } from "@/components/occasion-coming-soon";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { InvitationEditor, type EditorPhoto } from "@/components/editor/invitation-editor";
@@ -15,6 +17,7 @@ export const dynamic = "force-dynamic";
 
 export default async function CustomizePage({ searchParams }: { searchParams: Promise<{ theme?: string; event?: string; occasion?: string; tradition?: string }> }) {
   const params = await searchParams;
+  if (!params.event && !isOccasionAvailable(getOccasion(params.occasion).id)) return <OccasionComingSoon occasion={getOccasion(params.occasion).id} />;
   const requestedTheme = params.theme ? resolveTheme(params.theme) : getOccasionThemes(getOccasion(params.occasion).id)[0].id;
   const configured = Boolean(getSupabaseConfig());
   let signedIn = false;

@@ -1,9 +1,11 @@
 import { expect, test } from "@playwright/test";
 import { mkdir } from "node:fs/promises";
+import { occasionDemo } from "../src/data/occasion-demos";
+import { showDraftPreview } from "./helpers/draft-preview";
 import { getOccasionThemes } from "../src/data/occasion-themes";
 
 test.use({ trace: "off", screenshot: "off", video: "off" });
-test("birthday draft, three curated theme switches, true preview, saved publication and account dashboard", async ({ page }) => {
+test("engagement draft, three curated theme switches, true preview, saved publication and account dashboard", async ({ page }) => {
   test.skip(process.env.INVITLY_INTEGRATION !== "1", "Local isolated accounts required");
   test.setTimeout(120000);
   page.setDefaultTimeout(10000);
@@ -12,30 +14,31 @@ test("birthday draft, three curated theme switches, true preview, saved publicat
   await page.getByLabel(/^Password/).fill(process.env.TEST_HOST_A_PASSWORD!);
   await page.getByRole('button',{name:'Sign in',exact:true}).click();
   await expect(page).toHaveURL(/\/dashboard$/);
-  await page.goto('/customize?occasion=birthday');
+  await page.goto('/customize?occasion=engagement');
   await page.getByRole('button',{name:'Save draft',exact:true}).click();
   await expect(page).toHaveURL(/event=[0-9a-f-]{36}$/);
   const editorUrl = page.url();
   await page.reload();
   await page.getByRole('button',{name:'Details',exact:true}).click();
-  await expect(page.getByLabel('Birthday person’s name', {exact:true})).toHaveValue('');
-  await page.getByLabel('Birthday person’s name', {exact:true}).fill('ਸਿਮਰਨ · सिमरन');
+  await expect(page.getByLabel('First name', {exact:true})).toHaveValue('');
+  await page.getByLabel('First name', {exact:true}).fill('ਸਿਮਰਨ · सिमरन');
+  await page.getByLabel('Second name', {exact:true}).fill('Arjun');
   await page.getByLabel(/^Event date and time/).fill('2027-04-03T16:00');
   await page.getByLabel('City', {exact:true}).fill('Chandigarh');
   await page.getByRole('button',{name:'Schedule',exact:true}).click();
   await page.getByRole('button',{name:'Add function',exact:true}).click();
-  await page.getByLabel('Function name', {exact:true}).fill('Birthday lunch');
+  await page.getByLabel('Function name', {exact:true}).fill('Engagement lunch');
   await page.getByLabel(/^Date and time/).fill('2027-04-03T16:00');
   await page.getByLabel('Venue name',{exact:true}).fill('Our family home');
   await page.getByLabel(/^Venue address/).fill('Sector 17, Chandigarh');
   await page.getByLabel('Google Maps link (optional)').fill('https://maps.app.goo.gl/saved-pin');
   await page.getByRole('button',{name:'Design',exact:true}).click();
-  for (const theme of getOccasionThemes('birthday')) {
+  for (const theme of getOccasionThemes('engagement')) {
     const choice = page.getByRole('button',{name:theme.name,exact:true});
     await choice.click(); await expect(choice).toHaveAttribute('aria-pressed','true');
     const actual = page.frameLocator('iframe').locator('main');
     await expect(actual).toContainText('ਸਿਮਰਨ · सिमरन');
-    await expect(actual).toContainText('Birthday lunch');
+    await expect(actual).toContainText('Engagement lunch');
     await expect(actual.locator('#invitation')).toHaveAttribute('data-occasion-layout', theme.layout);
   }
   await page.getByLabel('A soundtrack for your story').check();
@@ -58,7 +61,7 @@ test("birthday draft, three curated theme switches, true preview, saved publicat
   const publicUrl = await page.getByLabel('Published invitation URL',{exact:true}).inputValue();
   await page.goto(publicUrl);
   await expect(page.getByRole('heading',{level:1})).toContainText('ਸਿਮਰਨ · सिमरन');
-  await expect(page.getByRole('heading',{name:'Birthday lunch',exact:true})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'Engagement lunch',exact:true})).toBeVisible();
   await expect(page.locator('main')).not.toContainText('bride');
   await expect(page.getByRole('link',{name:/Get directions/})).toHaveAttribute('href','https://maps.app.goo.gl/saved-pin');
   await page.getByRole('button',{name:'Play music',exact:true}).click();
@@ -77,8 +80,9 @@ test("birthday draft, three curated theme switches, true preview, saved publicat
   await expect(page.locator('.editor-feedback')).toContainText('private again');
 });
 
-test("remembrance starts without wedding wording or a countdown", async ({ page }) => {
-  await page.goto('/demo?occasion=remembrance&theme=royal');
+test("existing remembrance content still renders without wedding wording or a countdown", async ({ page }) => {
+  await page.goto('/preview');
+  await showDraftPreview(page, { themeId: 'royal', invitation: occasionDemo('remembrance', 'royal'), musicEnabled: false });
   await expect(page.getByRole('heading',{level:1})).toContainText('Dev Sharma');
   await expect(page.locator('.countdown')).toHaveCount(0);
   await expect(page.locator('main')).not.toContainText('forever');

@@ -30,7 +30,7 @@ async function loadedCoverArtwork(cover: Locator) {
   return [...new Set(assets)].sort();
 }
 
-for (const occasion of occasions) {
+for (const occasion of occasions.filter(item => item.id === 'wedding' || item.id === 'engagement')) {
   test(`${occasion.id} has its own illustration, readable schedule and editable entry point`, async ({ page }, info) => {
     const theme = occasionCollections[occasion.id].theme;
     await page.goto(`/demo?theme=${theme}&occasion=${occasion.id}`);
@@ -48,10 +48,10 @@ for (const occasion of occasions) {
   });
 }
 
-test('legacy links for every occasion remain usable across all ten theme IDs', async ({ page }, info) => {
+test('legacy links for available occasions remain usable across all ten theme IDs', async ({ page }, info) => {
   test.skip(info.project.name !== 'mobile-360','Composition matrix at 360px; each starter also checked at all widths');
   test.setTimeout(180000);
-  for (const occasion of occasions) for (const theme of themes) {
+  for (const occasion of occasions.filter(item => item.id === 'wedding' || item.id === 'engagement')) for (const theme of themes) {
     await page.goto(`/demo?theme=${theme.id}&occasion=${occasion.id}`);
     await expect(page.getByRole('heading',{level:1})).toContainText(occasionCollections[occasion.id].names[0]);
     expect(await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth),`${occasion.id}/${theme.id}`).toBeLessThanOrEqual(0);
@@ -59,7 +59,7 @@ test('legacy links for every occasion remain usable across all ten theme IDs', a
   }
 });
 
-for (const occasion of occasions.filter(item => item.id !== 'wedding')) {
+for (const occasion of occasions.filter(item => item.id === 'engagement')) {
   test(`${occasion.id} offers three real cover compositions with readable actions`, async ({ page }, info) => {
     test.setTimeout(60000);
     const designs = getOccasionThemes(occasion.id);
@@ -109,7 +109,7 @@ for (const occasion of occasions.filter(item => item.id !== 'wedding')) {
 }
 
 test('venue and soundtrack preferences survive reload and preview', async ({ page }, info) => {
-  await page.goto('/customize?occasion=birthday&theme=kesar');
+  await page.goto('/customize?occasion=engagement&theme=lotus');
   await page.getByRole('button',{name:'Schedule',exact:true}).click();
   await page.getByRole('button',{name:'Add function',exact:true}).click();
   await page.getByLabel('Venue name',{exact:true}).fill('Rose Garden');
@@ -118,9 +118,9 @@ test('venue and soundtrack preferences survive reload and preview', async ({ pag
   await page.getByLabel('Google Maps link (optional)').fill('https://maps.app.goo.gl/example');
   await expect(page.getByRole('link',{name:/Check your saved location/})).toHaveAttribute('href','https://maps.app.goo.gl/example');
   await page.getByRole('button',{name:'Design',exact:true}).click();
-  const birthdayDesign = getOccasionThemes('birthday')[1];
-  await page.getByRole('button',{name:birthdayDesign.name,exact:true}).click();
-  expect(new URL(page.url()).searchParams.get('occasion')).toBe('birthday');
+  const engagementDesign = getOccasionThemes('engagement')[1];
+  await page.getByRole('button',{name:engagementDesign.name,exact:true}).click();
+  expect(new URL(page.url()).searchParams.get('occasion')).toBe('engagement');
   await page.getByLabel('A soundtrack for your story').check();
   await page.getByRole('button',{name:/Evening breeze/}).click();
   await page.getByLabel('Movement & transitions').selectOption('expressive');
@@ -128,7 +128,7 @@ test('venue and soundtrack preferences survive reload and preview', async ({ pag
   await expect(page.locator('.editor-feedback')).toContainText('saved');
   await page.reload();
   await page.getByRole('button',{name:'Design',exact:true}).click();
-  await expect(page.getByRole('button',{name:birthdayDesign.name,exact:true})).toHaveAttribute('aria-pressed','true');
+  await expect(page.getByRole('button',{name:engagementDesign.name,exact:true})).toHaveAttribute('aria-pressed','true');
   await expect(page.getByRole('button',{name:/Evening breeze/})).toHaveAttribute('aria-pressed','true');
   await expect(page.getByLabel('Movement & transitions')).toHaveValue('expressive');
   const actualPreview = page.frameLocator('iframe[title="Actual guest invitation preview"]');
@@ -218,19 +218,19 @@ test.describe('motion preferences',()=>{
 });
 
 
-test('occasion selection updates gallery artwork and all nine editor fields remain editable',async({page},info)=>{
+test('available occasion selection updates gallery artwork and preserves editable fields',async({page},info)=>{
   test.skip(info.project.name !== 'mobile-360','Full occasion editor journey at 360px');
   test.setTimeout(120000);
   await page.goto('/templates');
   page.setDefaultTimeout(10000);
-  await page.getByRole('combobox',{name:'Occasion',exact:true}).selectOption('birthday');
-  const birthdayDesigns = getOccasionThemes('birthday');
-  await expect(page.locator('article.collection-card')).toHaveCount(birthdayDesigns.length);
-  await expect(page.locator('.collection-card [data-occasion="birthday"]')).toHaveCount(birthdayDesigns.length);
-  await page.getByRole('link',{name:`Customize ${birthdayDesigns[0].name}`,exact:true}).click();
+  await page.getByRole('combobox',{name:'Occasion',exact:true}).selectOption('engagement');
+  const engagementDesigns = getOccasionThemes('engagement');
+  await expect(page.locator('article.collection-card')).toHaveCount(engagementDesigns.length);
+  await expect(page.locator('.collection-card [data-occasion="engagement"]')).toHaveCount(engagementDesigns.length);
+  await page.getByRole('link',{name:`Customize ${engagementDesigns[0].name}`,exact:true}).click();
   await page.getByRole('button',{name:'Details',exact:true}).click();
-  await expect(page.getByLabel('Birthday person’s name',{exact:true})).toBeVisible();
-  for(const occasion of occasions){
+  await expect(page.getByLabel('First name',{exact:true})).toBeVisible();
+  for(const occasion of occasions.filter(item => item.id === 'wedding' || item.id === 'engagement')){
     await page.goto(`/customize?occasion=${occasion.id}&theme=${occasionCollections[occasion.id].theme}`);
     await page.getByRole('button',{name:'Details',exact:true}).click();
     await page.getByLabel(occasion.firstLabel,{exact:true}).fill('ਸਿਮਰਨ · सिमरन');

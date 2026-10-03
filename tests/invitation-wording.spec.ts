@@ -2,6 +2,8 @@ import { mkdir } from 'node:fs/promises';
 import { expect, test, type FrameLocator, type Page } from '@playwright/test';
 import { getWordingPreset, wordingLanguages, type WordingPatch } from '../src/data/invitation-wording';
 import type { OccasionId } from '../src/types/invitation';
+import { occasionDemo } from '../src/data/occasion-demos';
+import { showDraftPreview } from './helpers/draft-preview';
 
 test.use({ actionTimeout: 10000 });
 
@@ -10,7 +12,7 @@ const scriptFonts: Record<string, string> = {
   punjabi: 'Invitly Gurmukhi', gujarati: 'Invitly Gujarati',
 };
 
-async function expectWording(frame: FrameLocator, wording: WordingPatch) {
+async function expectWording(frame: FrameLocator | Page, wording: WordingPatch) {
   for (const line of Object.values(wording)) await expect(frame.locator('main')).toContainText(line);
 }
 
@@ -109,28 +111,24 @@ test('wording choices preview before explicit apply and preserve personal detail
   await expect(page.getByLabel(/^Cover text/)).toHaveValue(current.coverText);
 });
 
-test('remembrance wording stays quiet in all six languages and never adds a wedding countdown', async ({ page }) => {
+test('existing remembrance wording stays quiet in all six languages and never adds a wedding countdown', async ({ page }) => {
   test.setTimeout(60000);
-  await page.goto('/customize?occasion=remembrance&theme=floral');
-  await page.getByRole('button', { name: 'Details', exact: true }).click();
-  const panel = page.locator('details.editor-wording-panel');
-  await panel.locator('summary').click();
-  const frame = page.frameLocator('iframe[title="Actual guest invitation preview"]');
+  await page.goto('/preview');
   for (const language of wordingLanguages) {
     const preset = getWordingPreset('remembrance', language.id);
     expect(Object.values(preset).join(' ')).not.toMatch(/wedding|shaadi|शादी|ਵਿਆਹ|લગ્ન|लग्न/iu);
-    await panel.getByRole('combobox', { name: 'Wording language', exact: true }).selectOption(language.id);
-    await panel.getByRole('button', { name: 'Use this wording', exact: true }).click();
-    await expectWording(frame, preset);
+    await showDraftPreview(page, { themeId: 'floral', invitation: { ...occasionDemo('remembrance', 'floral'), ...preset }, musicEnabled: false });
+    await expectWording(page, preset);
     if (scriptFonts[language.id]) {
-      const nativeCover = frame.locator('#invitation').getByText(preset.coverText, { exact: true });
+      const nativeCover = page.locator('#invitation').getByText(preset.coverText, { exact: true });
       await expect(nativeCover).toHaveCSS('letter-spacing', /^(normal|0px)$/);
       await expect(nativeCover).toHaveCSS('font-style', 'normal');
       await expect(nativeCover).toHaveCSS('text-transform', 'none');
     }
-    await expect(frame.locator('.countdown')).toHaveCount(0);
-    await expect(frame.locator('main')).not.toContainText('We’re getting married');
-    await noOverflow(page, frame);
+    await expect(page.locator('.countdown')).toHaveCount(0);
+    await expect(page.locator('main')).not.toContainText('We’re getting married');
+    await page.evaluate(() => document.fonts.ready);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
   }
 });
 

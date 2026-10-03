@@ -5,11 +5,11 @@ import { Pause, Play } from "lucide-react";
 import { Flower } from "@/components/brand";
 import "./occasion-marquee.css";
 
-const moments = ["Weddings", "Engagements", "Birthdays", "Baby showers", "New beginnings", "Anniversaries", "Every little celebration"];
+const moments = ["Weddings", "Engagements", "Your story", "Your people", "More occasions coming soon"];
 
 export function OccasionMarquee() {
   const [paused, setPaused] = useState(false);
-  return <section className="occasion-marquee" aria-label="Invitations for every occasion" data-paused={paused}>
+  return <section className="occasion-marquee" aria-label="Wedding and engagement invitations; more occasions coming soon" data-paused={paused}>
     <div className="occasion-marquee-viewport">
       <div className="occasion-marquee-track">
         {[0, 1].map(copy => <ul className="occasion-marquee-group" key={copy} aria-hidden={copy === 1 ? true : undefined}>

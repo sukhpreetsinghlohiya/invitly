@@ -1,5 +1,7 @@
 # Invitly design foundation
 
+**Current launch scope:** wedding and engagement. The remaining seven occasion collections show Coming soon in discovery and the editor; new creation and demo routes are gated by `src/data/occasion-availability.ts`. Existing saved invitations remain editable and renderable. The future design specifications below are retained for later polishing.
+
 The shared visual system lives in `src/app/globals.css` and `src/app/design-system.css`. The latter exposes Tailwind v4 semantic tokens for surfaces, primary/hover colors, borders, radii, panel shadows and page spacing. The customized shadcn/ui button pattern is in `src/components/ui/button.tsx` and is used for dashboard publication controls. The ten invitation styles are extended in `src/app/theme-collection.css`; the collection and editor have route-scoped styles in `src/app/templates/gallery.css` and `src/app/customize/editor.css`. Tailwind is available for layout utilities; reusable semantic classes keep marketing, invitations, and account forms consistent.
 
 ## Tokens

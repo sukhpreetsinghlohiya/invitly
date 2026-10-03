@@ -1,5 +1,14 @@
 # Production validation
 
+## Wedding and engagement launch scope — 3 October 2026
+
+New creation is available for Wedding and Engagement. Homepage, collection, footer and editor label the other seven occasions **Coming soon**. Unsupported demo, collection and new-editor URLs show the same notice; the save action rejects new unsupported occasions. Existing owned invitations may retain their previous occasion, and public/guest rendering remains unchanged. Anonymous device drafts are preserved when their occasion is unavailable and can be reused for an available occasion.
+
+Validation on the production build at port 3011: build and ESLint passed; 29 data tests passed; 63 browser checks passed across the core 360px flows and the 320px/desktop availability and journal checks. Five checks were skipped (four require authenticated fixtures; one runs only in the separate narrowest-width photo matrix). Tests cover all seven future occasions across all three guarded routes, the two active collections, disabled editor choices, preserved local drafts, owner-authentication entry, and all 21 retained future layouts through private preview. The initial availability run had two test-selector issues and browser timeouts; the corrected run passed all 20 checks. Visual review found no horizontal overflow or clipped labels in eight page/viewport combinations. The editor keeps Coming soon labels at full opacity for readable contrast.
+
+Evidence: `artifacts/launch-build.log`, `artifacts/launch-lint.log`, `artifacts/launch-data-tests.log`, `artifacts/launch-browser.log`, `artifacts/launch-regressions.log`, `artifacts/launch-availability-final.log`, and `artifacts/launch-review/`. The database/deployment limits in the earlier review below still apply; no hosted migration was run in this pass.
+
+
 ## Invitation design and animated stories — 2 October 2026
 
 Implemented and reviewed all 34 designs across nine occasions, including enhanced painted/engraved covers, independent ceremony-art motion, cover-first photo slideshows, a framed three-card album, individual couple/family profiles, optional film, independent countdown date, RSVP visibility and configurable envelope openings. Existing public/guest photo authorization and protected image delivery are preserved. Five specialist agents contributed across two waves; all project changes and review artifacts stayed inside the Invitly directory.

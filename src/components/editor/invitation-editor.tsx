@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore, type FormEvent, type MouseEvent } from "react";
 import Link from "next/link";
+import { isOccasionAvailable } from "@/data/occasion-availability";
+import { OccasionComingSoon } from "@/components/occasion-coming-soon";
 import Image from "next/image";
 import { AlertCircle, ArrowLeft, ArrowRight, CalendarDays, CheckCircle2, Circle, Copy, ExternalLink, Heart, ImagePlus, LayoutTemplate, Link2, Loader2, Plus, Save, Settings2, ShieldCheck, Smartphone, Sparkles, Trash2, Upload } from "lucide-react";
 import { Brand } from "@/components/brand";
@@ -55,6 +57,7 @@ export function InvitationEditor(props: Props) {
     if (props.preferredOccasion) initial = { ...initial, invitation: applyOccasion(initial.invitation, props.preferredOccasion) };
     if (props.preferredTradition) initial = { ...initial, invitation: { ...initial.invitation, tradition: props.preferredTradition } };
   }
+  if (!props.eventId && !isOccasionAvailable(initial.invitation.occasion)) return <OccasionComingSoon occasion={initial.invitation.occasion!} />;
   const restoredWithChanges = savedLocalSnapshot !== null && savedLocalSnapshot !== JSON.stringify(initial);
   // A first save changes the URL from a local draft to its new event ID. Keep
   // that workspace mounted so refreshed server props cannot erase its feedback.

@@ -1,3 +1,5 @@
+import { isOccasionAvailable } from "@/data/occasion-availability";
+import { OccasionComingSoon, ComingSoonBadge } from "@/components/occasion-coming-soon";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Brand, Flower } from "@/components/brand";
@@ -14,12 +16,13 @@ import "./gallery.css";
 
 export const metadata: Metadata = {
   title: "The invitation collection",
-  description: "Explore occasion-specific invitations with rich Indian artwork, editable layouts, venue directions, and music. Ten wedding designs and three for each of eight other occasions.",
+  description: "Explore ten wedding and three engagement invitation designs with rich artwork, editable layouts, venue directions, and music. More occasions are coming soon.",
 };
 
 export default async function TemplatesPage({ searchParams }: { searchParams: Promise<{ occasion?: string; tradition?: string }> }) {
   const params = await searchParams;
   const occasion = getOccasion(params.occasion);
+  if (!isOccasionAvailable(occasion.id)) return <OccasionComingSoon occasion={occasion.id} />;
   const tradition = traditions.find(item => item.id === params.tradition)?.id || "neutral";
   const traditionQuery = tradition === "neutral" ? "" : `&tradition=${tradition}`;
   const demoInvitation = { ...occasionDemo(occasion.id), tradition };
@@ -39,7 +42,12 @@ export default async function TemplatesPage({ searchParams }: { searchParams: Pr
       <section id="collection" className="collection-catalog container" aria-labelledby="collection-heading"><div className="collection-section-heading"><div><span className="eyebrow">MADE FOR YOUR MOMENT</span><h2 id="collection-heading">{occasion.name === "Other gathering" ? "Your gathering" : occasion.name} <em>invitations</em></h2></div><p>Open a design to experience it.<br />Then make it entirely yours.</p></div>
         <ThemeGallery key={occasion.id} selectedOccasion={occasion.id} selectedTradition={tradition} items={collectionThemes.map(theme => ({ theme, artwork: artwork(theme.id) }))} />
       </section>
-      <section className="occasion-collections container" aria-labelledby="occasion-collections-title"><div><span className="eyebrow">EVERY KIND OF TOGETHERNESS</span><h2 id="occasion-collections-title">An invitation for <em>your moment.</em></h2><p>Each occasion has its own artwork, compositions, and thoughtful starting copy.</p></div><div className="occasion-collection-grid">{occasions.map(item => { const collection = occasionCollections[item.id]; return <Link key={item.id} href={`/templates?occasion=${item.id}${traditionQuery}#collection`} aria-current={occasion.id === item.id ? "page" : undefined} className={`occasion-collection occasion-collection-${item.id}`} prefetch={false}><OccasionCardArt occasion={item.id} /><div className="occasion-collection-copy"><span>{item.name}</span><strong>{collection.title}</strong><p>{collection.description}</p><span className="occasion-collection-action">Explore {getOccasionThemes(item.id).length} designs <span aria-hidden="true">↗</span></span></div></Link>; })}</div></section>
+      <section className="occasion-collections container" aria-labelledby="occasion-collections-title"><div><span className="eyebrow">EVERY KIND OF TOGETHERNESS</span><h2 id="occasion-collections-title">An invitation for <em>your moment.</em></h2><p>Wedding and engagement collections are ready. More occasions are coming soon.</p></div><div className="occasion-collection-grid">{occasions.map(item => {
+        const collection = occasionCollections[item.id];
+        const available = isOccasionAvailable(item.id);
+        const content = <><OccasionCardArt occasion={item.id} /><div className="occasion-collection-copy"><span>{item.name}</span><strong>{collection.title}</strong><p>{collection.description}</p>{available ? <span className="occasion-collection-action">Explore {getOccasionThemes(item.id).length} designs <span aria-hidden="true">↗</span></span> : <ComingSoonBadge />}</div></>;
+        return available ? <Link key={item.id} href={`/templates?occasion=${item.id}${traditionQuery}#collection`} aria-current={occasion.id === item.id ? "page" : undefined} className={`occasion-collection occasion-collection-${item.id}`} prefetch={false}>{content}</Link> : <article key={item.id} className={`occasion-collection occasion-collection-${item.id}`} data-coming-soon={item.id}>{content}</article>;
+      })}</div></section>
       <section className="collection-process" aria-label="From choosing a theme to sharing your invitation"><ol className="container"><li><span>01</span><div><strong>Find your design</strong><p>Preview the real invitation.</p></div></li><li><span>02</span><div><strong>Tell your story</strong><p>Add your names, words, and moments.</p></div></li><li><span>03</span><div><strong>Bring everyone together</strong><p>Publish a link for your people.</p></div></li></ol></section>
       <section className="collection-closing container"><Flower /><span className="eyebrow">THE DESIGN IS ONLY THE BEGINNING</span><h2>Your names.<br /><em>Your kind of together.</em></h2><p>Try your details in the live editor. Switch styles until it feels just right.</p><Link href={customizeUrl} className="button">Make an invitation <span aria-hidden="true">↗</span></Link></section>
     </main>

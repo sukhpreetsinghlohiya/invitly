@@ -1,8 +1,8 @@
 import { mkdir } from 'node:fs/promises';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
-const featured = ['wedding', 'engagement', 'birthday', 'baby-shower'] as const;
-const occasions = [...featured, 'housewarming', 'naming', 'anniversary', 'remembrance', 'other'] as const;
+const available = ['wedding', 'engagement'] as const;
+const upcoming = ['birthday', 'baby-shower', 'housewarming', 'naming', 'anniversary', 'remembrance', 'other'] as const;
 
 async function expectNoOverflow(page: Page) {
   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
@@ -64,8 +64,22 @@ test('stationery homepage has readable navigation, loaded artwork and real occas
     await expect(image).toHaveAttribute('sizes', /.+/);
   }
   await expect(showcase.locator('.occasion-showcase-card')).toHaveCount(4);
-  await expect(showcase.locator('a[data-occasion]')).toHaveCount(9);
-  for (const occasion of occasions) {
+  await expect(showcase.locator('[data-occasion]')).toHaveCount(9);
+  await expect(showcase.locator('a[data-occasion]')).toHaveCount(2);
+  for (const occasion of upcoming) {
+    const card = showcase.locator(`[data-occasion="${occasion}"]`);
+    await expect(card).toContainText('Coming soon');
+    await expect(card).not.toHaveAttribute('href');
+    await expect(card.locator('a,button')).toHaveCount(0);
+  }
+  const footerOccasions = page.locator('.marketing-footer').getByRole('navigation', { name: 'Invitation occasions', exact: true });
+  await expect(footerOccasions.locator('a[href*="occasion="]')).toHaveCount(2);
+  for (const occasion of upcoming) {
+    const label = footerOccasions.locator(`[data-coming-soon="${occasion}"]`);
+    await expect(label).toContainText('Coming soon');
+    await expect(label.locator('a,button')).toHaveCount(0);
+  }
+  for (const occasion of available) {
     const link = showcase.locator(`a[data-occasion="${occasion}"]`);
     const href = `/templates?occasion=${occasion}#collection`;
     await expect(link).toHaveAttribute('href', href);
@@ -94,7 +108,7 @@ test('stationery homepage has readable navigation, loaded artwork and real occas
   await expect(page).toHaveURL(/\/demo$/);
   await expect(page.getByText('Aanya', { exact: false }).first()).toBeVisible();
 
-  for (const occasion of featured) {
+  for (const occasion of available) {
     await page.goto('/');
     await showcase.locator(`a[data-occasion="${occasion}"]`).click();
     await expect(page).toHaveURL(new RegExp(`/templates\\?occasion=${occasion}#collection$`));

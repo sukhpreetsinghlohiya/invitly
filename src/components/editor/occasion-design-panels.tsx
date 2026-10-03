@@ -1,5 +1,7 @@
 "use client";
 
+import { isOccasionAvailable } from "@/data/occasion-availability";
+import { ComingSoonBadge } from "@/components/occasion-coming-soon";
 import { ArrowDown, ArrowUp, Check } from "lucide-react";
 import { applyOccasion, getDesign, occasions, sectionLabels, traditions } from "@/data/occasions";
 import { getOccasionThemes } from "@/data/occasion-themes";
@@ -16,8 +18,8 @@ type PanelProps = { draft: InvitationDraft; change: (draft: InvitationDraft) => 
 
 export function OccasionPanel({ draft, change }: PanelProps) {
   const invitation = draft.invitation;
-  return <><div className="editor-panel-heading"><h2 id="editor-step-heading" tabIndex={-1}>What brings you together?</h2><p>Start with your occasion. Every word, blessing, and decorative detail can be made your own.</p></div>
-    <div className="editor-occasion-grid" role="group" aria-label="Choose an occasion">{occasions.map((item, index) => <button type="button" key={item.id} aria-pressed={(invitation.occasion || "wedding") === item.id} onClick={() => change({ ...draft, themeId: getOccasionThemes(item.id)[0].id, invitation: applyOccasion(invitation, item.id) })}><span>{String(index + 1).padStart(2, "0")}</span><strong>{item.name}</strong>{(invitation.occasion || "wedding") === item.id && <Check size={15} />}</button>)}</div>
+  return <><div className="editor-panel-heading"><h2 id="editor-step-heading" tabIndex={-1}>What brings you together?</h2><p>Wedding and engagement invitations are available now. More occasions are coming soon.</p></div>
+    <div className="editor-occasion-grid" role="group" aria-label="Choose an occasion">{occasions.map((item, index) => <button type="button" key={item.id} disabled={!isOccasionAvailable(item.id)} aria-pressed={(invitation.occasion || "wedding") === item.id} onClick={() => change({ ...draft, themeId: getOccasionThemes(item.id)[0].id, invitation: applyOccasion(invitation, item.id) })}><span>{String(index + 1).padStart(2, "0")}</span><strong>{item.name}</strong>{!isOccasionAvailable(item.id) && <ComingSoonBadge />}{(invitation.occasion || "wedding") === item.id && <Check size={15} />}</button>)}</div>
     <label className="form-field">Tradition or cultural style (optional)<select value={invitation.tradition || "neutral"} onChange={event => change({ ...draft, invitation: { ...invitation, tradition: event.target.value as TraditionId } })}>{traditions.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select><small>Choose what feels right to you. No religious phrase or symbol is added automatically.</small></label>
     {invitation.tradition === "other" && <label className="form-field">Your tradition or style<input maxLength={100} value={invitation.traditionLabel || ""} onChange={event => change({ ...draft, invitation: { ...invitation, traditionLabel: event.target.value } })} /></label>}
     <p className="editor-help-note">Changing the occasion keeps your names, schedule, photos, and custom wording. Suggested copy updates only where you haven’t changed it.</p>

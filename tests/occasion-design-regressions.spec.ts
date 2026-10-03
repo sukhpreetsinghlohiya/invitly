@@ -2,6 +2,8 @@ import { expect, test, type Locator } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
 import { createOccasionInvitation, occasions } from '../src/data/occasions';
 import { getOccasionThemes } from '../src/data/occasion-themes';
+import { occasionDemo } from '../src/data/occasion-demos';
+import { showDraftPreview } from './helpers/draft-preview';
 
 test.use({ actionTimeout: 10000 });
 
@@ -18,7 +20,7 @@ async function expectReadableText(sheet: Locator) {
   expect(clipped, 'Personal text stays inside the complete stationery sheet').toEqual([]);
 }
 
-for (const occasion of occasions.filter(item => item.id !== 'wedding')) {
+for (const occasion of occasions.filter(item => item.id === 'engagement')) {
   test(`${occasion.id} preserves long multilingual copy, palette and artwork controls across its three designs`, async ({ page }, info) => {
     test.skip(info.project.name !== 'mobile-360', 'Full editing journey at phone width; guest covers have a separate viewport matrix');
     test.setTimeout(60000);
@@ -91,6 +93,46 @@ for (const occasion of occasions.filter(item => item.id !== 'wedding')) {
     }
   });
 }
+
+test('existing upcoming invitations preserve long multilingual copy and artwork controls in all 21 layouts', async ({ page }, info) => {
+  test.skip(info.project.name !== 'mobile-360', 'Existing future designs stay covered at phone width without exposing new creation');
+  test.setTimeout(120000);
+  await page.goto('/preview');
+  for (const occasion of occasions.filter(item => item.id !== 'wedding' && item.id !== 'engagement')) {
+    const invitation = occasionDemo(occasion.id);
+    invitation.couple = ['Ananya Harpreet Kaur · अनन्या कौर · ਅਨਨਿਆ ਕੌਰ', occasion.secondLabel ? 'Arjun Sukhpreet Singh · अर्जुन सिंह · ਅਰਜੁਨ ਸਿੰਘ' : ''];
+    invitation.city = 'Chandigarh, Punjab · चंडीगढ़ · ਚੰਡੀਗੜ੍ਹ';
+    invitation.coverText = 'Together with our families, please join us for an afternoon of stories, kindness and happy memories. हमारे साथ आइए · ਸਾਡੇ ਨਾਲ ਆਓ';
+    invitation.design = { ...invitation.design!, palette: 'sage', typography: 'sans' };
+    for (const design of getOccasionThemes(occasion.id)) for (const decoration of [true, false]) {
+      invitation.design.decoration = decoration;
+      await showDraftPreview(page, { invitation, themeId: design.id, musicEnabled: false });
+      const cover = page.locator('#invitation');
+      await expect(cover).toHaveAttribute('data-occasion-layout', design.layout);
+      await expect(cover).toHaveAttribute('data-palette', 'sage');
+      await expect(cover).toHaveAttribute('data-typography', 'sans');
+      await expect(cover).toHaveAttribute('data-artwork', decoration ? 'on' : 'off');
+      await expect(cover.getByRole('heading', { level: 1 })).toContainText(invitation.couple[0]);
+      if (occasion.secondLabel) await expect(cover.getByRole('heading', { level: 1 })).toContainText(invitation.couple[1]);
+      await expect(cover.getByText(invitation.coverText, { exact: true })).toBeVisible();
+      await expect(cover.getByText(invitation.city, { exact: true })).toBeVisible();
+      await expect(cover.getByRole('heading', { level: 1 })).toHaveCSS('font-family', /sans-serif/);
+      await page.evaluate(() => document.fonts.ready);
+      await expectReadableText(cover.locator('[data-occasion-sheet]'));
+      if (decoration) {
+        for (const image of await cover.locator('[data-occasion-art] img').all()) {
+          await image.scrollIntoViewIfNeeded();
+          await expect.poll(() => image.evaluate(node => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+        }
+      } else {
+        await expect(cover.locator('[data-archive-ornament],[data-occasion-art] img')).toHaveCount(0);
+      }
+      await expect(cover.getByRole('link', { name: 'Directions', exact: true })).toBeVisible();
+      await expect(cover.getByRole('link', { name: 'RSVP', exact: true })).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth), `${occasion.id}/${design.layout}/${decoration}`).toBeLessThanOrEqual(0);
+    }
+  }
+});
 
 test('personal cover photos remain visible in all 24 occasion layouts when decorative artwork is off', async ({ page }, info) => {
   test.skip(info.project.name !== 'mobile-320', 'Photo rendering at the narrowest guest width');
