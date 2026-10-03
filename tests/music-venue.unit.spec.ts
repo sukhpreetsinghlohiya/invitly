@@ -35,9 +35,17 @@ test("recordings round-trip through validation and reject unknown files or arbit
 
 test("private audio supports normal, suffix and invalid byte ranges without caching", async () => {
   const blob = new Blob([new Uint8Array([0, 1, 2, 3, 4])]);
+  const full = audioResponse(blob, new Request("https://example.test/audio"));
+  expect(full.status).toBe(200);
+  expect(full.headers.get("Content-Length")).toBe("5");
+  expect(full.headers.get("Cache-Control")).toBe("private, no-store");
+  expect(full.headers.get("Accept-Ranges")).toBe("bytes");
+  expect([...new Uint8Array(await full.arrayBuffer())]).toEqual([0, 1, 2, 3, 4]);
   for (const [range, expected] of [["bytes=1-3", [1, 2, 3]], ["bytes=-2", [3, 4]], ["bytes=3-", [3, 4]]] as const) {
     const response = audioResponse(blob, new Request("https://example.test/audio", { headers: { Range: range } }));
     expect(response.status).toBe(206);
+    expect(response.headers.get("Content-Length")).toBe(String(expected.length));
+    expect(response.headers.get("Content-Range")).toBe(`bytes ${expected[0]}-${expected[expected.length - 1]}/5`);
     expect(response.headers.get("Cache-Control")).toBe("private, no-store");
     expect([...new Uint8Array(await response.arrayBuffer())]).toEqual(expected);
   }

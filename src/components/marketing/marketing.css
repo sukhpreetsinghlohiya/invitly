@@ -66,3 +66,8 @@
 @media(prefers-reduced-motion:reduce) {
 .home-login,.faq-item>summary,.faq-toggle,.faq-toggle::after { transition:none; }
 }
+
+/* Display the actual invitation sheet in a mount; its copy defines its height. */
+.stationery-home .theme-preview { height:auto; min-height:0; padding:48px 18% 36px; align-items:flex-start; }
+.stationery-home .theme-preview>[data-illustrated-cover] { width:100%; box-shadow:0 12px 24px #382e231a; }
+@media(max-width:760px){.stationery-home .theme-preview{padding:48px 16% 32px}}

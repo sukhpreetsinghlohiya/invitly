@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+import { publicMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { Flower } from "@/components/brand";
 import { blogTopics, getBlogTopic, blogReadingMinutes } from "@/data/blog";
 import { getPublishedPosts } from "@/lib/blog";
 
-export const metadata: Metadata = { title: "The Invitly journal", description: "Thoughtful invitation wording, practical hosting details and ideas for Indian celebrations. Find a little inspiration for your next gathering.", alternates: { canonical: "/blog" } };
+export const metadata = publicMetadata("The Invitly journal", "Thoughtful invitation wording, practical hosting details and ideas for Indian celebrations. Find a little inspiration for your next gathering.", "/blog");
 
 export default async function BlogPage() {
   const posts = await getPublishedPosts();

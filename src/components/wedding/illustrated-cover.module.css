@@ -6,35 +6,35 @@
   color:var(--art-ink); text-align:center; isolation:isolate;
 }
 .sheet { position:relative; min-height:140cqi; overflow:hidden; background:var(--art-ground); box-shadow:0 2px 5px #33261518,0 15px 35px #33261514; }
-.sheet::after { content:""; position:absolute; inset:0; pointer-events:none; opacity:.15; background:repeating-linear-gradient(0deg,#ffffff1c 0 1px,transparent 1px 4px),repeating-linear-gradient(90deg,#30200d12 0 1px,transparent 1px 5px); mix-blend-mode:soft-light; }
+.sheet::after { content:""; position:absolute; inset:0; pointer-events:none; z-index:5; opacity:.055; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='.65'/%3E%3C/svg%3E"); mix-blend-mode:multiply; }
 .border { position:absolute; inset:0; display:block; width:100%; height:100%; pointer-events:none; }
 .frameTop,.frameBottom { position:absolute; left:0; z-index:1; display:block; width:100%; height:70cqi; overflow:hidden; pointer-events:none; }
 .frameTop { top:0; mask-image:linear-gradient(to bottom,#000 calc(100% - 5cqi),transparent); }.frameBottom { bottom:0; mask-image:linear-gradient(to bottom,transparent,#000 5cqi); }
 .frameMiddle { position:absolute; left:0; top:65cqi; display:block; width:100%; height:max(0px,calc(100% - 130cqi)); pointer-events:none; }
 .topOrnament { position:absolute; left:0; top:0; z-index:2; width:100%; height:43.478cqi; display:block; pointer-events:none; }
 .landscape { position:absolute; left:0; bottom:0; z-index:2; display:block; width:100%; height:42.17cqi; pointer-events:none; }
-.copy { position:relative; z-index:3; display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; min-height:140cqi; padding:31cqi 19cqi 40cqi; }
+.copy { position:relative; z-index:3; display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; min-height:140cqi; padding:38cqi 20cqi 31cqi; }
 .readingArea { display:flex; flex-direction:column; align-items:inherit; width:100%; min-width:0; background:var(--art-paper); }
-.cover[data-extended-copy="false"] .readingArea { background:transparent; }
+
 .copy p { margin:0; max-width:100%; color:inherit; overflow-wrap:anywhere; }
 .eyebrow { font:400 2.8cqi/1.7 var(--sans); text-transform:uppercase; letter-spacing:.12em; white-space:pre-line; text-wrap:balance; }
-.names { width:100%; margin-block:5cqi; font:400 16cqi/1.03 var(--cover-name-font); letter-spacing:-.035em; overflow-wrap:anywhere; }
+.names { width:100%; margin-block:5.2cqi 5.6cqi; font:400 15.2cqi/1.06 var(--cover-name-font); letter-spacing:-.035em; overflow-wrap:anywhere; }
 .person { display:flex; flex-direction:column; align-items:center; max-width:100%; }.person>span { max-width:100%; }.ampersand { display:block; margin:1.9cqi 0 2cqi; font:italic 7cqi/1 "Cormorant Garamond",var(--serif); letter-spacing:0; }
 .details { display:flex; flex-direction:column; align-items:center; gap:1.3cqi; max-width:100%; font:400 3.1cqi/1.6 var(--sans); letter-spacing:.05em; }
 .location { font:400 3.35cqi/1.5 "Cormorant Garamond",var(--serif); letter-spacing:.04em; text-wrap:balance; }
 .blessing { margin-bottom:3cqi!important; font:400 3.3cqi/1.6 var(--serif); white-space:pre-line; }
 .full .eyebrow { font-size:max(11px,2.8cqi); }.full .details { font-size:max(13px,3.1cqi); }.full .location,.full .blessing { font-size:max(14px,3.35cqi); }
-.cover[data-illustrated-cover="royal"] .copy { padding-bottom:50cqi; }
+
 .cover[data-long-names="true"] .names { font-size:12.7cqi; }.cover[data-long-names="very"] .names { font-size:10cqi; line-height:1.15; }.full[data-long-names="very"] .names { font-size:max(26px,10cqi); }
-.cover[data-illustrated-cover="mehfil"] { --art-ground:#163e36; --art-paper:#173e35; --art-ink:#f2e0b3; --art-line:#d1b36f; --art-gold:#c3a25e; --art-petal:#cfbd83; --art-leaf:#8f9b72; --art-soft:#244e40; }.cover[data-illustrated-cover="mehfil"] .copy { padding-top:41cqi; padding-bottom:34cqi; }.cover[data-illustrated-cover="mehfil"] .names { --cover-name-font:"Great Vibes",var(--serif); font-size:15cqi; line-height:1.2; letter-spacing:0; }
-.cover[data-illustrated-cover="modern"] { --art-ground:#f6f0e3; --art-paper:#faf6ec; --art-ink:#384a3e; --art-line:#536052; --art-gold:#b99960; --art-petal:#be7559; --art-leaf:#7d8b70; --art-soft:#e1dfcd; }.cover[data-illustrated-cover="modern"] .copy { padding:32cqi 20cqi 34cqi; text-align:left; align-items:flex-start; }.cover[data-illustrated-cover="modern"] .names { font-size:17cqi; letter-spacing:-.055em; }.cover[data-illustrated-cover="modern"] .person,.cover[data-illustrated-cover="modern"] .details { align-items:flex-start; }.cover[data-illustrated-cover="modern"] .ampersand { margin-left:9cqi; }.cover[data-illustrated-cover="modern"] .eyebrow { letter-spacing:.17em; font-size:2.55cqi; }
-.cover[data-illustrated-cover="floral"] { --art-ground:#f2e4d5; --art-paper:#fcf5e8; --art-ink:#56604d; --art-line:#a27a61; --art-gold:#d4b475; --art-petal:#d39883; --art-leaf:#889375; --art-soft:#efd5bd; }.cover[data-illustrated-cover="floral"] .copy { padding-top:29cqi; }.cover[data-illustrated-cover="floral"] .names { --cover-name-font:"Great Vibes",var(--serif); font-size:16cqi; letter-spacing:0; line-height:1.1; }
-.cover[data-illustrated-cover="kesar"] { --art-ground:#d48337; --art-paper:#fff0cd; --art-ink:#8c3e29; --art-line:#9e422e; --art-gold:#e6b45a; --art-petal:#f5ca73; --art-leaf:#78854e; --art-soft:#f1ca8b; }.cover[data-illustrated-cover="kesar"] .copy { padding-top:34cqi; padding-inline:20cqi; }.cover[data-illustrated-cover="kesar"] .names { font-style:italic; font-size:16.5cqi; }
-.cover[data-illustrated-cover="lotus"] { --art-ground:#ead5d2; --art-paper:#faf0e5; --art-ink:#80555a; --art-line:#ad7c7b; --art-gold:#d2ac7e; --art-petal:#dbaaab; --art-leaf:#8c9b83; --art-soft:#f0d6cd; }.cover[data-illustrated-cover="lotus"] .copy { padding-top:32cqi; padding-bottom:43cqi; padding-inline:22cqi; }.cover[data-illustrated-cover="lotus"] .names { font-style:italic; font-size:15.7cqi; }.cover[data-illustrated-cover="lotus"] .eyebrow { text-transform:none; letter-spacing:.04em; font:italic 4cqi/1.5 "Cormorant Garamond",var(--serif); }
-.cover[data-illustrated-cover="pichwai"] { --art-ground:#a6b593; --art-paper:#f3efd8; --art-ink:#435b47; --art-line:#7c774c; --art-gold:#ceb773; --art-petal:#daa890; --art-leaf:#66836b; --art-soft:#e1d9b8; --art-blue:#35665e; }.cover[data-illustrated-cover="pichwai"] .copy { padding-top:31cqi; padding-bottom:44cqi; }.cover[data-illustrated-cover="pichwai"] .names { font-size:15.7cqi; }
-.cover[data-illustrated-cover="ocean"] { --art-ground:#dce8e6; --art-paper:#f2f3e9; --art-ink:#2e5b66; --art-line:#7e9c9b; --art-gold:#c5b591; --art-petal:#e4c4ab; --art-leaf:#427889; --art-soft:#b8d0cb; --art-blue:#8db4bb; }.cover[data-illustrated-cover="ocean"] .copy { padding-top:36cqi; padding-bottom:36cqi; }.cover[data-illustrated-cover="ocean"] .names { font-size:15.8cqi; font-style:italic; }.cover[data-illustrated-cover="ocean"] .eyebrow { letter-spacing:.16em; }
-.cover[data-illustrated-cover="champagne"] { --art-ground:#33332d; --art-paper:#33332d; --art-ink:#efdfbc; --art-line:#c2a772; --art-gold:#c2a772; --art-petal:#d8c699; --art-leaf:#a6a686; --art-soft:#565140; }.cover[data-illustrated-cover="champagne"] .copy { padding-block:35cqi; padding-inline:19cqi; }.cover[data-illustrated-cover="champagne"] .names { font-size:14.7cqi; text-transform:uppercase; letter-spacing:.035em; }.cover[data-illustrated-cover="champagne"] .ampersand { font-style:normal; font-size:6cqi; }.cover[data-illustrated-cover="champagne"] .eyebrow { letter-spacing:.21em; font-size:2.45cqi; }
-.cover[data-illustrated-cover="sindoor"] { --art-ground:#a4382d; --art-paper:#fcf0d5; --art-ink:#9b372a; --art-line:#b05d37; --art-gold:#e6bf79; --art-petal:#edc47e; --art-leaf:#9f743f; --art-soft:#efcdab; }.cover[data-illustrated-cover="sindoor"] .copy { padding:39cqi 23cqi 32cqi; }.cover[data-illustrated-cover="sindoor"] .names { font-size:15.5cqi; font-style:italic; }.cover[data-illustrated-cover="sindoor"] .eyebrow { font-size:2.6cqi; }
+.cover[data-illustrated-cover="mehfil"] { --art-ground:#163e36; --art-paper:#173e35; --art-ink:#f2e0b3; --art-line:#d1b36f; --art-gold:#c3a25e; --art-petal:#cfbd83; --art-leaf:#8f9b72; --art-soft:#244e40; }.cover[data-illustrated-cover="mehfil"] .copy { padding-top:42cqi; padding-bottom:31cqi; }.cover[data-illustrated-cover="mehfil"] .names { --cover-name-font:"Great Vibes",var(--serif); font-size:15cqi; line-height:1.2; letter-spacing:0; }
+.cover[data-illustrated-cover="modern"] { --art-ground:#f6f0e3; --art-paper:#faf6ec; --art-ink:#384a3e; --art-line:#536052; --art-gold:#b99960; --art-petal:#be7559; --art-leaf:#7d8b70; --art-soft:#e1dfcd; }.cover[data-illustrated-cover="modern"] .copy { padding:34cqi 20cqi 31cqi; text-align:left; align-items:flex-start; }.cover[data-illustrated-cover="modern"] .names { font-size:17cqi; letter-spacing:-.055em; }.cover[data-illustrated-cover="modern"] .person,.cover[data-illustrated-cover="modern"] .details { align-items:flex-start; }.cover[data-illustrated-cover="modern"] .ampersand { margin-left:9cqi; }.cover[data-illustrated-cover="modern"] .eyebrow { letter-spacing:.17em; font-size:2.55cqi; }
+.cover[data-illustrated-cover="floral"] { --art-ground:#f2e4d5; --art-paper:#fcf5e8; --art-ink:#56604d; --art-line:#a27a61; --art-gold:#d4b475; --art-petal:#d39883; --art-leaf:#889375; --art-soft:#efd5bd; }.cover[data-illustrated-cover="floral"] .copy { padding-top:37cqi; }.cover[data-illustrated-cover="floral"] .names { --cover-name-font:"Great Vibes",var(--serif); font-size:16cqi; letter-spacing:0; line-height:1.1; }
+.cover[data-illustrated-cover="kesar"] { --art-ground:#d48337; --art-paper:#fff0cd; --art-ink:#8c3e29; --art-line:#9e422e; --art-gold:#e6b45a; --art-petal:#f5ca73; --art-leaf:#78854e; --art-soft:#f1ca8b; }.cover[data-illustrated-cover="kesar"] .copy { padding-top:38cqi; padding-inline:22cqi; }.cover[data-illustrated-cover="kesar"] .names { font-style:italic; font-size:16.5cqi; }
+.cover[data-illustrated-cover="lotus"] { --art-ground:#ead5d2; --art-paper:#faf0e5; --art-ink:#80555a; --art-line:#ad7c7b; --art-gold:#d2ac7e; --art-petal:#dbaaab; --art-leaf:#8c9b83; --art-soft:#f0d6cd; }.cover[data-illustrated-cover="lotus"] .copy { padding-top:36cqi; padding-bottom:34cqi; padding-inline:23cqi; }.cover[data-illustrated-cover="lotus"] .names { font-style:italic; font-size:15.7cqi; }.cover[data-illustrated-cover="lotus"] .eyebrow { text-transform:none; letter-spacing:.04em; font:italic 4cqi/1.5 "Cormorant Garamond",var(--serif); }
+.cover[data-illustrated-cover="pichwai"] { --art-ground:#a6b593; --art-paper:#f3efd8; --art-ink:#435b47; --art-line:#7c774c; --art-gold:#ceb773; --art-petal:#daa890; --art-leaf:#66836b; --art-soft:#e1d9b8; --art-blue:#35665e; }.cover[data-illustrated-cover="pichwai"] .copy { padding-top:36cqi; padding-bottom:35cqi; }.cover[data-illustrated-cover="pichwai"] .names { font-size:15.7cqi; }
+.cover[data-illustrated-cover="ocean"] { --art-ground:#dce8e6; --art-paper:#f2f3e9; --art-ink:#2e5b66; --art-line:#7e9c9b; --art-gold:#c5b591; --art-petal:#e4c4ab; --art-leaf:#427889; --art-soft:#b8d0cb; --art-blue:#8db4bb; }.cover[data-illustrated-cover="ocean"] .copy { padding-top:34cqi; padding-bottom:32cqi; }.cover[data-illustrated-cover="ocean"] .names { font-size:15.8cqi; font-style:italic; }.cover[data-illustrated-cover="ocean"] .eyebrow { letter-spacing:.16em; }
+.cover[data-illustrated-cover="champagne"] { --art-ground:#33332d; --art-paper:#33332d; --art-ink:#efdfbc; --art-line:#c2a772; --art-gold:#c2a772; --art-petal:#d8c699; --art-leaf:#a6a686; --art-soft:#565140; }.cover[data-illustrated-cover="champagne"] .copy { padding-block:33cqi; padding-inline:21cqi; }.cover[data-illustrated-cover="champagne"] .names { font-size:14.7cqi; text-transform:uppercase; letter-spacing:.035em; }.cover[data-illustrated-cover="champagne"] .ampersand { font-style:normal; font-size:6cqi; }.cover[data-illustrated-cover="champagne"] .eyebrow { letter-spacing:.21em; font-size:2.45cqi; }
+.cover[data-illustrated-cover="sindoor"] { --art-ground:#a4382d; --art-paper:#fcf0d5; --art-ink:#9b372a; --art-line:#b05d37; --art-gold:#e6bf79; --art-petal:#edc47e; --art-leaf:#9f743f; --art-soft:#efcdab; }.cover[data-illustrated-cover="sindoor"] .copy { padding:34cqi 23cqi 32cqi; }.cover[data-illustrated-cover="sindoor"] .names { font-size:15.5cqi; font-style:italic; }.cover[data-illustrated-cover="sindoor"] .eyebrow { font-size:2.6cqi; }
 .cover[data-palette="rose"] { --art-ground:#b17073; --art-paper:#fcf0e9; --art-ink:#6c3d49; --art-line:#ae756b; --art-gold:#d8b589; --art-petal:#e4b8a3; --art-leaf:#8c9273; --art-soft:#eed1c2; --art-blue:#a5afa1; }
 .cover[data-palette="sage"] { --art-ground:#667d69; --art-paper:#f3f1df; --art-ink:#3b5647; --art-line:#708266; --art-gold:#c8b879; --art-petal:#d9bd96; --art-leaf:#82976c; --art-soft:#dbe0c8; --art-blue:#9eafa3; }
 .cover[data-palette="indigo"] { --art-ground:#38465f; --art-paper:#eff0ee; --art-ink:#344662; --art-line:#77859a; --art-gold:#c7b790; --art-petal:#b5c2d4; --art-leaf:#879e96; --art-soft:#d2d9df; --art-blue:#7d9ead; }
@@ -84,42 +84,6 @@
 .cover[data-palette=indigo] { --art-ground:#38465f; --art-ink:#344662; --art-line:#77859a; --art-gold:#c7b790; --art-petal:#b5c2d4; --art-leaf:#879e96; }
 .cover:is([data-illustrated-cover=mehfil],[data-illustrated-cover=champagne]):not([data-palette=original]) { --art-ground:var(--art-paper); }
 
-/* Every focal illustration has a reserved stage below the names and event details. */
-.cover[data-cover-illustration=painted] .copy { padding-bottom:70cqi; }
-.paintedScene { position:absolute; z-index:2; width:82cqi; left:9cqi; bottom:5cqi; pointer-events:none; }
-.paintedScene>img { position:relative; z-index:1; width:100%; height:auto; display:block; object-fit:contain; filter:drop-shadow(0 1.6cqi 1.3cqi #3c2b241c); }
-.paintedScene::before { content:""; position:absolute; width:74%; height:7%; border-radius:50%; left:13%; bottom:1%; background:var(--art-line); filter:blur(2.2cqi); opacity:.16; }
-.cover[data-illustrated-cover=royal] .copy { padding-bottom:71cqi; }
-.cover[data-illustrated-cover=floral] .paintedScene { width:62cqi; left:19cqi; bottom:6cqi; }
-.cover[data-illustrated-cover=floral] .copy { padding-bottom:57cqi; }
-.cover[data-illustrated-cover=mehfil] .paintedScene { width:73cqi; left:13.5cqi; bottom:8cqi; }
-.cover[data-illustrated-cover=kesar] .paintedScene { width:76cqi; left:12cqi; bottom:5cqi; }
-.cover[data-illustrated-cover=kesar] .copy { padding-bottom:66cqi; }
-.cover[data-illustrated-cover=champagne] .paintedScene { width:76cqi; left:12cqi; bottom:8cqi; }
-.cover[data-illustrated-cover=sindoor] .paintedScene { width:73cqi; left:13.5cqi; bottom:8cqi; }
-.sceneSprigLeft,.sceneSprigRight { position:absolute; display:block; z-index:2; width:14cqi; bottom:0; transform-origin:50% 100%; }
-.sceneSprigLeft { left:-5cqi; transform:rotate(-18deg); }.sceneSprigRight { right:-5cqi; transform:scaleX(-1) rotate(-18deg); }
-.sprigMotion { display:block; transform-origin:50% 100%; }.sprigMotion img { display:block; width:100%; height:auto; }
-.botanicalSpecimen { position:absolute; z-index:2; bottom:7cqi; left:16cqi; width:68cqi; height:34cqi; color:var(--art-leaf); }
-.botanicalSpecimen>.sprigMotion { position:absolute; width:27cqi; right:3cqi; bottom:1cqi; }.botanicalSpecimen .specimenRule { position:absolute; left:0; bottom:0; width:100%; height:2cqi; border-block:1px solid var(--art-line); }
-.cover[data-illustrated-cover=modern] .copy { padding-bottom:46cqi; }
-.cover[data-illustrated-cover=modern] .engravedGarden { display:none; }
-.lotusGarden { position:absolute; z-index:2; width:76cqi; height:43cqi; left:12cqi; bottom:4cqi; pointer-events:none; }
-.lotusGarden>img { position:absolute; width:50cqi; height:auto; left:13cqi; bottom:3cqi; }
-.lotusBudLeft,.lotusBudRight { position:absolute; width:20cqi; height:15cqi; bottom:0; background:url('/images/art/patterned-lotus.svg') center/contain no-repeat; opacity:.75; }.lotusBudLeft { left:-1cqi; transform:rotate(-15deg); }.lotusBudRight { right:-1cqi; transform:rotate(15deg); }
-.pondRipples { position:absolute; width:90%; left:5%; height:9cqi; bottom:0; border:1px solid var(--art-line); border-radius:50%; opacity:.45; }.pondRipples::after { content:""; position:absolute; inset:2cqi -3cqi; border:1px solid var(--art-line); border-radius:50%; }
-.cover[data-illustrated-cover=lotus] .copy { padding-bottom:52cqi; }
-.peacockGarden { position:absolute; z-index:2; width:88cqi; height:42cqi; left:6cqi; bottom:4cqi; pointer-events:none; }
-.peacockLeft,.peacockRight { position:absolute; bottom:0; display:block; width:49cqi; height:35.3cqi; background:var(--art-blue); mask:url('/images/art/peacock-engraving.svg') center/contain no-repeat; mask-mode:luminance; }
-.peacockLeft { left:0; transform:scaleX(-1); }.peacockRight { right:0; }
-.gardenVine { position:absolute; bottom:0; left:33cqi; width:22cqi; color:var(--art-leaf); opacity:.5; transform-origin:50% 100%; }
-.cover[data-illustrated-cover=pichwai] .copy { padding-bottom:50cqi; }
-.shellSpecimen { position:absolute; z-index:2; top:15cqi; left:40cqi; width:20cqi; height:11cqi; background:var(--art-line); mask:url('/images/art/seashell-engraving.svg') center/contain no-repeat; }
-.edgePetals { position:absolute; inset:0; pointer-events:none; z-index:2; }.edgePetals>span { position:absolute; width:1.3cqi; height:2.2cqi; border-radius:90% 10% 90% 10%; background:var(--art-petal); opacity:.65; }.edgePetals>span:nth-child(1) { left:8cqi; top:34cqi; }.edgePetals>span:nth-child(2) { right:8cqi; top:53cqi; animation-delay:-3s; }.edgePetals>span:nth-child(3) { left:9cqi; top:79cqi; animation-delay:-5s; }.edgePetals>span:nth-child(4) { right:9cqi; top:104cqi; animation-delay:-1s; }
-.cover:is([data-illustrated-cover=modern],[data-illustrated-cover=champagne],[data-illustrated-cover=ocean]) .edgePetals { display:none; }
-.lanternMotion { transform-box:fill-box; transform-origin:50% 0; }.waterMotion { transform-box:fill-box; transform-origin:center; }
-.cover[data-artwork=off] .copy { padding:20cqi 13cqi; }
-
 /* Fine movement belongs to separate ornaments; the invitation and typography remain still. */
 @media(prefers-reduced-motion:no-preference) {
   .full:not([data-motion=none]) .sprigMotion,.full:not([data-motion=none]) .gardenVine { animation:botanical-sway 9s ease-in-out infinite alternate; animation-play-state:paused; }
@@ -135,3 +99,93 @@
 @keyframes petal-drift { from { transform:translateY(0) rotate(-20deg); opacity:.35; } to { transform:translateY(var(--petal-distance,1.5cqi)) rotate(25deg); opacity:.8; } }
 @media(prefers-reduced-motion:reduce) { .cover [data-cover-motion] { animation:none!important; } }
 .cover[data-motion=none] [data-cover-motion],.compact [data-cover-motion] { animation:none!important; }
+
+/* The frame is decorative; all editable copy has its own measured, growing column. */
+.cover[data-illustrated-cover=royal] .copy { padding-top:39cqi; padding-inline:22cqi; }
+.cover .eyebrow { max-width:100%; }
+.cover .names { flex-shrink:0; }
+.cover .details { width:100%; padding-top:1cqi; }
+.cover .location { margin-top:.7cqi; }
+.cover[data-extended-copy=true] .copy { justify-content:flex-start; }
+.cover[data-extended-copy=true] .readingArea { padding-block:2cqi; }
+.cover[data-illustrated-cover=modern] .names { font-size:15.2cqi; }
+.cover[data-illustrated-cover=champagne] .names { font-size:13cqi; letter-spacing:.065em; }
+.cover[data-long-names=true] .names { font-size:12.2cqi; }
+.cover[data-long-names=very] .names { font-size:10cqi; line-height:1.18; }
+.cover.full[data-long-names=very] .names { font-size:max(26px,10cqi); }
+.cover[data-artwork=off] .copy { padding:20cqi 13cqi; }
+
+/* Archival botanicals are cropped at the paper edge, never placed behind editable copy. */
+.botanicalEdges { position:absolute; inset:0; z-index:2; pointer-events:none; overflow:hidden; }
+.botanicalTop,.botanicalBottom { position:absolute; display:block; width:44cqi; opacity:.95; }
+.botanicalTop { left:-12cqi; top:-14cqi; transform:rotate(-24deg); }
+.botanicalBottom { right:-12cqi; bottom:-13cqi; transform:rotate(154deg); }
+.sprigMotion { display:block; transform-origin:50% 100%; }
+.sprigMotion img { display:block; width:100%; height:auto; }
+.cornerEngraving,.cornerEngravingEcho { position:absolute; width:44cqi; height:56cqi; background:var(--art-gold); mask:url('/images/art/engraved-branch.svg') center/contain no-repeat; opacity:.33; }
+.cornerEngraving { left:-15cqi; top:-3cqi; transform:rotate(-36deg); }
+.cornerEngravingEcho { right:-15cqi; bottom:-3cqi; transform:rotate(144deg); }
+.footerOrnament { position:absolute; z-index:2; left:35cqi; bottom:12cqi; width:30cqi; color:var(--art-line); opacity:.8; }
+.footerOrnament>span { width:100%; }
+.footerOrnament svg { display:block; width:16cqi; height:5.2cqi; margin:3cqi auto 0; }
+.cover[data-illustrated-cover=royal] .botanicalTop { width:49cqi; left:-16cqi; top:-16cqi; }
+.cover[data-illustrated-cover=royal] .botanicalBottom { width:45cqi; right:-14cqi; bottom:-17cqi; }
+.cover[data-illustrated-cover=royal] .engravedGarden { display:none; }
+.cover[data-illustrated-cover=royal] .footerOrnament { bottom:11cqi; color:var(--art-gold); }
+.cover[data-illustrated-cover=floral] .botanicalTop { width:50cqi; left:-10cqi; top:-13cqi; }
+.cover[data-illustrated-cover=floral] .botanicalBottom { width:50cqi; right:-10cqi; bottom:-13cqi; }
+.cover[data-illustrated-cover=floral] .engravedGarden { opacity:.25; }
+.cover[data-illustrated-cover=floral] .cornerEngraving,.cover[data-illustrated-cover=floral] .cornerEngravingEcho { background:var(--art-leaf); opacity:.18; }
+.cover[data-illustrated-cover=mehfil] .botanicalTop { width:41cqi; left:-16cqi; top:-14cqi; }
+.cover[data-illustrated-cover=mehfil] .botanicalBottom { width:45cqi; right:-13cqi; bottom:-15cqi; }
+.cover[data-illustrated-cover=mehfil] .cornerEngraving,.cover[data-illustrated-cover=mehfil] .cornerEngravingEcho { opacity:.5; }
+.cover[data-illustrated-cover=mehfil] .engravedGarden { display:none; }
+.cover[data-illustrated-cover=lotus] .botanicalTop { width:37cqi; top:-10cqi; left:-13cqi; opacity:.7; }
+.cover[data-illustrated-cover=lotus] .botanicalBottom { width:37cqi; bottom:-10cqi; right:-13cqi; opacity:.7; }
+.cover[data-illustrated-cover=lotus] .engravedGarden { display:none; }
+.cover[data-illustrated-cover=ocean] .botanicalTop { width:48cqi; left:-12cqi; top:-15cqi; }
+.cover[data-illustrated-cover=ocean] .botanicalBottom { width:48cqi; right:-12cqi; bottom:-15cqi; }
+.cover[data-illustrated-cover=ocean] .cornerEngraving,.cover[data-illustrated-cover=ocean] .cornerEngravingEcho { background:var(--art-leaf); opacity:.2; }
+.cover[data-illustrated-cover=ocean] .footerOrnament { width:21cqi; left:39.5cqi; bottom:13cqi; }
+.cover[data-illustrated-cover=sindoor] .botanicalTop { width:38cqi; left:-12cqi; top:-12cqi; }
+.cover[data-illustrated-cover=sindoor] .botanicalBottom { width:38cqi; right:-12cqi; bottom:-12cqi; }
+.cover[data-illustrated-cover=sindoor] .footerOrnament { bottom:9cqi; color:var(--art-gold); }
+.cover[data-illustrated-cover=champagne] .cornerEngraving { width:42cqi; left:-7cqi; top:16cqi; opacity:.2; }
+.cover[data-illustrated-cover=champagne] .cornerEngravingEcho { width:42cqi; right:-7cqi; bottom:16cqi; opacity:.2; }
+.cover[data-illustrated-cover=modern] .cornerEngraving { width:33cqi; left:-15cqi; top:23cqi; background:var(--art-leaf); opacity:.15; }
+.cover[data-illustrated-cover=modern] .cornerEngravingEcho { display:none; }
+.cover[data-illustrated-cover=modern] .engravedGarden { display:none; }
+.marigoldTop,.marigoldBottom { position:absolute; display:block; width:24cqi; }
+.marigoldTop { top:-11cqi; right:0; transform:rotate(17deg); }
+.marigoldBottom { bottom:-9cqi; left:0; transform:rotate(197deg); }
+.cover[data-illustrated-cover=kesar] .cornerEngraving,.cover[data-illustrated-cover=kesar] .cornerEngravingEcho { opacity:.18; }
+.botanicalSpecimen { position:absolute; z-index:2; bottom:9cqi; left:17cqi; width:67cqi; height:25cqi; color:var(--art-leaf); pointer-events:none; }
+.botanicalSpecimen>.sprigMotion { position:absolute; width:22cqi; right:-3cqi; bottom:0; }
+.specimenRule { position:absolute; left:0; bottom:0; width:100%; border-bottom:1px solid var(--art-line); }
+.lotusGarden { position:absolute; z-index:2; width:40cqi; height:24cqi; left:30cqi; bottom:6cqi; pointer-events:none; }
+.lotusGarden>img { position:absolute; width:30cqi; height:auto; left:5cqi; bottom:2cqi; }
+.pondRipples { position:absolute; width:90%; left:5%; height:4cqi; bottom:0; border:1px solid var(--art-line); border-radius:50%; opacity:.35; }
+.pondRipples::after { content:""; position:absolute; inset:1cqi -2cqi; border:1px solid var(--art-line); border-radius:50%; }
+.peacockGarden { position:absolute; z-index:2; width:72cqi; height:27cqi; left:14cqi; bottom:7cqi; pointer-events:none; }
+.peacockLeft,.peacockRight { position:absolute; bottom:0; display:block; width:34cqi; height:24.5cqi; background:var(--art-blue); mask:url('/images/art/peacock-engraving.svg') center/contain no-repeat; mask-mode:luminance; }
+.peacockLeft { left:0; transform:scaleX(-1); }.peacockRight { right:0; }
+.gardenVine { position:absolute; bottom:-3cqi; left:27cqi; width:18cqi; color:var(--art-leaf); opacity:.35; }
+.cover[data-illustrated-cover=pichwai] .cornerEngraving { width:36cqi; left:-5cqi; top:-3cqi; background:var(--art-leaf); opacity:.4; }
+.cover[data-illustrated-cover=pichwai] .cornerEngravingEcho { width:36cqi; right:-5cqi; top:-3cqi; bottom:auto; transform:scaleX(-1) rotate(-36deg); background:var(--art-leaf); opacity:.4; }
+.shellSpecimen { position:absolute; z-index:2; top:15cqi; left:42cqi; width:16cqi; height:9cqi; background:var(--art-line); mask:url('/images/art/seashell-engraving.svg') center/contain no-repeat; }
+.edgePetals { position:absolute; inset:0; pointer-events:none; z-index:2; }
+.edgePetals>span { position:absolute; width:1cqi; height:1.8cqi; border-radius:90% 10% 90% 10%; background:var(--art-petal); opacity:.45; }
+.edgePetals>span:nth-child(1) { left:8cqi; top:34cqi; }.edgePetals>span:nth-child(2) { right:8cqi; top:53cqi; animation-delay:-3s; }.edgePetals>span:nth-child(3) { left:9cqi; top:79cqi; animation-delay:-5s; }.edgePetals>span:nth-child(4) { right:9cqi; top:104cqi; animation-delay:-1s; }
+.cover:is([data-illustrated-cover=modern],[data-illustrated-cover=champagne],[data-illustrated-cover=ocean]) .edgePetals { display:none; }
+.lanternMotion { transform-box:fill-box; transform-origin:50% 0; }
+
+.botanicalTopEcho,.botanicalBottomEcho { position:absolute; display:block; width:37cqi; }
+.botanicalTopEcho { right:-10cqi; top:-15cqi; transform:scaleX(-1) rotate(-24deg); }
+.botanicalBottomEcho { left:-10cqi; bottom:-17cqi; transform:scaleX(-1) rotate(154deg); }
+.botanicalTopEcho img,.botanicalBottomEcho img { width:100%; height:auto; display:block; }
+.cover[data-illustrated-cover=mehfil] .botanicalTopEcho { width:32cqi; top:-13cqi; right:-14cqi; }
+.cover[data-illustrated-cover=mehfil] .botanicalBottomEcho { width:40cqi; bottom:-15cqi; left:-14cqi; }
+
+.botanicalFoil { display:block; width:100%; aspect-ratio:267.188 / 289.688; background:var(--art-gold); mask:url('/images/stationery/engraved-rose.svg') center/contain no-repeat; }
+.cover[data-illustrated-cover=champagne] .botanicalTop { width:34cqi; top:-10cqi; left:-12cqi; opacity:.72; }
+.cover[data-illustrated-cover=champagne] .botanicalBottom { width:34cqi; bottom:-10cqi; right:-12cqi; opacity:.72; }

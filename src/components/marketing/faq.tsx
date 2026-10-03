@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PHOTO_UPLOAD_MAX_LABEL } from "@/lib/photo-upload";
 import { getOccasionThemes } from "@/data/occasion-themes";
 
 const questions = [
@@ -8,7 +9,7 @@ const questions = [
   { question: "Can I change an invitation after sharing it?", answer: "Yes. Open it from your dashboard, make your changes, and save. Guests see the updated invitation at the same published link. You can also make the invitation private again. If you change the invitation’s web address, remember to share that new link with your guests." },
   { question: "How do guest RSVPs work?", answer: "Create guests and their personal invitation links from your host dashboard. Those links show each guest’s permitted schedule and let them send one RSVP for their party, including attendance, party size, and a note. You can review responses in your account. Your general invitation link is for sharing the event details; demo RSVPs stay in the browser and are not sent to a host." },
   { question: "Can I add a Google Maps location?", answer: "Yes. Add a venue and address to each function, then paste its Google Maps share link to point guests to the exact place. Guests can tap Directions or copy the address from the invitation. Different functions can have different venues." },
-  { question: "Can I use my own photos and a song?", answer: "Once your invitation is saved to your account, upload JPG, PNG, or WebP photos up to 5 MB each and choose a cover image. Choose a wedding song, an original instrumental mood, or an official YouTube video. You can also upload your own MP3 up to 10 MB and 15 minutes, then save it with your invitation. Guests choose when to play; music never starts automatically." },
+  { question: "Can I use my own photos and a song?", answer: `Once your invitation is saved to your account, upload JPG, PNG, or WebP photos up to ${PHOTO_UPLOAD_MAX_LABEL} each and choose a cover image. Choose a wedding song, an original instrumental mood, or an official YouTube video. You can also upload your own MP3 up to 10 MB and 15 minutes, then save it with your invitation. Guests choose when to play; music never starts automatically.` },
   { question: "Can I check how it looks before publishing?", answer: "Absolutely. The editor shows your actual invitation in phone and desktop previews. Check your wording, dates, schedule, photos, and directions, then publish when you are ready. Switching between designs keeps your content, so you can find the one that feels right." },
 ];
 

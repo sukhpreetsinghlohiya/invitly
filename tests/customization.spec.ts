@@ -79,6 +79,11 @@ test("functions can be added, renamed, previewed and removed", async ({ page }, 
   await expectNoHorizontalOverflow(page);
   await capture(page, testInfo, "customize-functions");
   await page.getByRole("button", { name: "Remove Mehndi", exact: true }).click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(removeButtons).toHaveCount(initialCount + 1);
+  await page.getByRole("button", { name: "Remove Mehndi", exact: true }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Remove function", exact: true }).click();
   await expect(removeButtons).toHaveCount(initialCount);
   await expect(page.frameLocator("iframe").locator("body")).not.toContainText("Mehndi");
 });

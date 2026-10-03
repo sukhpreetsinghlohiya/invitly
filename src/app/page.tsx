@@ -1,6 +1,8 @@
+import { MarketingHeader } from "@/components/navigation/marketing-header";
+import { publicMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { Brand, Flower } from "@/components/brand";
+import { Flower } from "@/components/brand";
 import { Footer } from "@/components/footer";
 import { InvitationArt } from "@/components/invitation-art";
 import { SetupNotice } from "@/components/setup-notice";
@@ -14,10 +16,12 @@ import { OccasionShowcase } from "@/components/marketing/occasion-showcase";
 import { FrequentlyAskedQuestions } from "@/components/marketing/faq";
 import "@/components/marketing/marketing.css";
 
+export const metadata = { ...publicMetadata("Invitly — A little link. A lot of togetherness.", "Thoughtful wedding and engagement invitations. Choose a design, tell your story, share personal guest links, and collect RSVPs.", "/"), title: { absolute: "Invitly — A little link. A lot of togetherness." } };
+
 export default function Home() {
   return <div className="stationery-home">
     <SetupNotice />
-    <header className="site-header home-header container"><Brand /><nav aria-label="Main navigation"><Link href="/templates">The collection</Link><a href="#how-it-works">How it works</a><a href="#faqs">FAQs</a></nav><div className="home-header-actions"><Link className="home-login" href="/login">Log in</Link><Link className="button button-small" href="/demo">Try a demo <ArrowUpRight size={16} aria-hidden="true" /></Link></div></header>
+    <MarketingHeader />
     <main id="main">
       <HomeHero />
       <OccasionMarquee />

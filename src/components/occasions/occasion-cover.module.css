@@ -42,10 +42,6 @@
 .actions a:focus-visible { outline:3px solid var(--occasion-accent); outline-offset:4px; }
 
 /* Eight signature stationery compositions. The artwork has its own space, away from editable text. */
-.cover[data-occasion=engagement][data-layout=signature] .composition { border-inline:2.6cqi solid var(--occasion-ink); padding-inline:12cqi; }
-.cover[data-occasion=engagement][data-layout=signature] .composition::before { border:1px solid var(--cover-line); border-radius:44cqi 44cqi 0 0; inset:4cqi 3cqi; }
-.cover[data-occasion=engagement][data-layout=signature] .signatureVisual { width:85%; margin-top:3cqi; }
-.cover[data-occasion=engagement][data-layout=signature] .names { font-style:italic; }
 .cover[data-occasion=birthday] { --occasion-ink:#8b3429; --occasion-paper:#fff0cd; --occasion-accent:#ab6139; --cover-wash:#efcf98; }
 .cover[data-occasion=birthday][data-layout=signature] .composition { padding:9cqi 11cqi; background:repeating-linear-gradient(90deg,transparent 0 5cqi,#c4692710 5cqi 10cqi),var(--occasion-paper); border-block:2cqi solid var(--occasion-ink); }
 .cover[data-occasion=birthday][data-layout=signature] .composition::before { inset:3cqi; border:1px solid var(--occasion-ink); outline:1px solid var(--cover-line); outline-offset:1cqi; }
@@ -150,6 +146,65 @@
 .cover[data-layout=keepsake][data-occasion=remembrance] .keepsakeVisual { border-radius:0; }.cover[data-layout=keepsake][data-occasion=remembrance] .names { font-style:normal; }
 .cover[data-layout=keepsake][data-occasion=other] { --occasion-ink:#4b5c43; --occasion-paper:#f4f0e3; --occasion-accent:#8a9064; --cover-wash:#d9ddc7; }
 
+/* Engagement stationery has one spacing rhythm at every size, with art kept clear of editable copy. */
+.engagementGarden { position:relative; width:100%; aspect-ratio:1.55; isolation:isolate; }
+.engagementGarden>span { position:absolute; display:block; pointer-events:none; }
+.engagementGarden .gardenLeft,.engagementGarden .gardenRight { width:60%; height:108%; top:-7%; }
+.engagementGarden .gardenLeft { left:-6%; transform:rotate(-24deg); }
+.engagementGarden .gardenRight { right:-6%; transform:scaleX(-1) rotate(-24deg); }
+.engagementGarden .gardenLeft img,.engagementGarden .gardenRight img { width:100%; height:100%; object-fit:contain; }
+.engagementGarden .gardenRings { z-index:1; width:48%; left:26%; bottom:-1%; }
+.engagementGarden .gardenRings img { filter:drop-shadow(0 .8cqi .5cqi #49362716); }
+.engagementGarden .artAccents { opacity:.6; }
+.cover[data-occasion=engagement] .composition { min-height:150cqi; justify-content:center; }
+.cover[data-occasion=engagement] .coverText { max-width:28em; line-height:1.85; margin-bottom:3.5cqi; }
+.cover[data-occasion=engagement] .details { max-width:70cqi; gap:2.4cqi; }
+.cover[data-occasion=engagement] .details small { margin-top:1.2cqi; }
+.cover[data-occasion=engagement] .divider { width:22cqi; margin-block:4cqi 1cqi; }
+.cover[data-occasion=engagement] .names>span>i { margin-block:1.3cqi; }
+.cover[data-occasion=engagement][data-layout=signature] .composition { padding:10cqi 11cqi 14cqi; border-block:1.1cqi solid var(--occasion-accent); }
+.cover[data-occasion=engagement][data-layout=signature] .composition::before { inset:3.5cqi; border-radius:44cqi 44cqi 1px 1px; outline:1px solid var(--cover-line); outline-offset:1.4cqi; }
+.cover[data-occasion=engagement][data-layout=signature] .occasionName { margin:0 0 3cqi; }
+.cover[data-occasion=engagement][data-layout=signature] .signatureVisual { width:76cqi; max-width:100%; margin:2cqi auto 5cqi; }
+.cover[data-occasion=engagement][data-layout=signature] .branchLeft { left:-18cqi; top:7cqi; width:32cqi; opacity:.3; }
+.cover[data-occasion=engagement][data-layout=signature] .branchRight { right:-18cqi; bottom:4cqi; width:32cqi; opacity:.3; }
+.cover[data-occasion=engagement][data-layout=signature] .names { font-style:italic; font-size:15cqi; line-height:1.04; }
+.cover[data-occasion=engagement][data-layout=signature] .details { margin-top:3cqi; }
+.cover[data-occasion=engagement][data-layout=editorial] .composition { padding:8cqi 9cqi 12cqi; justify-content:flex-start; }
+.cover[data-occasion=engagement][data-layout=editorial] .composition::before { inset:2.8cqi; outline:1px solid var(--cover-line); outline-offset:1.1cqi; }
+.cover[data-occasion=engagement][data-layout=editorial] .editionRail { padding-bottom:3.5cqi; }
+.cover[data-occasion=engagement][data-layout=editorial] .editorialCopy { padding-block:6cqi 5cqi; }
+.cover[data-occasion=engagement][data-layout=editorial] .names { font-size:16cqi; line-height:1.06; }
+.cover[data-occasion=engagement][data-layout=editorial] .editorialVisual { position:relative; z-index:1; margin-top:auto; grid-template-columns:minmax(0,1fr) 24cqi; border:1px solid var(--cover-line); }
+.cover[data-occasion=engagement][data-layout=editorial] .editorialVisual .artwork { padding:5cqi 2cqi; }
+.cover[data-occasion=engagement][data-layout=editorial] .engagementGarden { aspect-ratio:1.1; }
+.cover[data-occasion=engagement][data-layout=editorial] .gardenLeft { width:90%; height:112%; left:-21%; top:-13%; transform:rotate(-27deg); }
+.cover[data-occasion=engagement][data-layout=editorial] .gardenRight { width:69%; height:92%; right:-14%; top:16%; transform:scaleX(-1) rotate(-29deg); }
+.cover[data-occasion=engagement][data-layout=editorial] .gardenRings { width:61%; left:19.5%; bottom:-1%; }
+.cover[data-occasion=engagement][data-layout=editorial] .visualCaption { position:relative; z-index:2; padding:5cqi 2cqi; justify-content:center; gap:4cqi; background:var(--occasion-ink); color:var(--occasion-paper); border:0; }
+.cover[data-occasion=engagement][data-layout=editorial] .dateStamp { color:inherit; }
+.cover[data-occasion=engagement][data-layout=editorial] .details { max-width:none; margin-top:5cqi; }
+.cover[data-occasion=engagement][data-layout=keepsake] .composition { padding:8cqi 9cqi 12cqi; border:2cqi solid var(--cover-wash); }
+.cover[data-occasion=engagement][data-layout=keepsake] .composition::before { inset:2cqi; border-radius:1px; outline:1px solid var(--cover-line); outline-offset:1cqi; }
+.cover[data-occasion=engagement][data-layout=keepsake] .keepsakeHeading { padding:0 1cqi 3cqi; align-items:center; }
+.cover[data-occasion=engagement][data-layout=keepsake] .keepsakeVisual { width:66cqi; max-width:100%; margin:3cqi auto 6cqi; padding:1.5cqi; }
+.cover[data-occasion=engagement][data-layout=keepsake] .keepsakeVisual .artwork { padding:2cqi 3cqi; }
+.cover[data-occasion=engagement][data-layout=keepsake] .engagementGarden { aspect-ratio:1.4; }
+.cover[data-occasion=engagement][data-layout=keepsake] .gardenLeft { left:-18%; width:77%; height:120%; top:-10%; transform:rotate(-23deg); }
+.cover[data-occasion=engagement][data-layout=keepsake] .gardenRight { right:-18%; width:77%; height:120%; top:-10%; transform:scaleX(-1) rotate(-23deg); }
+.cover[data-occasion=engagement][data-layout=keepsake] .gardenRings { width:52%; left:24%; bottom:-1%; }
+.cover[data-occasion=engagement][data-layout=keepsake] .keepsakeVisual .dateStamp { right:-3cqi; bottom:-2cqi; }
+.cover[data-occasion=engagement][data-layout=keepsake] .names { font-size:14.2cqi; line-height:1.07; }
+.cover[data-occasion=engagement][data-cover-photo=true] .signatureVisual,
+.cover[data-occasion=engagement][data-cover-photo=true] .keepsakeVisual { width:100%; margin-block:4cqi 6cqi; }
+.cover[data-occasion=engagement][data-cover-photo=true] .photograph { padding:0; aspect-ratio:1; }
+.cover[data-occasion=engagement][data-cover-photo=true] .editorialVisual { grid-template-columns:minmax(0,1fr); }
+.cover[data-occasion=engagement][data-cover-photo=true] .visualCaption { flex-direction:row; justify-content:center; padding:3.5cqi 4cqi; gap:5cqi; }
+.cover[data-occasion=engagement][data-cover-photo=true] .visualCaption .dateStamp { flex-shrink:0; }
+.cover[data-occasion=engagement][data-cover-photo=true] .visualCaption .dateStamp strong { font-size:9cqi; }
+.cover[data-occasion=engagement][data-cover-photo=true] .visualCaption>span { text-align:left; max-width:40cqi; }
+.cover[data-occasion=engagement] [data-photo-slideshow]>div:has(>button) { width:max-content; max-width:calc(100% - 8px); right:50%; transform:translateX(50%); bottom:12px; }
+
 /* Editable names keep their proportions even in the oversized birthday and naming editions. */
 .cover[data-occasion][data-layout] .names[data-long=true] { font-size:10.8cqi; line-height:1.16; letter-spacing:-.025em; }
 .cover[data-occasion][data-layout] .names[data-indic=true][data-long=true] { line-height:1.5; letter-spacing:0; }
@@ -161,11 +216,15 @@
 .cover[data-typography=serif] .names { font-family:var(--cover-serif); }
 .cover[data-typography=sans] .names { font-family:var(--sans); font-size:12cqi; font-weight:500; font-style:normal; line-height:1.2; letter-spacing:-.05em; }
 .cover[data-typography=script] .names { font-family:"Great Vibes",var(--serif); line-height:1.2; font-style:normal; letter-spacing:0; }
+.cover[data-occasion=engagement][data-typography=sans] .names { font-size:12cqi; font-style:normal; line-height:1.2; letter-spacing:-.04em; }
+.cover[data-occasion=engagement][data-typography=script] .names { font-style:normal; line-height:1.2; letter-spacing:0; }
 .cover .names[data-indic=true] { font-family:var(--serif); letter-spacing:0; font-style:normal; line-height:1.45; }
+.cover[data-occasion=engagement] .names[data-indic=true] { letter-spacing:0; font-style:normal; line-height:1.45; }
 .cover[data-typography=sans] .names[data-indic=true] { font-family:var(--sans); }
 .cover [data-indic=true]:not(.names) { letter-spacing:0; text-transform:none; line-height:1.7; }
 .cover[data-artwork=off] :is(.paperTrim,.divider,.signatureVisual:not(:has(.photograph)),.editorialVisual:not(:has(.photograph)),.keepsakeVisual:not(:has(.photograph))) { display:none; }
 .cover[data-artwork=off] .composition { background:var(--occasion-paper); border:0; justify-content:center; gap:6cqi; }.cover[data-artwork=off] .composition::before,.cover[data-artwork=off] .composition::after { display:none; }
+.cover[data-occasion=engagement][data-layout][data-artwork=off] .composition { border:0; justify-content:center; gap:4cqi; padding:10cqi 9cqi; }
 .cover.full .coverText { font-size:max(10px,2.45cqi); }.cover.full .occasionName,.full .editionRail,.full .keepsakeHeading { font-size:max(9px,2.2cqi); }
 .cover.full .date { font-size:max(11px,2.7cqi); }.cover.full .dateStamp span { font-size:max(9px,2.2cqi); }.cover.full .visualCaption>span { font-size:max(11px,3.7cqi); }.cover.full .location { font-size:max(15px,4cqi); }.cover.full .details small { font-size:max(11px,2.6cqi); }
 .compact { padding:0!important; min-height:0!important; }.compact .composition { box-shadow:none; }.compact .canvas { max-width:none; }

@@ -7,9 +7,9 @@ export type OccasionTheme = InvitationTheme & { layout: OccasionLayout };
 type CollectionEntry = [ThemeId, string, string, string];
 const collections: Record<Exclude<OccasionId, "wedding">, CollectionEntry[]> = {
   engagement: [
-    ["lotus", "The Promise Letter", "A PROMISE IN BLOOM", "Blush stationery with a burgundy edge, intertwined rings, and delicate engraved flowers."],
-    ["royal", "The Engagement Edit", "A NEW CHAPTER", "A cream and rose announcement with expressive serif names, an illustrated panel, and a date column."],
-    ["floral", "Pressed Promises", "A LITTLE FOREVER", "Sage paper, a garden-ring illustration in an arched mount, and a dated keepsake seal."],
+    ["lotus", "The Promise Letter", "A PROMISE IN BLOOM", "A garden of antique roses, intertwined rings, and graceful names within a fine double arch on blush paper."],
+    ["royal", "The Engagement Edit", "A NEW CHAPTER", "An ivory announcement with generous serif names, a rose-filled illustration, and a burgundy date ribbon."],
+    ["floral", "Pressed Promises", "A LITTLE FOREVER", "Blue botanicals and golden rings in a sage portrait mount, with a dated seal and delicate engraved details."],
   ],
   birthday: [
     ["kesar", "The Birthday Ticket", "ONE VERY HAPPY DAY", "A sunshine-yellow party ticket with a perforated detail line, birthday cake, and big joyful type."],

@@ -20,7 +20,7 @@ export function Footer() {
         <nav className="footer-link-group footer-blog-links" aria-label="From the blog"><h3>From the blog</h3>{blogTopics.map(topic => <Link key={topic.slug} href={`/blog/category/${topic.slug}`}>{topic.name}</Link>)}</nav>
       </div>
       <SocialLinks />
-      <div className="footer-bottom"><p>A little link. A lot of togetherness.</p><span>Made by Sukhpreet <span aria-hidden="true">♡</span></span></div>
+      <div className="footer-bottom"><p>A little link. A lot of togetherness.</p><nav aria-label="Privacy and terms"><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></nav><span>Made by Sukhpreet <span aria-hidden="true">♡</span></span></div>
     </div>
   </footer>;
 }

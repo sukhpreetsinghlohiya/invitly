@@ -1,0 +1,50 @@
+Invitly stationery botanical artwork
+Retrieved and visually reviewed: 2026-10-03
+
+1. public/images/stationery/rose-bouquet.svg
+   Source title: Rose 33
+   Creator: Firkin, after an original uploaded by SH
+   Source page: https://openclipart.org/detail/304693/rose-33
+   Original page: https://openclipart.org/detail/278391/rose
+   Download: https://openclipart.org/download/304693/Rose33.svg
+   License: Public domain, under Openclipart's public-domain submission policy.
+   Policy: https://openclipart.org/share
+   Source page identifies this as Firkin's entirely vector version of SH's rose.
+   Adaptation: slightly subdued blush petals and sage/olive foliage; normalized
+   dimensions; removed editor metadata/attributes. Original geometry retained.
+   Final viewBox: 0 0 356.26459 486.3502
+
+2. public/images/stationery/blue-bouquet.svg
+   Source title: Hydrangea
+   Creator: j4p4n
+   Source page: https://openclipart.org/detail/331383/hydrangea
+   Download: https://openclipart.org/download/331383/hydrangea.svg
+   License: CC0 1.0 Universal (Public Domain Dedication).
+   License URI: https://creativecommons.org/publicdomain/zero/1.0/
+   Verification: the downloaded SVG's RDF metadata explicitly declares
+   http://creativecommons.org/publicdomain/zero/1.0/ as its license.
+   Adaptation: cropped transparent margins; recolored purple/teal artwork to
+   dusty blue and sage; removed editor/RDF metadata and non-SVG attributes.
+   Final viewBox: 170 360 1145 990
+
+3. public/images/stationery/engraved-rose.svg
+   Source title: Rose Drawing
+   Creator: Firkin
+   Source page: https://www.clipsafari.com/clips/o232132-rose-drawing
+   Download: https://images.clipsafari.com/k27oc0vrrvusibp3ah5fl9il8udi?filename=rose-drawing.svg
+   License: CC0 1.0 Universal (Public Domain Dedication).
+   License URI: https://creativecommons.org/publicdomain/zero/1.0/
+   Verification: source page explicitly labels the artwork CC0 / No Rights
+   Reserved and allows modification and commercial use.
+   Adaptation: SVG serialization cleanup only. Original geometry retained.
+   Intended use: a decorative monochrome mask colored by each stationery theme.
+   Final viewBox: 0 0 267.188 289.688
+
+All three assets are transparent, self-contained vector artwork. They contain
+no scripts, event handlers, foreign objects, external references or embedded
+raster images. Original source pages and license links are retained here for
+provenance even though attribution is not required for public-domain work.
+
+public/images/stationery/botanicals-contact-sheet.png is a local white-background
+inspection sheet showing these three adapted assets from left to right. It is
+for design review and is not referenced by invitation templates.

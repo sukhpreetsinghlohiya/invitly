@@ -1,3 +1,4 @@
+import { publicMetadata } from "@/lib/seo";
 import { isOccasionAvailable } from "@/data/occasion-availability";
 import { OccasionComingSoon, ComingSoonBadge } from "@/components/occasion-coming-soon";
 import type { Metadata } from "next";
@@ -14,10 +15,13 @@ import type { ThemeId } from "@/types/invitation";
 import { ThemeGallery } from "./theme-gallery";
 import "./gallery.css";
 
-export const metadata: Metadata = {
-  title: "The invitation collection",
-  description: "Explore ten wedding and three engagement invitation designs with rich artwork, editable layouts, venue directions, and music. More occasions are coming soon.",
-};
+export async function generateMetadata({ searchParams }: { searchParams: Promise<{ occasion?: string }> }): Promise<Metadata> {
+  const { occasion: selection } = await searchParams;
+  const occasion = getOccasion(selection);
+  const available = isOccasionAvailable(occasion.id);
+  const canonical = occasion.id === "wedding" ? "/templates" : `/templates?occasion=${occasion.id}`;
+  return { ...publicMetadata(`${occasion.name} invitation designs`, available ? `Explore original ${occasion.name.toLowerCase()} invitations with rich artwork, editable details, photographs and music.` : `${occasion.name} invitations are coming soon. Explore our wedding and engagement collections.`, canonical), ...(!available ? { robots: { index: false, follow: true } } : {}) };
+}
 
 export default async function TemplatesPage({ searchParams }: { searchParams: Promise<{ occasion?: string; tradition?: string }> }) {
   const params = await searchParams;

@@ -1,0 +1,2 @@
+.localTime { display:flex; align-items:flex-start; gap:7px; margin-top:9px; font:400 12px/1.6 var(--sans,sans-serif); color:inherit; opacity:.8; overflow-wrap:anywhere; }
+.localTime>svg { flex-shrink:0; margin-top:2px; }.localTime>span { min-width:0; }.localTime.localTime time { display:inline; font:inherit; color:inherit; letter-spacing:normal; text-transform:none; }.localTime small { display:block; margin-top:1px; font:400 10px/1.5 var(--sans,sans-serif); opacity:.85; }

@@ -1,3 +1,4 @@
+import { brandImage, publicMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,7 +12,7 @@ import { getPublishedPost, getPublishedPosts } from "@/lib/blog";
 type Props = { params: Promise<{ slug: string }> };
 export const dynamicParams = false;
 export async function generateStaticParams() { return (await getPublishedPosts()).map(post => ({ slug: post.slug })); }
-export async function generateMetadata({ params }: Props): Promise<Metadata> { const { slug } = await params; const post = await getPublishedPost(slug); if (!post) notFound(); return { title: post.title, description: post.excerpt, alternates: { canonical: `/blog/${post.slug}` }, openGraph: { title: post.title, description: post.excerpt, type: "article", publishedTime: post.date, url: `/blog/${post.slug}`, ...(post.coverImage ? { images: [{ url: post.coverImage.src, width: post.coverImage.width, height: post.coverImage.height, alt: post.coverImage.alt }] } : {}) } }; }
+export async function generateMetadata({ params }: Props): Promise<Metadata> { const { slug } = await params; const post = await getPublishedPost(slug); if (!post) notFound(); return { ...publicMetadata(post.title, post.excerpt, `/blog/${post.slug}`), twitter: { card: "summary_large_image", title: post.title, description: post.excerpt, images: [post.coverImage?.src || brandImage] }, openGraph: { title: post.title, description: post.excerpt, type: "article", publishedTime: post.date, url: `/blog/${post.slug}`, ...(post.coverImage ? { images: [{ url: post.coverImage.src, width: post.coverImage.width, height: post.coverImage.height, alt: post.coverImage.alt }] } : { images: [brandImage] }) } }; }
 
 export default async function BlogArticlePage({ params }: Props) {
   const { slug } = await params;

@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
     { pathname: "/images/**", search: "" },
     { pathname: "/_next/static/media/**", search: "" },
   ] },
-  experimental: { serverActions: { bodySizeLimit: "6mb" } },
+  experimental: { serverActions: { bodySizeLimit: "4.25mb" } },
   async headers() {
     return [{ source: "/:path*", headers: [
       { key: "Referrer-Policy", value: "no-referrer" },
@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
       { key: "X-Frame-Options", value: "SAMEORIGIN" },
       { key: "Content-Security-Policy", value: "frame-ancestors 'self'" },
       { key: "Cache-Control", value: "private, no-store" },
-    ] }];
+    ] }, ...["/g/:path*", "/i/:path*", "/media/:path*", "/invite/:path*", "/dashboard/:path*", "/account", "/customize", "/preview", "/auth/:path*"].map(source => ({ source, headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }] }))];
   },
 };
 

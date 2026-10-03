@@ -25,6 +25,8 @@ import { LiveAnnouncements } from "@/components/live-announcements";
 import { WeddingExperience } from "@/components/wedding/wedding-experience";
 import "./invitation-extras.css";
 import { VenueCard } from "./venue-card";
+import { CalendarActions } from "./calendar-actions";
+import { LocalEventTime } from "./local-event-time";
 import { InvitationMotion } from "./invitation-motion";
 import { OccasionExperience } from "./occasions/occasion-experience";
 import { CeremonyArt } from "./ceremony-art";
@@ -85,7 +87,7 @@ export function InvitationContent({ invitation, theme, mode, musicEnabled = mode
           return <article data-reveal className={`function-card${design.decoration ? " function-card-with-art" : ""}`} key={event.id}>
             <div className={`function-top${design.decoration ? " ceremony-card-art" : ""}`}>{design.decoration && <CeremonyArt title={event.name} fallbackIcon={event.icon} />}<span className="function-number">{String(index + 1).padStart(2, "0")}</span></div>
             <div className="function-details" data-reveal-content><span className="eyebrow">{formatEventDate(event.startsAt, invitation.timezone, { weekday: "long", day: "numeric", month: "short" })}</span><h3 data-indic={hasIndicText(event.name) || undefined}>{event.name}</h3>
-              <time dateTime={event.startsAt}>{formatEventDate(event.startsAt, invitation.timezone, { hour: "numeric", minute: "2-digit", ...(invitation.timezone === "Asia/Kolkata" ? {} : { timeZoneName: "short" as const }) })}{invitation.timezone === "Asia/Kolkata" ? " IST" : ""}</time>
+              <time dateTime={event.startsAt}>{formatEventDate(event.startsAt, invitation.timezone, { hour: "numeric", minute: "2-digit", ...(invitation.timezone === "Asia/Kolkata" ? {} : { timeZoneName: "short" as const }) })}{invitation.timezone === "Asia/Kolkata" ? " IST" : ""}</time><LocalEventTime startsAt={event.startsAt} hostTimezone={invitation.timezone} /><CalendarActions event={event} names={invitation.couple} timezone={invitation.timezone} calendarHref={calendarHref} />
               {event.description && <p data-indic={hasIndicText(event.description) || undefined}>{event.description}</p>}{event.dressCode && <span className="dress-code" data-indic={hasIndicText(event.dressCode) || undefined}>A little dress note: {event.dressCode}</span>}
             </div>
             <VenueCard venue={event.venue} address={event.address} mapUrl={event.mapUrl} eventName={event.name} />

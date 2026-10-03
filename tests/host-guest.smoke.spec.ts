@@ -320,8 +320,8 @@ test.describe("authenticated host and guest publication smoke", () => {
     row = host.getByRole("row").filter({ hasText: guestName });
     await expect(row).toContainText("declined");
     await expect(row).toContainText("0 / 2");
-    host.once("dialog", (dialog) => dialog.accept());
     await row.getByRole("button", { name: "Replace link", exact: true }).click();
+    await host.getByRole("dialog").getByRole("button", { name: "Replace link", exact: true }).click();
     await expect(host.getByText("A new private link is ready. The old link no longer works.", { exact: true })).toBeVisible();
     expect((await guest.goto(privatePath))?.status()).toBe(404);
     await expectInvitationResources(privatePath, false);
@@ -343,7 +343,7 @@ test.describe("authenticated host and guest publication smoke", () => {
     await host.getByRole("button", { name: "Post announcement", exact: true }).click();
     await expect(guest.getByText(text, { exact: true })).toBeVisible({ timeout: 25000 });
     await recordLatency("post", started);
-    await expect(host.getByRole("status")).toContainText("Announcement saved for your guests.");
+    await expect(host.locator(".announcements-feedback")).toContainText("Announcement saved for your guests.");
     let card = host.locator("article.announcement-card").filter({ hasText: text });
     await card.getByRole("button", { name: "Edit announcement", exact: true }).click();
     const changed = `The welcome toast starts at 6:30 pm in the garden. ${slug}`;
@@ -359,8 +359,8 @@ test.describe("authenticated host and guest publication smoke", () => {
     await expect(guest.locator('[data-pinned="true"]').filter({ hasText: changed })).toBeVisible({ timeout: 25000 });
     await recordLatency("pin", started);
     started = Date.now();
-    host.once("dialog", (dialog) => dialog.accept());
     await card.getByRole("button", { name: "Remove announcement", exact: true }).click();
+    await host.getByRole("dialog").getByRole("button", { name: "Remove announcement", exact: true }).click();
     await expect(guest.getByText(changed, { exact: true })).toHaveCount(0, { timeout: 25000 });
     await recordLatency("remove", started);
     const secretDraft = `Host-only announcement draft ${slug}`;
@@ -377,6 +377,7 @@ test.describe("authenticated host and guest publication smoke", () => {
     await host.goto(`/customize?event=${eventId}`);
     await host.getByRole("button", { name: "Share", exact: true }).click();
     await host.getByRole("button", { name: "Make invitation private", exact: true }).click();
+    await host.getByRole("dialog").getByRole("button", { name: "Make private", exact: true }).click();
     await expect(host.locator(".editor-feedback")).toContainText("Your invitation is private again");
     expect((await guest.goto(`/i/${slug}`))?.status()).toBe(404);
     const response = await guestContext.request.get(`/media/${mediaId}`);

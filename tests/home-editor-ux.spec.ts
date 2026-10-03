@@ -13,11 +13,17 @@ async function capturePage(page: Page, file: string, viewport = false) {
 test('homepage login, keyboard FAQs and footer navigation work at every viewport', async ({ page }, info) => {
   await page.goto('/');
   const login = page.getByRole('link', { name: 'Log in', exact: true });
-  await expect(login).toHaveAttribute('href', '/login');
-  await expect(login).toBeInViewport({ ratio: 1 });
-  expect((await login.boundingBox())?.height).toBeGreaterThanOrEqual(44);
+  if (page.viewportSize()!.width <= 800) {
+    await page.getByRole('button', { name: 'Open navigation' }).click();
+    await expect(page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: 'Host login' })).toBeVisible();
+    await page.keyboard.press('Escape');
+  } else {
+    await expect(login).toHaveAttribute('href', '/login');
+    await expect(login).toBeInViewport({ ratio: 1 });
+    expect((await login.boundingBox())?.height).toBeGreaterThanOrEqual(44);
+  }
   expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
-  await expect(page.locator('.home-header')).toHaveCount(1);
+  await expect(page.locator('.marketing-header')).toHaveCount(1);
   await expect(page.locator('main .hero')).toHaveCount(1);
   await mkdir('artifacts/home-editor-after', { recursive: true });
   await capturePage(page, `homepage-${info.project.name}`, true);
@@ -57,7 +63,10 @@ test('homepage login, keyboard FAQs and footer navigation work at every viewport
   }
   await footer.screenshot({ path: `artifacts/home-editor-after/footer-${info.project.name}.png` });
   expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
-  await login.click();
+  if (page.viewportSize()!.width <= 800) {
+    await page.getByRole('button', { name: 'Open navigation' }).click();
+    await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: 'Host login' }).click();
+  } else await login.click();
   await expect(page).toHaveURL(/\/login$/);
   await expect(page.getByLabel('Email address', { exact: true })).toBeVisible();
 });
@@ -161,7 +170,8 @@ test.describe('homepage account entry', () => {
     await page.getByRole('button', { name: 'Save draft', exact: true }).click();
     await expect(page.locator('.editor-workspace-status')).toContainText(/device|browser/i);
     await page.goto('/');
-    await page.getByRole('link', { name: 'Log in', exact: true }).click();
+    await page.getByRole('button', { name: 'Open navigation' }).click();
+    await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: 'Host login' }).click();
     await page.getByLabel('Email address', { exact: true }).fill(process.env.TEST_HOST_A_EMAIL!);
     await page.getByLabel(/^Password/).fill(process.env.TEST_HOST_A_PASSWORD!);
     await page.getByRole('button', { name: 'Sign in', exact: true }).click();
@@ -194,7 +204,8 @@ test.describe('homepage without JavaScript', () => {
     await expect(question.locator('.faq-answer')).toContainText('There is nothing to install');
     await question.locator('summary').press('Space');
     await expect(question).toHaveJSProperty('open', false);
-    await page.getByRole('link', { name: 'Log in', exact: true }).click();
+    await page.getByRole('button', { name: 'Open navigation' }).click();
+    await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: 'Host login' }).click();
     await expect(page).toHaveURL(/\/login$/);
     await expect(page.getByRole('button', { name: 'Sign in', exact: true })).toBeVisible();
   });

@@ -4,6 +4,7 @@ import sharp, { type OutputInfo } from "sharp";
 import { revalidatePath } from "next/cache";
 import { requireHostEvent, isUuid } from "@/lib/host-event";
 import { EVENT_MEDIA_BUCKET } from "@/lib/supabase/storage";
+import { PHOTO_UPLOAD_ERROR, PHOTO_UPLOAD_MAX_BYTES } from "@/lib/photo-upload";
 import type { EventPhoto } from "@/types/media";
 export type { EventPhoto } from "@/types/media";
 
@@ -12,7 +13,7 @@ export async function uploadEventPhoto(eventId: string, form: FormData): Promise
     const { client, event } = await requireHostEvent(eventId);
     const file = form.get("file");
     const alt = String(form.get("alt") || "").trim();
-    if (!(file instanceof File) || !["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size < 1 || file.size > 5 * 1024 * 1024) return { error: "Choose a JPG, PNG, or WebP photo up to 5 MB." };
+    if (!(file instanceof File) || !["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size < 1 || file.size > PHOTO_UPLOAD_MAX_BYTES) return { error: PHOTO_UPLOAD_ERROR };
     if (!alt || alt.length > 300) return { error: "Describe your photo in 1–300 characters for guests using screen readers." };
     const { count, error: countError } = await client.from("media").select("id", { count: "exact", head: true }).eq("event_id", eventId);
     if (countError) return { error: "Photo storage is unavailable. Check the latest database migration." };

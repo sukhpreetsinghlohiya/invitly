@@ -32,19 +32,24 @@ test('stationery homepage has readable navigation, loaded artwork and real occas
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/');
   await page.evaluate(() => document.fonts.ready);
-  const header = page.locator('.home-header');
+  const header = page.locator('.marketing-header');
   const hero = page.locator('main .hero.stationery-hero');
   const heroWrap = page.locator('.stationery-hero-wrap');
   const showcase = page.locator('#occasions');
   const login = header.getByRole('link', { name: 'Log in', exact: true });
   await expect(header).toHaveCount(1);
   await expect(hero.getByRole('heading', { level: 1 })).toBeVisible();
-  await expect(login).toHaveAttribute('href', '/login');
-  await expect(login).toBeInViewport({ ratio: 1 });
-  expect((await login.boundingBox())?.height).toBeGreaterThanOrEqual(44);
-  for (const link of await header.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('link').all()) {
-    await expect(link).toHaveAccessibleName(/.+/);
-    await expect(link).toBeInViewport({ ratio: 1 });
+  if (page.viewportSize()!.width <= 800) {
+    await header.getByRole('button', { name: 'Open navigation' }).click();
+    const mobile = header.getByRole('navigation', { name: 'Mobile navigation' });
+    await expect(mobile.getByRole('link', { name: 'Host login' })).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(mobile).toBeHidden();
+  } else {
+    await expect(login).toHaveAttribute('href', '/login');
+    await expect(login).toBeInViewport({ ratio: 1 });
+    expect((await login.boundingBox())?.height).toBeGreaterThanOrEqual(44);
+    for (const link of await header.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('link').all()) await expect(link).toBeInViewport({ ratio: 1 });
   }
   await expect(hero.getByRole('link', { name: 'Create your invitation', exact: true })).toHaveAttribute('href', '/templates#occasion-collections-title');
   await expect(hero.getByRole('link', { name: 'View the demo', exact: true })).toHaveAttribute('href', '/demo');
@@ -117,7 +122,10 @@ test('stationery homepage has readable navigation, loaded artwork and real occas
     await expectNoOverflow(page);
   }
   await page.goto('/');
-  await login.click();
+  if (page.viewportSize()!.width <= 800) {
+    await page.getByRole('button', { name: 'Open navigation' }).click();
+    await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: 'Host login' }).click();
+  } else await login.click();
   await expect(page).toHaveURL(/\/login$/);
   await expect(page.getByLabel('Email address', { exact: true })).toBeVisible();
   expect(errors).toEqual([]);

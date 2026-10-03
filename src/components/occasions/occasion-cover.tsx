@@ -34,6 +34,17 @@ function ArtAccents({ occasion }: { occasion: string }) {
   </svg>;
 }
 
+/** The botanical arrangement keeps its own print area, even when the hosts add longer copy. */
+function EngagementGarden({ keepsake, compact }: { keepsake: boolean; compact: boolean }) {
+  const bouquet = `/images/stationery/${keepsake ? "blue" : "rose"}-bouquet.svg`;
+  return <div className={styles.engagementGarden} data-decoration aria-hidden="true">
+    <span className={styles.gardenLeft}><Image src={bouquet} alt="" width={640} height={640} sizes={compact ? "140px" : "240px"} /></span>
+    <span className={styles.gardenRight}><Image src={bouquet} alt="" width={640} height={640} sizes={compact ? "140px" : "240px"} /></span>
+    <span className={styles.gardenRings}><Image src="/images/occasions/engagement.webp" alt="" width={480} height={360} sizes={compact ? "100px" : "160px"} /></span>
+    <ArtAccents occasion="engagement" />
+  </div>;
+}
+
 /** The same composed cover is used in the gallery, editor, and actual invitation. */
 export function OccasionCover({ invitation, theme, compact = false, cover, photos = [], showRsvp = true }: Props) {
   const occasion = getOccasion(invitation.occasion);
@@ -56,7 +67,7 @@ export function OccasionCover({ invitation, theme, compact = false, cover, photo
   const engraved = !cover && selected.layout === "editorial" && (occasion.id === "birthday" || occasion.id === "baby-shower");
   const artwork = <div className={`${styles.artwork} ${cover ? styles.photograph : ""} ${engraved ? styles.engraved : ""}`} data-occasion-art={occasion.id}>
     {cover ? (compact ? <InvitationImage src={cover.url} alt={cover.alt} width={cover.width} height={cover.height} sizes="230px" /> : <HeroPhotoSlideshow photos={photos.length ? photos : [cover]} coverPhotoId={cover.id} motion={occasion.id === "remembrance" ? "none" : design.motion || "gentle"} />)
-      : design.decoration && <>{engraved ? <span className={styles.balloonMotion} data-cover-motion="balloon"><ArchiveOrnament kind="balloon" /></span> : <Image src={`/images/occasions/${occasion.id}.webp`} alt="" width={480} height={360} sizes={compact ? "230px" : "(max-width: 700px) 88vw, 480px"} preload={!compact} />}<ArtAccents occasion={occasion.id} /></>}
+      : design.decoration && (occasion.id === "engagement" ? <EngagementGarden keepsake={selected.layout === "keepsake"} compact={compact} /> : <>{engraved ? <span className={styles.balloonMotion} data-cover-motion="balloon"><ArchiveOrnament kind="balloon" /></span> : <Image src={`/images/occasions/${occasion.id}.webp`} alt="" width={480} height={360} sizes={compact ? "230px" : "(max-width: 700px) 88vw, 480px"} preload={!compact} />}<ArtAccents occasion={occasion.id} /></>)}
   </div>;
   const title = <div className={styles.identity}>
     <p className={styles.coverText} data-indic={hasIndicText(invitation.coverText ?? occasion.cover) || undefined}>{invitation.coverText ?? occasion.cover}</p>
@@ -71,7 +82,7 @@ export function OccasionCover({ invitation, theme, compact = false, cover, photo
   const dateStamp = <div className={styles.dateStamp} aria-hidden="true"><strong>{dayLabel}</strong><span>{monthLabel}</span></div>;
   return <section id={compact ? undefined : "invitation"} aria-labelledby={compact ? undefined : "occasion-cover-title"}
     data-section={compact ? undefined : "cover"} data-occasion={occasion.id} data-layout={selected.layout} data-occasion-layout={selected.layout}
-    data-theme={theme} data-motion={occasion.id === "remembrance" ? "none" : design.motion || "gentle"} data-palette={design.palette} data-typography={design.typography} data-artwork={design.decoration ? "on" : "off"}
+    data-theme={theme} data-motion={occasion.id === "remembrance" ? "none" : design.motion || "gentle"} data-palette={design.palette} data-typography={design.typography} data-artwork={design.decoration ? "on" : "off"} data-cover-photo={cover ? "true" : undefined}
     className={`${styles.cover} ${compact ? `${styles.compact} invitation-art compact` : styles.full}`}>
     <div className={styles.canvas}><div className={styles.composition} data-occasion-sheet>
       {design.decoration && <div className={styles.paperTrim} data-decoration aria-hidden="true"><ArchiveOrnament kind="branch" className={styles.branchLeft} /><ArchiveOrnament kind="branch" className={styles.branchRight} /></div>}

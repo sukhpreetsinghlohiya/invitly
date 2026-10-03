@@ -8,7 +8,7 @@ import { resolveTheme } from "@/data/themes";
 import { getOccasionThemes } from "@/data/occasion-themes";
 
 export const metadata: Metadata = {
-  title: "Preview your occasion — Invitly",
+  title: "Preview your occasion",
   description: "Explore original Indian invitation designs for weddings and engagements. More occasions are coming soon.",
   robots: { index: false, follow: true },
 };

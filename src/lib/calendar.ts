@@ -26,3 +26,32 @@ export function invitationCalendar(invitation: Invitation, eventId: string, now 
   lines.push("END:VCALENDAR");
   return `${lines.map(foldCalendarLine).join("\r\n")}\r\n`;
 }
+
+export type CalendarEvent = Invitation["functions"][number];
+
+/** Use the same two-hour estimate as the downloadable calendar, always as UTC instants. */
+export function eventCalendarLinks(event: CalendarEvent, names: string[], timezone: string) {
+  const startsAt = Date.parse(event.startsAt);
+  if (!Number.isFinite(startsAt)) return null;
+  const endsAt = startsAt + 2 * 60 * 60 * 1000;
+  const hosts = names.filter(Boolean).join(" & ");
+  const title = `${event.name}${hosts ? ` — ${hosts}` : ""}`;
+  const description = [event.description, event.dressCode ? `Dress code: ${event.dressCode}` : "", `Event timezone: ${timezone}`, "End time is an estimate; check with your hosts."].filter(Boolean).join("\n\n");
+  const location = [event.venue, event.address].filter(Boolean).join(", ");
+  // Google's documented event-edit link creates a guest-owned copy without sharing an invitation URL.
+  const google = new URL("https://calendar.google.com/calendar/r/eventedit");
+  google.search = new URLSearchParams({ action: "TEMPLATE", text: title, dates: `${utcTimestamp(startsAt)}/${utcTimestamp(endsAt)}`, stz: timezone, etz: timezone, details: description, location }).toString();
+  const outlook = new URL("https://outlook.live.com/calendar/0/deeplink/compose");
+  outlook.search = new URLSearchParams({ path: "/calendar/action/compose", rru: "addevent", subject: title, startdt: new Date(startsAt).toISOString().replace(".000Z", "Z"), enddt: new Date(endsAt).toISOString().replace(".000Z", "Z"), body: description, location, allday: "false" }).toString();
+  return { google: google.href, outlook: outlook.href };
+}
+
+/** Keep the existing public or token-scoped download route and its query parameters. */
+export function eventCalendarDownloadHref(calendarHref: string, functionId: string) {
+  const [base, hash] = calendarHref.split("#");
+  const separator = base.indexOf("?");
+  const pathname = separator === -1 ? base : base.slice(0, separator);
+  const search = new URLSearchParams(separator === -1 ? "" : base.slice(separator + 1));
+  search.set("function", functionId);
+  return `${pathname}?${search.toString()}${hash ? `#${hash}` : ""}`;
+}

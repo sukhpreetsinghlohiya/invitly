@@ -15,6 +15,8 @@ import { InvitationMotion } from "@/components/invitation-motion";
 import { invitationPresentation } from "@/components/invitation-presentation";
 import { LiveAnnouncements } from "@/components/live-announcements";
 import { VenueCard } from "@/components/venue-card";
+import { CalendarActions } from "@/components/calendar-actions";
+import { LocalEventTime } from "@/components/local-event-time";
 import { CoupleProfiles } from "@/components/couple-profiles";
 import { InvitationVideo } from "@/components/invitation-video";
 import { InvitationEnvelope } from "@/components/invitation-envelope";
@@ -109,7 +111,7 @@ export function OccasionExperience({ invitation, theme, mode, musicEnabled = mod
         {!events.length && <p className="occasion-empty">Your hosts will share the time and place here.</p>}
         <div className="occasion-event-list">{events.map((event, index) => <article data-reveal key={event.id} className="occasion-event">
           <div className="occasion-event-date"><span className="occasion-event-index">{String(index + 1).padStart(2, "0")}</span><span>{formatEventDate(event.startsAt, invitation.timezone, { weekday: "long" })}</span><strong>{formatEventDate(event.startsAt, invitation.timezone, { day: "2-digit" })}</strong><span>{formatEventDate(event.startsAt, invitation.timezone, { month: "long", year: "numeric" })}</span>{design.decoration && <div className="occasion-event-art"><CeremonyArt title={event.name} fallbackIcon={event.icon} occasion={occasion} /></div>}</div>
-          <div className="occasion-event-content" data-reveal-content><h3 data-indic={hasIndicText(event.name) || undefined}>{event.name}</h3><time dateTime={event.startsAt}>{formatEventDate(event.startsAt, invitation.timezone, { hour: "numeric", minute: "2-digit" })} · {timezone}</time><span className="sr-only">{calendarDate(event.startsAt)}</span>{event.description && <p className="occasion-event-description" data-indic={hasIndicText(event.description) || undefined}>{event.description}</p>}{event.dressCode && <p className="occasion-dress-note" data-indic={hasIndicText(event.dressCode) || undefined}><strong>Dress note</strong> {event.dressCode}</p>}<VenueCard venue={event.venue} address={event.address} mapUrl={event.mapUrl} eventName={event.name} /></div>
+          <div className="occasion-event-content" data-reveal-content><h3 data-indic={hasIndicText(event.name) || undefined}>{event.name}</h3><time dateTime={event.startsAt}>{formatEventDate(event.startsAt, invitation.timezone, { hour: "numeric", minute: "2-digit" })} · {timezone}</time><LocalEventTime startsAt={event.startsAt} hostTimezone={invitation.timezone} /><CalendarActions event={event} names={invitation.couple} timezone={invitation.timezone} calendarHref={calendarHref} /><span className="sr-only">{calendarDate(event.startsAt)}</span>{event.description && <p className="occasion-event-description" data-indic={hasIndicText(event.description) || undefined}>{event.description}</p>}{event.dressCode && <p className="occasion-dress-note" data-indic={hasIndicText(event.dressCode) || undefined}><strong>Dress note</strong> {event.dressCode}</p>}<VenueCard venue={event.venue} address={event.address} mapUrl={event.mapUrl} eventName={event.name} /></div>
         </article>)}</div>
         {isDemo && <p className="occasion-demo-note">Fictional names, dates and venue details for this demo. Add and check your own details before sharing.</p>}
       </section>

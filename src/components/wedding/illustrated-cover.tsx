@@ -12,13 +12,15 @@ import styles from "./illustrated-cover.module.css";
 
 type Props = { invitation: Invitation; theme: ThemeId; compact?: boolean };
 
-const paintedScenes: Partial<Record<ThemeId, string>> = {
-  royal: "/images/occasions/wedding.webp",
-  floral: "/images/occasions/anniversary.webp",
-  mehfil: "/images/ceremonies/mehndi.webp",
-  kesar: "/images/ceremonies/haldi.webp",
-  champagne: "/images/ceremonies/reception.webp",
-  sindoor: "/images/ceremonies/sangeet.webp",
+/** Botanical corners are composed independently from the editable print area. */
+const botanicalArt: Partial<Record<ThemeId, string>> = {
+  royal: "/images/stationery/engraved-rose.svg",
+  floral: "/images/stationery/rose-bouquet.svg",
+  mehfil: "/images/stationery/rose-bouquet.svg",
+  lotus: "/images/stationery/rose-bouquet.svg",
+  ocean: "/images/stationery/blue-bouquet.svg",
+  sindoor: "/images/stationery/engraved-rose.svg",
+  champagne: "/images/stationery/engraved-rose.svg",
 };
 
 /** Original printmaking motifs. SVG definitions are scoped to each card instance. */
@@ -50,25 +52,10 @@ function Motifs({ id, theme }: { id: string; theme: ThemeId }) {
       <path d="M0 13C-32 22-57 4-62-18C-29-17-10-6 0 13ZM0 13C32 22 57 4 62-18C29-17 10-6 0 13Z" fill="var(--art-petal)" /><path d="M-54-12Q-31-5 0 13Q31-5 54-12M0-37V8" fill="none" />
       <path d="M-29 17Q0 32 29 17M0 22v21" fill="none" stroke="var(--art-leaf)" strokeWidth="2" />
     </g>}
-    {theme === "pichwai" && <g id={`${id}-peacock`} stroke="var(--art-line)" strokeWidth="1.1" strokeLinejoin="round">
-      <g transform="translate(-20 15)">{[-65, -43, -21, 1, 23].map(angle => <g key={angle} transform={`rotate(${angle})`}>
-        <path d="M0 12C-22-15-24-65 0-87C24-65 22-15 0 12Z" fill="var(--art-leaf)" /><path d="M0 6V-77M-9-14-1-6m13-19-10 10m-15-24 12 12m12-29-12 12" fill="none" stroke="var(--art-gold)" />
-        <path d="M-6-6Q-16-22-15-39M6-6Q16-22 15-39M-15-48Q-17-66-4-79M15-48Q17-66 4-79" fill="none" stroke="var(--art-gold)" strokeWidth=".55" />
-        <ellipse cy="-59" rx="10" ry="16" fill="var(--art-gold)" /><ellipse cy="-61" rx="5.5" ry="10" fill="var(--art-blue)" /><circle cy="-65" r="2.5" fill="var(--art-paper)" />
-      </g>)}</g>
-      <path d="M-25 8C-7 28 16 28 27 12C41-8 18-38 30-58C37-71 48-69 52-61C56-52 47-48 43-51C39-39 54-22 55-6C63 20 42 46 15 45C-5 43-13 29-25 8Z" fill="var(--art-blue)" />
-      <path d="M-17 15C4-6 32 0 31 20C19 38-5 35-17 15Z" fill="var(--art-leaf)" /><path d="M-10 15q19-5 33 7M-3 24q10-4 19 4" fill="none" stroke="var(--art-gold)" />
-      <circle cx="47" cy="-61" r="2" fill="var(--art-paper)" /><path d="m53-56 11 4-11 3" fill="var(--art-gold)" stroke="none" /><path d="M35-72v-12m6 13 7-11m-16 12-7-9M7 44 1 61m24-18 8 18M-4 61h11m22 0h12" fill="none" />
-      <g fill="var(--art-gold)"><circle cx="35" cy="-85" r="3" /><circle cx="49" cy="-83" r="3" /><circle cx="24" cy="-80" r="3" /></g>
-    </g>}
     {theme === "mehfil" && <>
       <pattern id={`${id}-jaali`} width="38" height="38" patternUnits="userSpaceOnUse"><path d="M19 0 38 19 19 38 0 19ZM0 0l38 38M38 0 0 38" fill="none" stroke="var(--art-gold)" strokeWidth=".65" /><circle cx="19" cy="19" r="5" fill="none" stroke="var(--art-gold)" strokeWidth=".5" /></pattern>
       <g id={`${id}-lantern`} stroke="var(--art-gold)" strokeWidth="1.2"><path d="M0-40v38M-13 13 0-4l13 17M-17 13h34L13 56H-13ZM-17 13l17 6 17-6M-13 56 0 67l13-11M0 19v48M-10 19l3 33m17-33-3 33" fill="var(--art-soft)" /><path d="M-7 31Q0 20 7 31L5 48H-5Z" fill="var(--art-gold)" /><path d="M0 68v10m-4 0h8" /></g>
     </>}
-    {theme === "royal" && <g id={`${id}-pavilion`} stroke="var(--art-line)" strokeWidth=".85" strokeLinejoin="round">
-      <path d="M-39 13V-4H39V13M-34 13V75H34V13" fill="var(--art-paper)" /><path d="M-44-4Q-25-12-23-25Q-18-36 0-40Q18-36 23-25Q25-12 44-4Z" fill="var(--art-petal)" /><path d="M-44-4h88M-38 4h76M-39 13h78M-36 76h72M-41 83h82M0-40v-9m-4 0h8" fill="none" />
-      <path d="M-18 75V32Q-18 17 0 14Q18 17 18 32V75Z" fill="var(--art-soft)" /><path d="M-12 74V33Q-12 24 0 21Q12 24 12 33V74M-30 19v50m60-50v50M-22-18h44M-16-27h32" fill="none" /><path d="M-34 70h68" />
-    </g>}
   </defs>;
 }
 
@@ -185,44 +172,32 @@ function DateOrnament({ id, theme }: { id: string; theme: ThemeId }) {
   return <ArchiveOrnament kind="flourish" className={styles.dateFlourish} />;
 }
 
-function Landscape({ id, theme }: { id: string; theme: ThemeId }) {
-  if (theme === "royal") return <>
-    <path d="M38 579Q116 558 230 573T422 574V624H38Z" fill="var(--art-blue)" opacity=".55" /><path d="M57 564H403V579H57Z" fill="var(--art-gold)" />
-    <g transform="translate(230 489)"><path d="M-137 78V27H137V78Z" fill="var(--art-petal)" stroke="var(--art-line)" strokeWidth=".8" />{[-116, -90, -64, 64, 90, 116].map(x => <path key={x} d={`M${x - 7} 73V49q7-14 14 0v24Z`} fill="var(--art-soft)" stroke="var(--art-line)" strokeWidth=".6" />)}<use href={`#${id}-pavilion`} transform="translate(-107 6) scale(.74)" /><use href={`#${id}-pavilion`} transform="translate(107 6) scale(.74)" /><use href={`#${id}-pavilion`} transform="translate(0 -15) scale(1.14)" /></g>
-    <path d="M72 591h102m34 0h87m-201 9h61m90 0h84m-154 9h91m51-18h42" stroke="var(--art-paper)" strokeWidth="1" opacity=".7" /><use href={`#${id}-sprig`} transform="translate(61 516) scale(.56)" /><use href={`#${id}-sprig`} transform="translate(399 516) scale(-.56 .56)" />
-  </>;
-  if (theme === "mehfil") return <><path d="M88 565h284m-265-8h246m-183-8h120" stroke="var(--art-gold)" strokeWidth=".7" /><use href={`#${id}-sprig`} transform="translate(120 496) rotate(-36) scale(.61)" /><use href={`#${id}-sprig`} transform="translate(340 496) rotate(36) scale(-.61 .61)" /><use href={`#${id}-flower`} transform="translate(230 557) scale(.51)" /><path d="M99 605h91m80 0h91" stroke="var(--art-gold)" strokeWidth=".7" /><path d="m219 605 11-9 11 9-11 9Z" fill="var(--art-gold)" /></>;
-  if (theme === "modern") return <><path d="M77 567h309M77 576h309" stroke="var(--art-line)" strokeWidth=".7" /><path d="M327 565C334 535 304 506 325 461M327 538C299 537 283 520 286 504C313 507 323 523 327 538ZM327 513C353 506 363 489 357 475C337 479 329 496 327 513Z" fill="var(--art-leaf)" stroke="var(--art-leaf)" strokeWidth="1.2" /><circle cx="123" cy="532" r="29" fill="none" stroke="var(--art-line)" strokeWidth=".8" /><circle cx="158" cy="532" r="29" fill="none" stroke="var(--art-line)" strokeWidth=".8" /></>;
-  if (theme === "pichwai") return <><path d="M45 589Q230 549 415 589V621H45Z" fill="var(--art-blue)" opacity=".17" /><use href={`#${id}-peacock`} transform="translate(121 529) scale(.75)" /><use href={`#${id}-peacock`} transform="translate(339 529) scale(-.75 .75)" /><use href={`#${id}-lotus`} transform="translate(230 592) scale(.52)" /><path d="M83 609h60m174 0h60m-209 5h29m66 0h29" stroke="var(--art-line)" strokeWidth=".7" /></>;
-  if (theme === "lotus") return <><path d="M38 566Q130 546 231 566T422 566M63 583Q130 563 231 583T397 583M91 600Q190 580 369 600" fill="none" stroke="var(--art-leaf)" strokeWidth=".8" /><use href={`#${id}-lotus`} transform="translate(230 535) scale(1.03)" /><use href={`#${id}-lotus`} transform="translate(117 568) rotate(-12) scale(.48)" /><use href={`#${id}-lotus`} transform="translate(350 574) rotate(13) scale(.4)" /><path d="M86 601q-16-28-30-18q7 22 30 18Zm285 4q21-27 35-15q-11 19-35 15Z" fill="var(--art-leaf)" /></>;
-  if (theme === "ocean") return <>
-    <path d="M18 495C84 475 100 551 174 533C246 515 260 468 332 506C384 534 412 527 442 510V626H18Z" fill="var(--art-soft)" />
-    <path d="M18 531C97 501 117 568 184 547C255 525 279 518 337 547C382 569 415 555 442 539V626H18Z" fill="var(--art-blue)" opacity=".64" /><path d="M18 567C85 544 146 598 230 570S363 590 442 565V626H18Z" fill="var(--art-leaf)" opacity=".7" />
-    <g className={styles.waterMotion} data-cover-motion="water">{[0, 7, 17, 24, 34, 41].map((y, index) => <path key={y} d={`M${index % 2 ? 25 : 40} ${556 + y}q38-13 72 0t72 0t72 0t72 0t72 0`} fill="none" stroke="var(--art-paper)" strokeWidth={index % 2 ? ".45" : ".85"} opacity={index % 2 ? ".45" : ".85"} />)}</g>
-  </>;
-  if (theme === "champagne") return <g transform="translate(460 644) rotate(180)"><DecoChevron /></g>;
-  if (theme === "sindoor") return null;
-  return <>
-    <use href={`#${id}-sprig`} transform="translate(104 526) rotate(-62) scale(.86)" /><use href={`#${id}-sprig`} transform="translate(356 526) rotate(62) scale(-.86 .86)" />
-    <use href={`#${id}-sprig`} transform="translate(161 568) rotate(-44) scale(.6)" /><use href={`#${id}-sprig`} transform="translate(299 568) rotate(44) scale(-.6 .6)" /><use href={`#${id}-flower`} transform="translate(230 565) scale(1.2)" /><use href={`#${id}-flower`} transform="translate(193 586) scale(.61)" /><use href={`#${id}-flower`} transform="translate(267 586) scale(.61)" />
-    <path d="M111 615h91m56 0h91" fill="none" stroke="var(--art-line)" strokeWidth=".6" />
-  </>;
+/** Corner artwork and restrained footer engravings leave the names as the centrepiece. */
+function BotanicalSpray({ source, compact }: { source: string; compact: boolean }) {
+  if (source.endsWith("engraved-rose.svg")) return <span className={styles.botanicalFoil} />;
+  const blue = source.endsWith("blue-bouquet.svg");
+  return <Image src={source} alt="" width={blue ? 1145 : 356} height={blue ? 990 : 486} sizes={compact ? "150px" : "260px"} />;
 }
 
-/** Detailed focal illustrations sit in a reserved area below the editable copy. */
-function CoverIllustration({ id, theme, compact }: { id: string; theme: ThemeId; compact: boolean }) {
-  const painted = paintedScenes[theme];
-  if (painted) return <div className={styles.paintedScene} data-cover-painted-scene={theme} data-cover-ornament="bottom" data-decoration aria-hidden="true">
-    <Image src={painted} alt="" width={600} height={450} sizes={compact ? "220px" : "(max-width: 600px) 78vw, 400px"} loading={compact ? "lazy" : "eager"} />
-    {(theme === "royal" || theme === "kesar" || theme === "sindoor") && <>
-      <span className={styles.sceneSprigLeft}><span className={styles.sprigMotion} data-cover-motion="botanical"><Image src="/images/marketing/marigold-branch.webp" alt="" width={180} height={270} sizes="70px" /></span></span>
-      <span className={styles.sceneSprigRight}><span className={styles.sprigMotion} data-cover-motion="botanical"><Image src="/images/marketing/marigold-branch.webp" alt="" width={180} height={270} sizes="70px" /></span></span>
-    </>}
+function BotanicalEdges({ theme, compact }: { theme: ThemeId; compact: boolean }) {
+  const source = botanicalArt[theme];
+  return <div className={styles.botanicalEdges} data-cover-botanical={theme} data-decoration aria-hidden="true">
+    <span className={styles.cornerEngraving} />
+    <span className={styles.cornerEngravingEcho} />
+    {source && <>{["top", "bottom"].map(position => <span className={position === "top" ? styles.botanicalTop : styles.botanicalBottom} key={position}>
+      <span className={styles.sprigMotion} data-cover-motion="botanical"><BotanicalSpray source={source} compact={compact} /></span>
+    </span>)}</>}
+    {source && (theme === "royal" || theme === "mehfil") && <>{["top", "bottom"].map(position => <span className={position === "top" ? styles.botanicalTopEcho : styles.botanicalBottomEcho} key={`echo-${position}`}><BotanicalSpray source={source} compact={compact} /></span>)}</>}
+    {theme === "kesar" && <>{["top", "bottom"].map(position => <span className={position === "top" ? styles.marigoldTop : styles.marigoldBottom} key={position}><span className={styles.sprigMotion} data-cover-motion="botanical"><Image src="/images/marketing/marigold-branch.webp" alt="" width={180} height={270} sizes={compact ? "100px" : "160px"} /></span></span>)}</>}
   </div>;
+}
+
+function CoverIllustration({ id, theme }: { id: string; theme: ThemeId }) {
+  if (theme === "pichwai") return <div className={styles.peacockGarden} data-cover-ornament="bottom" data-decoration aria-hidden="true"><span className={styles.peacockLeft} /><span className={styles.peacockRight} /><ArchiveOrnament kind="branch" className={styles.gardenVine} /></div>;
+  if (theme === "lotus") return <div className={styles.lotusGarden} data-cover-ornament="bottom" data-decoration aria-hidden="true"><span className={styles.pondRipples} data-cover-motion="water" /><Image src="/images/art/patterned-lotus.svg" alt="" width={480} height={346} sizes="150px" /></div>;
   if (theme === "modern") return <div className={styles.botanicalSpecimen} data-cover-ornament="bottom" data-decoration aria-hidden="true"><span className={styles.specimenRule} /><span className={styles.sprigMotion} data-cover-motion="botanical"><ArchiveOrnament kind="branch" /></span></div>;
-  if (theme === "lotus") return <div className={styles.lotusGarden} data-cover-ornament="bottom" data-decoration aria-hidden="true"><span className={styles.pondRipples} data-cover-motion="water" /><Image src="/images/art/patterned-lotus.svg" alt="" width={480} height={346} sizes={compact ? "170px" : "280px"} /><span className={styles.lotusBudLeft} /><span className={styles.lotusBudRight} /></div>;
-  if (theme === "pichwai") return <div className={styles.peacockGarden} data-cover-ornament="bottom" data-decoration aria-hidden="true"><span className={styles.peacockLeft} /><span className={styles.peacockRight} /><span className={styles.gardenVine} data-cover-motion="botanical"><ArchiveOrnament kind="branch" /></span></div>;
-  return <svg className={styles.landscape} viewBox="0 450 460 194" data-cover-ornament="bottom" data-decoration aria-hidden="true" focusable="false"><Landscape id={id} theme={theme} /></svg>;
+  if (theme === "champagne") return <svg className={styles.landscape} viewBox="0 450 460 194" data-cover-ornament="bottom" data-decoration aria-hidden="true" focusable="false"><g transform="translate(460 644) rotate(180)"><DecoChevron /></g></svg>;
+  return <div className={styles.footerOrnament} data-cover-ornament="bottom" data-decoration aria-hidden="true"><ArchiveOrnament kind="flourish" />{theme === "kesar" && <svg viewBox="0 0 100 32" focusable="false"><use href={`#${id}-flower`} transform="translate(50 16) scale(.6)" /></svg>}</div>;
 }
 
 /** A single, real cover composition shared by the catalogue and the invitation. */
@@ -237,7 +212,7 @@ export function IllustratedCover({ invitation, theme, compact = false }: Props) 
   const location = invitation.city || firstEvent?.venue;
   const coverText = guestWording(invitation).cover;
   const extendedCopy = Boolean(invitation.blessing) || coverText.length > 64 || (location?.length || 0) > 40 || nameLength > 20;
-  return <div className={`${styles.cover} ${compact ? styles.compact : styles.full}`} data-illustrated-cover={theme} data-cover-illustration={paintedScenes[theme] ? "painted" : "engraved"} data-motion={design.motion || "gentle"} data-compact={compact} data-extended-copy={extendedCopy} data-palette={design.palette} data-typography={design.typography} data-artwork={design.decoration ? "on" : "off"} data-long-names={nameLength > 20 ? "very" : nameLength > 11 ? "true" : undefined} aria-hidden={compact || undefined}>
+  return <div className={`${styles.cover} ${compact ? styles.compact : styles.full}`} data-illustrated-cover={theme} data-cover-illustration={botanicalArt[theme] ? "botanical" : "engraved"} data-motion={design.motion || "gentle"} data-compact={compact} data-extended-copy={extendedCopy} data-palette={design.palette} data-typography={design.typography} data-artwork={design.decoration ? "on" : "off"} data-long-names={nameLength > 20 ? "very" : nameLength > 11 ? "true" : undefined} aria-hidden={compact || undefined}>
     <div className={styles.sheet}>
       {design.decoration && <>
         {extendedCopy ? <>
@@ -246,6 +221,7 @@ export function IllustratedCover({ invitation, theme, compact = false }: Props) 
           <svg className={styles.frameBottom} viewBox="0 322 460 322" data-cover-frame-slice="bottom" data-decoration aria-hidden="true" focusable="false"><use href={`#${id}-frame`} /></svg>
         </> : <svg className={styles.border} viewBox="0 0 460 644" preserveAspectRatio="none" data-decoration aria-hidden="true" focusable="false"><Motifs id={id} theme={theme} /><Border id={id} theme={theme} /></svg>}
         <svg className={styles.topOrnament} viewBox="0 0 460 200" data-cover-ornament="top" data-decoration aria-hidden="true" focusable="false"><TopOrnament id={id} theme={theme} /></svg>
+        <BotanicalEdges theme={theme} compact={compact} />
         <div className={styles.engravedGarden} data-decoration aria-hidden="true"><ArchiveOrnament kind="branch" className={styles.engravedLeft} /><ArchiveOrnament kind="branch" className={styles.engravedRight} /></div>
         {theme === "ocean" && <span className={styles.shellSpecimen} data-decoration aria-hidden="true" />}
         <div className={styles.edgePetals} data-decoration aria-hidden="true">{[0, 1, 2, 3].map(index => <span key={index} data-cover-motion="petal" />)}</div>
@@ -259,7 +235,7 @@ export function IllustratedCover({ invitation, theme, compact = false }: Props) 
           <div className={styles.details}><p>{dateLabel}</p>{location && <p className={styles.location} data-indic={hasIndicText(location) || undefined}>{location}</p>}</div>
         </div>
       </div>
-      {design.decoration && <CoverIllustration id={id} theme={theme} compact={compact} />}
+      {design.decoration && <CoverIllustration id={id} theme={theme} />}
     </div>
   </div>;
 }

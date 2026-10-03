@@ -1,3 +1,4 @@
+import { publicMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -10,7 +11,7 @@ import { getPostsByTopic } from "@/lib/blog";
 type Props = { params: Promise<{ slug: string }> };
 export const dynamicParams = false;
 export function generateStaticParams() { return blogTopics.map(topic => ({ slug: topic.slug })); }
-export async function generateMetadata({ params }: Props): Promise<Metadata> { const { slug } = await params; const topic = getBlogTopic(slug); if (!topic) notFound(); return { title: `${topic.name} · The journal`, description: topic.description, alternates: { canonical: `/blog/category/${topic.slug}` } }; }
+export async function generateMetadata({ params }: Props): Promise<Metadata> { const { slug } = await params; const topic = getBlogTopic(slug); if (!topic) notFound(); return publicMetadata(`${topic.name} · The journal`, topic.description, `/blog/category/${topic.slug}`); }
 
 export default async function BlogCategoryPage({ params }: Props) {
   const { slug } = await params;

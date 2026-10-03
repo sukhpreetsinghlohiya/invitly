@@ -51,3 +51,5 @@
 .footer-socials a,.footer-social-pending { display:flex; align-items:center; justify-content:center; width:44px; height:44px; border:1px solid #cdb8a2; border-radius:50%; color:#725345; }
 .footer-socials a:hover { background:#e4d6c3; color:#733c35; }
 .footer-social-pending { border-style:dashed; color:#806d5f; }
+
+.footer-bottom nav{display:flex;gap:20px;font-size:12px}.footer-bottom nav a{display:inline-flex;align-items:center;min-height:44px;text-decoration:underline;text-underline-offset:4px}

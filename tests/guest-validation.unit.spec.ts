@@ -31,3 +31,12 @@ test("CSV exports neutralize formula injection and escape embedded quotes", () =
   expect(csvCell('Aman "A"')).toBe('"Aman ""A"""');
   expect(guestCsv(["name", "note"], [["Aman", "=1+1"]])).toContain('"Aman","\'=1+1"');
 });
+
+test("phone formatting only formats complete explicit country-code numbers", async () => {
+  const { formatPhoneInput } = await import("../src/lib/phone-input");
+  expect(formatPhoneInput("+919876543210")).toBe("+91 98765 43210");
+  expect(formatPhoneInput("+14155552671")).toBe("+1 (415) 555-2671");
+  expect(formatPhoneInput("+91987")).toBe("+91987");
+  expect(formatPhoneInput("9876543210")).toBe("9876543210");
+  expect(formatPhoneInput("+44 20 7946 0958")).toBe("+44 20 7946 0958");
+});

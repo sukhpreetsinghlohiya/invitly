@@ -63,7 +63,7 @@ Choose a theme at `/templates`, then personalize it at `/customize`. The editor 
 
 Choose the event's IANA time zone in Details. Date fields show local wall time in that zone; changing the zone preserves the entered wall time. The server stores explicit instants and the event zone. Invalid calendar dates and ambiguous or nonexistent daylight-saving times return errors instead of guessing. Public schedules display the event zone, regardless of the guest's device location.
 
-Save an invitation before adding photos. Upload your own JPG, PNG, or WebP files up to 5 MB, with an accessible description. The server checks image content, rejects oversized pixel dimensions, removes metadata through re-encoding, and produces WebP images up to 1,600 pixels per side. Invitations support up to twelve photos. Owner previews fetch private images through an authenticated route; published image delivery checks visibility on every request. Unpublishing removes public access to the invitation and its photo endpoints.
+Save an invitation before adding photos. Upload your own JPG, PNG, or WebP files up to 4 MB (4 MiB), with an accessible description. The app’s shared client/server limit leaves room for multipart fields below Vercel’s 4.5 MB function request limit; Next.js accepts a 4.25 MiB request envelope. The private Storage bucket retains its existing 5 MB ceiling. The server checks image content, rejects oversized pixel dimensions, removes metadata through re-encoding, and produces WebP images up to 1,600 pixels per side. Invitations support up to twelve photos. Owner previews fetch private images through an authenticated route; published image delivery checks visibility on every request. Unpublishing removes public access to the invitation and its photo endpoints.
 
 Published guest photos additionally require the server-only `SUPABASE_SECRET_KEY`. Host uploads and owner previews use the host's own authenticated session. The guest photo proxy first checks publication through a restricted public RPC, then downloads the approved object server-side; it never returns a signed Storage URL. Without the secret key, account pages, editing, and public invitation text still work, but guest photo requests return 404.
 
@@ -163,13 +163,34 @@ Local integration checks use a separate Supabase stack. They do not provision or
 
 ## Deploy on Vercel
 
-Import this GitHub repository into Vercel using the **Next.js** framework preset. Configure Preview first with `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `NEXT_PUBLIC_SITE_URL` pointing to the preview's address. Use a staging Supabase project and add its exact preview callback URLs in Auth URL Configuration. A Vercel deployment does not apply database migrations.
+Use the personal repository **https://github.com/sukhpreetsinghlohiya/invitly**, branch `main`. Git stores the complete app source, package lock, public assets and migrations. `.env.local`, secrets, `node_modules`, `.next`, `.vercel`, test reports and `artifacts` are ignored. Keep those ignored files out of GitHub.
 
-For guest photos, open that Supabase project's **Settings → API Keys** and copy its secret key directly into Vercel **Project → Settings → Environment Variables** as `SUPABASE_SECRET_KEY`, scoped to **Preview**. Use the key from the same project as the preview URL and publishable key. Do not add a `NEXT_PUBLIC_` prefix. Set the corresponding production project's secret separately when configuring Production, and redeploy after changing it. No hosted secret value is provided by this repository.
+1. In Vercel, choose **Add New → Project**, connect GitHub, and import `sukhpreetsinghlohiya/invitly`.
+2. Select **Next.js**, root directory **./**, install command **npm ci**, and build command **npm run build**. Leave the framework's output setting at its default; this is a server-rendered app, not a static export. Use Node.js **22.x** (the package requires Node 22 or newer).
+3. Add the following in **Project → Settings → Environment Variables** before deploying. Choose the correct scope (Production or Preview); use a separate staging Supabase project for previews.
 
-Verify the preview's signup/sign-in, editor, guest links, photos, and announcements before connecting the custom domain or changing DNS. For production, configure the appropriate Supabase project and `NEXT_PUBLIC_SITE_URL=https://invitly.co.in`, then add the domain and follow Vercel's DNS instructions. The Vercel CLI reported **Logged out** during this milestone, so no preview deployment or domain connection was made. Run `npx --yes vercel login` in your terminal, then `npx --yes vercel` from this repository to link the project and create a preview after configuring its environment variables.
+| Variable | Value/source |
+| --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Hosted Supabase project URL, from its Connect/API settings |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | The same project's `sb_publishable_...` key |
+| `SUPABASE_SECRET_KEY` | The same project's server-only secret key; never prefix with `NEXT_PUBLIC_` |
+| `NEXT_PUBLIC_SITE_URL` | Full deployed HTTPS origin, such as `https://your-project.vercel.app`; use your verified custom domain when connected |
+| `INVITLY_LEGAL_NAME` | Public operator/business name |
+| `INVITLY_PRIVACY_EMAIL` | Public support/privacy email |
+| `INVITLY_LEGAL_COUNTRY` | Operator's country |
+| `INVITLY_LEGAL_REVIEWED` | Keep `false` until actual retention, infrastructure, providers and legal text are reviewed; `true` finalizes/indexes the notices |
 
-Redeploy after changing environment variables: Next.js embeds `NEXT_PUBLIC_` values at build time. GitHub stores source code and the empty `.env.example`, while Vercel stores deployed environment values and your computer stores `.env.local`. A normal Vercel Git deployment does not require GitHub Actions secrets. Never commit local environment files. See [Vercel environment variable settings](https://vercel.com/docs/environment-variables/managing-environment-variables).
+The first four variables enable account, media and URL behavior. Legal variables finalize the policy pages; they do not themselves establish compliance. Values belong in Vercel settings, never in `.env.example` or GitHub. The checked-in `.env.example` only documents names.
+
+4. Apply **all unapplied** `supabase/migrations/` files to the matching hosted project using the migration workflow above, including `20261002171500_invitation_story_options.sql`. Vercel builds do not run migrations. Verify hosted RLS and Storage configuration before real guests use it.
+5. In Supabase **Authentication → URL Configuration**, set Site URL to the same HTTPS origin and allow the exact callbacks `https://YOUR-HOST/auth/callback` and `https://YOUR-HOST/auth/callback?next=/reset-password`. Keep email confirmation enabled and configure custom SMTP for real deliveries. Do not use localhost values for production.
+6. Deploy, then verify signup/confirmation/reset, host saving, photo/music delivery, private guest links, RSVP visibility and announcements on the deployed URL. Add a custom domain only after these work and follow Vercel's displayed DNS records. Update both site URL settings when changing the primary domain.
+
+Redeploy after changing variables: Next.js embeds `NEXT_PUBLIC_` values at build time. A normal Vercel Git deployment does not need GitHub Actions secrets. Do not configure local-only `INVITLY_BUILD_DIR`, `INVITLY_LOCAL_PORT` or integration-test credentials in Vercel.
+
+Photo requests are capped at 4 MiB with a 4.25mb Server Action envelope to remain below Vercel's 4.5 MB request limit. Music upload goes directly to authenticated Supabase Storage; playback responses explicitly stream and retain publication checks and byte ranges. Production upload/playback still requires a hosted smoke check.
+
+References: [Vercel Next.js deployment](https://vercel.com/docs/frameworks/full-stack/nextjs), [environment variables](https://vercel.com/docs/environment-variables), [function payload limits](https://vercel.com/docs/functions/limitations), [streaming large responses](https://vercel.com/kb/guide/how-to-bypass-vercel-body-size-limit-serverless-functions), [Supabase redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls).
 
 ## Database and security
 
@@ -180,7 +201,7 @@ Redeploy after changing environment variables: Next.js embeds `NEXT_PUBLIC_` val
 - `media`: event image metadata, dimensions, and accessible descriptions. Owner delivery and publication-aware guest delivery use separate endpoints.
 - Guest management uses private individual response links. Never put guest tokens in analytics, logs, screenshots, or Git. The original `rsvps` table remains an authenticated RSVP foundation; the sample demo stores its labelled preview response only in the current browser.
 - `event_updates`: host-owned announcements with published/private visibility, pinning, and edit timestamps. Public delivery excludes private drafts. Demo updates are sample data, separate from connected announcements.
-- `event-media`: **private** Storage bucket with a 5 MB limit and JPEG/PNG/WebP allowlist. Paths begin with an event UUID. Upload/removal actions independently verify ownership. Public image delivery checks event publication, downloads through a server-only secret client, and sends `private, no-store`; owner image delivery verifies the signed-in owner. Anonymous visitors cannot mint signed Storage URLs that would outlive unpublication.
+- `event-media`: **private** Storage bucket with an unchanged 5 MB limit (the app accepts photos up to 4 MiB) and JPEG/PNG/WebP allowlist. Paths begin with an event UUID. Upload/removal actions independently verify ownership. Public image delivery checks event publication, downloads through a server-only secret client, and sends `private, no-store`; owner image delivery verifies the signed-in owner. Anonymous visitors cannot mint signed Storage URLs that would outlive unpublication.
 
 The publishable key never bypasses RLS. Browser and authenticated server clients use typed `@supabase/ssr` clients. A separate server-only secret client is restricted in application code to the publication-checked photo proxy; it must not be used as a substitute for host ownership checks. Cookie refresh is confined to account/auth/dashboard/customization routes; public invite visitors do not pay for an authentication request. Protected responses use `private, no-store`.
 

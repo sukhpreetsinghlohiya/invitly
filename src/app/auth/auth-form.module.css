@@ -1,0 +1,17 @@
+.form { min-width: 0; }
+.passwordField { position: relative; min-width: 0; }
+.passwordField input { padding-right: 52px !important; }
+.visibilityButton { position: absolute; inset: 1px 1px 1px auto; width: 46px; display: grid; place-items: center; border: 0; border-radius: 4px; background: transparent; color: var(--muted); cursor: pointer; }
+.visibilityButton:hover { background: #eee6db; color: var(--maroon); }
+.visibilityButton:focus-visible { outline: 2px solid var(--maroon); outline-offset: -4px; }
+.hint { color: var(--muted); font-size: 12px; }
+.submit { width: 100%; gap: 9px; }
+.submit:disabled { opacity: .7; cursor: wait; transform: none; }
+.form:not([aria-busy="true"]) .submit:disabled { cursor: default; }
+.spinner { flex: 0 0 auto; animation: auth-spin .8s linear infinite; }
+.cooldown { font-size: 12px !important; line-height: 1.6; }
+.feedback { overflow-wrap: anywhere; }
+.feedback :global(.form-error) { color: #8e2638; }
+.feedback :global(.form-success) { color: #2f5840; }
+@keyframes auth-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
