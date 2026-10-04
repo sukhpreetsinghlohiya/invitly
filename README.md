@@ -192,6 +192,31 @@ Photo requests are capped at 4 MiB with a 4.25mb Server Action envelope to remai
 
 References: [Vercel Next.js deployment](https://vercel.com/docs/frameworks/full-stack/nextjs), [environment variables](https://vercel.com/docs/environment-variables), [function payload limits](https://vercel.com/docs/functions/limitations), [streaming large responses](https://vercel.com/kb/guide/how-to-bypass-vercel-body-size-limit-serverless-functions), [Supabase redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls).
 
+### Visitor welcome and webhook
+
+The English welcome form asks for **name** and **reason for visiting** before continuing on the homepage, collection and blog. It has no skip/close button. It does not appear on signup/login, the demo, private invitations or host pages. After a successful submission, a completion timestamp in browser local storage suppresses it for 30 days; no name or answer is stored there. This collects introductions, not anonymous visitor analytics or verified identities.
+
+In the **`invitly-xzml` Vercel project**, set `INVITLY_VISITOR_WEBHOOK_URL` to your receiver's HTTPS endpoint in Production. Optionally set `INVITLY_VISITOR_WEBHOOK_TOKEN` if the receiver needs a Bearer token. Keep both server-only and out of Git. Redeploy after changing environment variables. The form stays hidden when its URL is missing/invalid; set `INVITLY_VISITOR_WELCOME_ENABLED=false` to switch it off. No extra database migration or analytics package is needed.
+
+The server sends `POST`, `Content-Type: application/json`, and `Idempotency-Key: <id>` with:
+
+```json
+{
+  "event": "visitor.introduced",
+  "version": 1,
+  "id": "a586d533-d3f8-45b1-984a-87513818ce35",
+  "submittedAt": "2026-10-04T08:00:00.000Z",
+  "visitor": { "name": "Aman", "reason": "I want a wedding invitation." },
+  "context": { "page": "/", "referringSite": "www.google.com" }
+}
+```
+
+`referringSite` is `null` for direct visits or when the browser hides the source. Paths/queries from referring pages, IP addresses, cookies, passwords and private invitation links are not sent. The payload records a submitted introduction, not a separate consent or marketing opt-in. Identify the actual receiver and retention policy in the privacy notice before finalizing it. No email address is collected, so this form is not a contact/reply channel.
+
+The receiver must return a 2xx response within eight seconds. Configure any notification step (email, Slack, etc.) inside your receiving workflow. On a timeout/error the form keeps its answers and offers retry; the same id is reused. The receiver should deduplicate by `id` to avoid duplicate notifications if it accepted an earlier timed-out request. This implementation has no durable retry queue or delivery guarantee.
+
+Requests enforce same-origin JSON, a 4 KiB body limit, server-side validation, a honeypot and a supplementary five-attempts-per-ten-minutes throttle per server instance. The instance cache is bounded and uses a temporary salted hash rather than retaining the raw client address. For distributed protection, configure a Vercel Firewall rate-limit rule for `POST /api/visitor-welcome`; the in-process throttle is not a global quota. The provider's body, webhook credentials and visitor details are never written to application logs.
+
 ## Database and security
 
 - `profiles`: one private profile per host, created by a narrowly scoped signup trigger.

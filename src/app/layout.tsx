@@ -1,5 +1,6 @@
 import { ToastViewport } from "@/components/ui/feedback";
 import { ScrollToTop } from "@/components/navigation/scroll-to-top";
+import { VisitorWelcome } from "@/components/visitor-welcome";
 import type { Metadata, Viewport } from "next";
 import { getSiteUrl } from "@/lib/env";
 import "./globals.css";
@@ -15,5 +16,5 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#f9f6ef" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body><a href="#main" className="skip-link">Skip to content</a>{children}<ScrollToTop /><ToastViewport /></body></html>;
+  return <html lang="en"><body><a href="#main" className="skip-link">Skip to content</a>{children}<ScrollToTop /><ToastViewport /><VisitorWelcome /></body></html>;
 }
