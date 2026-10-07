@@ -1,7 +1,8 @@
 Project-owner supplied Canva imagery
 
-Seven photographs and five decorative illustrations were supplied by the
-project owner as direct media-public.canva.com URLs on 2026-10-07. Source URLs
+Seven photographs and eleven decorative illustrations were supplied by the
+project owner as direct media-public.canva.com and marketplace.canva.com URLs
+on 2026-10-07. Source URLs
 and optimized image dimensions are recorded in assets/source/demo-photo-sources.json
 and assets/source/provided-art-sources.json in the project repository.
 
@@ -9,8 +10,10 @@ The photographs in /images/demo/ are sample wedding images. Names and event
 details in demo invitations are fictional; the photographs do not identify
 the people shown as the demo hosts.
 
-The gurdwara, pink floral garland, peach mandap frame and two wedding-couple
-illustrations in /images/stationery/ are used on matching invitation designs.
+The gurdwara, pink floral garland, peach mandap frame, two wedding-couple
+illustrations, gold rings, joined hands, varmala couple, white doves, ring-line
+divider and floral infinity ribbon in /images/stationery/ are used on matching
+invitation designs. Original dimensions are preserved without upscaling.
 These assets are not AI-generated imagery.
 Copyright remains with the respective rights holders; this provenance record
 does not grant a separate asset license.

@@ -1,4 +1,5 @@
 import type { OccasionId } from "@/types/invitation";
+import { providedArtwork } from "@/data/provided-art";
 
 export type OccasionArtwork = {
   src: string;
@@ -21,7 +22,7 @@ const occasionArtwork: Record<OccasionId, OccasionArtwork> = {
   "baby-shower": watercolorArtwork["baby-shower"],
   housewarming: watercolorArtwork.housewarming,
   naming: watercolorArtwork["baby-shower"],
-  anniversary: watercolorArtwork.engagement,
+  anniversary: { src: providedArtwork.floralInfinity.src, width: providedArtwork.floralInfinity.width, height: providedArtwork.floralInfinity.height, motion: "ambient" },
   other: watercolorArtwork.marigold,
   remembrance: { src: "/images/occasions/remembrance.webp", width: 480, height: 360 },
 };

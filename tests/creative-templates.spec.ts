@@ -3,6 +3,11 @@ import { createHash } from 'node:crypto';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { themes } from '../src/data/themes';
 
+// The welcome form has a separate suite; keep real lead delivery out of card tests.
+test.beforeEach(async ({ page }) => {
+  await page.route('**/api/visitor-welcome', route => route.fulfill({ json: { enabled: false } }));
+});
+
 async function noOverflow(page: Page) {
   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
 }

@@ -2,9 +2,22 @@ import type { OccasionId, ThemeId, TraditionId } from "@/types/invitation";
 import { occasions, traditions } from "@/data/occasions";
 
 export type ThemeFamily = "Indian" | "Minimal" | "Floral" | "Contemporary";
-export type InvitationTheme = { id: ThemeId; name: string; category: string; description: string; number: string; family: ThemeFamily; accent: string; occasions?: OccasionId[]; traditions?: TraditionId[]; collection?: string };
+export type InvitationTheme = { id: ThemeId; name: string; category: string; description: string; number: string; family: ThemeFamily; accent: string; keywords?: readonly string[]; occasions?: OccasionId[]; traditions?: TraditionId[]; collection?: string };
 
-export const themes: InvitationTheme[] = [
+const searchKeywords: Record<ThemeId, readonly string[]> = {
+  royal: ["red", "burgundy", "gold", "traditional", "palace", "flowers"],
+  modern: ["green", "sage", "cream", "ivory", "simple", "clean", "hands", "rings"],
+  floral: ["pink", "green", "cream", "roses", "flowers", "botanical", "romantic"],
+  mehfil: ["dark", "green", "emerald", "gold", "lanterns", "roses", "flowers", "night"],
+  kesar: ["yellow", "orange", "marigold", "flowers", "warm", "traditional"],
+  lotus: ["pink", "blush", "rose", "flowers", "romantic", "soft"],
+  pichwai: ["green", "sage", "peacock", "birds", "lotus", "flowers", "traditional"],
+  ocean: ["blue", "aqua", "sea", "beach", "doves", "birds", "flowers"],
+  champagne: ["black", "dark", "gold", "rings", "luxury", "art deco", "geometric"],
+  sindoor: ["red", "vermillion", "gold", "traditional", "warm"],
+};
+
+export const themes: InvitationTheme[] = ([
   { id: "royal", name: "Royal Indian", category: "THE GULMOHAR EDIT", description: "A maroon arch, marigold warmth, and a celebration with a little grandeur.", number: "01", family: "Indian", accent: "#58252f" },
   { id: "modern", name: "Modern Minimal", category: "THE NOOR EDIT", description: "Room to breathe, thoughtful type, and your story at the centre.", number: "02", family: "Minimal", accent: "#33473f" },
   { id: "floral", name: "Floral Celebration", category: "THE MOGRA EDIT", description: "Soft petals. Sage leaves. A love that blooms in its own time.", number: "03", family: "Floral", accent: "#3f624d" },
@@ -15,7 +28,7 @@ export const themes: InvitationTheme[] = [
   { id: "ocean", name: "By the Blue", category: "WHERE TWO TIDES MEET", description: "Sea-glass blues, sweeping tides, and the freedom of a coastal celebration.", number: "08", family: "Contemporary", accent: "#225972" },
   { id: "champagne", name: "Champagne Hour", category: "AN EVENING TO REMEMBER", description: "Golden geometry, beautiful symmetry, and an invitation with a little sparkle.", number: "09", family: "Minimal", accent: "#75603e" },
   { id: "sindoor", name: "Sindoor Stories", category: "FULL OF HEART & COLOUR", description: "Vermillion, rangoli, and a joyful little promise surrounded by colour.", number: "10", family: "Indian", accent: "#a43828" },
-];
+] satisfies InvitationTheme[]).map(theme => ({ ...theme, keywords: searchKeywords[theme.id] }));
 
 export function resolveTheme(value?: string): ThemeId {
   return themes.find((theme) => theme.id === value)?.id ?? "royal";

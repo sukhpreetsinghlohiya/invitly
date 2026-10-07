@@ -113,6 +113,15 @@
 .collection-filters button { padding:9px 14px; background:#f2ecdf; border-color:#e5daca; border-radius:4px; color:#604b3c; }
 .collection-filters button[aria-pressed=true] { border-color:var(--maroon); }
 .collection-count { font-size:12px; color:#6b5542; }
+.collection-search-controls .collection-search-input input { padding-right:48px; }
+.collection-search-input input::-webkit-search-cancel-button { -webkit-appearance:none; }
+.collection-clear-search { position:absolute; top:1px; right:1px; width:44px; height:44px; display:grid; place-items:center; border:0; background:transparent; color:#604b3c; cursor:pointer; border-radius:4px; }
+.collection-clear-search:hover { background:#eee5d8; }
+.collection-result-summary { display:flex; align-items:center; flex-wrap:wrap; gap:4px 14px; min-width:0; }
+.collection-result-summary .collection-count { margin:0; min-width:0; overflow-wrap:anywhere; }
+.collection-reset { min-height:44px; padding:8px 0; border:0; background:transparent; color:var(--maroon); font-size:12px; font-weight:600; text-decoration:underline; text-underline-offset:4px; cursor:pointer; }
+.collection-card a[aria-disabled=true] { pointer-events:none; opacity:.6; }
+.collection-filters button:disabled { cursor:wait; opacity:.65; }
 .collection-adapt-note { max-width:840px; font-size:13px; }
 .collection-gallery .collection-card-art>.invitation-art { height:auto; min-height:0; }
 @media(max-width:1099px) {

@@ -1,6 +1,6 @@
 {
   "date": "2026-10-07",
-  "provenance": "Direct Canva image URLs supplied by the project owner for matching invitation artwork.",
+  "provenance": "Direct media-public.canva.com and marketplace.canva.com image URLs supplied by the project owner for matching invitation artwork. Canva interface graphics and analytics URLs are not used.",
   "processing": "WebP quality 88, transparency preserved, metadata removed. No generative edits.",
   "assets": [
     {
@@ -42,6 +42,60 @@
       "width": 677,
       "height": 800,
       "bytes": 127528
+    },
+    {
+      "id": "gold-wedding-rings",
+      "source": "https://marketplace.canva.com/RJjvE/MAHSCeRJjvE/1/tl/canva-MAHSCeRJjvE.png",
+      "file": "public/images/stationery/gold-wedding-rings.webp",
+      "width": 550,
+      "height": 263,
+      "bytes": 41626,
+      "placement": "Champagne wedding card footer"
+    },
+    {
+      "id": "joined-hands",
+      "source": "https://marketplace.canva.com/PILGo/MAFnICPILGo/1/tl/canva-MAFnICPILGo.png",
+      "file": "public/images/stationery/joined-hands.webp",
+      "width": 550,
+      "height": 335,
+      "bytes": 21940,
+      "placement": "Modern wedding card footer"
+    },
+    {
+      "id": "varmala-couple",
+      "source": "https://marketplace.canva.com/Z_k_Q/MAHCfTZ_k_Q/1/tl/canva-MAHCfTZ_k_Q.png",
+      "file": "public/images/stationery/varmala-couple.webp",
+      "width": 522,
+      "height": 550,
+      "bytes": 74758,
+      "placement": "Royal wedding card footer when the Hindu tradition is selected"
+    },
+    {
+      "id": "white-doves",
+      "source": "https://marketplace.canva.com/W8eNw/MAHNTXW8eNw/1/tl/canva-MAHNTXW8eNw.png",
+      "file": "public/images/stationery/white-doves.webp",
+      "width": 550,
+      "height": 413,
+      "bytes": 50434,
+      "placement": "Ocean wedding card footer"
+    },
+    {
+      "id": "ring-line-divider",
+      "source": "https://marketplace.canva.com/jg8X0/MAHGItjg8X0/1/tl/canva-MAHGItjg8X0.png",
+      "file": "public/images/stationery/ring-line-divider.webp",
+      "width": 550,
+      "height": 110,
+      "bytes": 7024,
+      "placement": "Modern wedding card date divider"
+    },
+    {
+      "id": "floral-infinity",
+      "source": "https://marketplace.canva.com/-qUVk/MAHKwp-qUVk/1/tl/canva-MAHKwp-qUVk.png",
+      "file": "public/images/stationery/floral-infinity.webp",
+      "width": 550,
+      "height": 347,
+      "bytes": 66142,
+      "placement": "Anniversary artwork"
     }
   ]
 }

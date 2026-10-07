@@ -12,7 +12,6 @@
 .frameTop { top:0; mask-image:linear-gradient(to bottom,#000 calc(100% - 5cqi),transparent); }.frameBottom { bottom:0; mask-image:linear-gradient(to bottom,transparent,#000 5cqi); }
 .frameMiddle { position:absolute; left:0; top:65cqi; display:block; width:100%; height:max(0px,calc(100% - 130cqi)); pointer-events:none; }
 .topOrnament { position:absolute; left:0; top:0; z-index:2; width:100%; height:43.478cqi; display:block; pointer-events:none; }
-.landscape { position:absolute; left:0; bottom:0; z-index:2; display:block; width:100%; height:42.17cqi; pointer-events:none; }
 .copy { position:relative; z-index:3; display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; min-height:140cqi; padding:38cqi 20cqi 31cqi; }
 .readingArea { display:flex; flex-direction:column; align-items:inherit; width:100%; min-width:0; background:var(--art-paper); }
 
@@ -159,9 +158,6 @@
 .marigoldTop { top:-2cqi; right:-3cqi; transform:rotate(17deg); }
 .marigoldBottom { bottom:-2cqi; left:-3cqi; transform:rotate(197deg); }
 .cover[data-illustrated-cover=kesar] .cornerEngraving,.cover[data-illustrated-cover=kesar] .cornerEngravingEcho { opacity:.18; }
-.botanicalSpecimen { position:absolute; z-index:2; bottom:9cqi; left:17cqi; width:67cqi; height:25cqi; color:var(--art-leaf); pointer-events:none; }
-.botanicalSpecimen>.sprigMotion { position:absolute; width:22cqi; right:-3cqi; bottom:0; }
-.specimenRule { position:absolute; left:0; bottom:0; width:100%; border-bottom:1px solid var(--art-line); }
 .lotusGarden { position:absolute; z-index:2; width:40cqi; height:24cqi; left:30cqi; bottom:6cqi; pointer-events:none; }
 .lotusGarden>img { position:absolute; width:30cqi; height:auto; left:5cqi; bottom:2cqi; }
 .pondRipples { position:absolute; width:90%; left:5%; height:4cqi; bottom:0; border:1px solid var(--art-line); border-radius:50%; opacity:.35; }
@@ -243,3 +239,12 @@
 .weddingCouple { position:relative; z-index:2; width:52cqi; margin:0 auto; pointer-events:none; }
 .weddingCouple img { display:block; width:100%; height:auto; }
 .cover[data-cover-tradition-art=hindu][data-illustrated-cover=lotus] .weddingCouple { width:48cqi; margin-bottom:7cqi; }
+.cover[data-illustrated-cover=modern] .ringDivider { width:26cqi; height:auto; margin-inline:auto; background:none; }
+.providedAccent { position:absolute; z-index:2; width:38cqi; left:31cqi; bottom:5cqi; pointer-events:none; }
+.providedAccent img { display:block; width:100%; height:auto; }
+.cover:is(.full,.compact)[data-cover-accent=joined-hands] .copy { padding-bottom:34cqi; }
+.cover:is(.full,.compact)[data-cover-accent=doves] .copy { padding-bottom:39cqi; }
+.cover[data-cover-accent=gold-rings] .providedAccent { width:36cqi; left:32cqi; bottom:7cqi; }
+.cover:is(.full,.compact)[data-cover-accent=gold-rings] .copy { padding-bottom:30cqi; }
+.cover[data-cover-accent=varmala] .providedAccent { width:42cqi; left:29cqi; bottom:4cqi; }
+.cover:is(.full,.compact)[data-cover-accent=varmala] .copy { padding-bottom:54cqi; }
