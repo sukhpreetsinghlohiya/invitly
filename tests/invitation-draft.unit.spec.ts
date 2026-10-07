@@ -7,6 +7,17 @@ import { parseInvitationVideo } from "../src/lib/invitation-video";
 
 const makeDraft = (): InvitationDraft => ({ themeId: "royal", invitation: structuredClone(demoInvitation), musicEnabled: false });
 
+test("the host's tradition-symbol choice survives draft validation and rejects invalid settings", () => {
+  const draft = validateInvitationDraft(makeDraft()).data!;
+  draft.invitation.tradition = "sikh";
+  draft.invitation.design!.traditionSymbol = false;
+  const saved = validateInvitationDraft(draft);
+  expect(saved.error).toBeUndefined();
+  expect(saved.data?.invitation.tradition).toBe("sikh");
+  expect(saved.data?.invitation.design?.traditionSymbol).toBe(false);
+  expect(validateInvitationDraft({ ...draft, invitation: { ...draft.invitation, design: { ...draft.invitation.design, traditionSymbol: "false" } } }).error).toContain("tradition symbol");
+});
+
 test("portrait cards and optional invitation sections survive validation without changing legacy drafts", () => {
   const legacy = validateInvitationDraft(makeDraft());
   expect(legacy.error).toBeUndefined();

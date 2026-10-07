@@ -1,0 +1,18 @@
+Invitly tradition symbols — 7 October 2026
+
+Open-source Material Design Icons from Pictogrammers, Apache-2.0.
+Source: https://github.com/Templarian/MaterialDesign-SVG
+Upstream originals: assets/source/tradition-icons/
+Licence: material-design-icons.txt and Apache-2.0.txt in this directory.
+
+om: Nick
+khanda: Michael Irigoyen
+star-crescent: Nick
+cross: Nick
+dharmachakra: Nick
+infinity: Austin Andrews
+
+SVG path geometry is unchanged; React renders paths using the invitation ink colour.
+The Jain ahimsa hand/wheel and Parsi sacred-fire altar are original project SVG drawings.
+Interfaith uses an abstract unity mark, not a symbol of a particular religion.
+Icons8 and Flaticon were visual references; their proprietary icon files are not bundled.

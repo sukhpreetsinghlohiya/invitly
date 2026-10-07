@@ -227,12 +227,35 @@ test.describe("authenticated host and guest publication smoke", () => {
     expect(await host.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 
+  test("a failed account save can be restored after reloading without overwriting the saved invitation", async () => {
+    await host.getByRole("button", { name: "Details", exact: true }).click();
+    await host.getByLabel("First name", { exact: true }).fill("Recover this name");
+    const route = "**/customize?event=*";
+    await host.route(route, request => request.request().method() === "POST" ? request.abort("failed") : request.continue());
+    await host.getByRole("button", { name: "Save draft", exact: true }).click();
+    await expect(host.locator(".editor-feedback .form-error")).toBeVisible();
+    await host.unroute(route);
+    host.once("dialog", dialog => dialog.accept());
+    await host.reload();
+    await expect(host.getByRole("region", { name: "Unsynced device backup" })).toBeVisible();
+    await host.getByRole("button", { name: "Details", exact: true }).click();
+    await expect(host.getByLabel("First name", { exact: true })).toHaveValue("SimranTest");
+    await host.getByRole("button", { name: "Restore device backup", exact: true }).click();
+    await expect(host.getByLabel("First name", { exact: true })).toHaveValue("Recover this name");
+    await host.getByLabel("First name", { exact: true }).fill("SimranTest");
+    await saveDraft();
+    await host.reload();
+    await expect(host.getByRole("region", { name: "Unsynced device backup" })).toHaveCount(0);
+  });
+
   test("another signed-in host cannot see the invitation, edit it, preview it, or fetch its private photo", async () => {
     test.setTimeout(60000);
     await signIn(otherHost, "B");
     await expect(otherHost.locator(`a[href="/customize?event=${eventId}"]`)).toHaveCount(0);
-    expect((await otherHost.goto(`/customize?event=${eventId}`))?.status()).toBe(404);
-    // The dashboard loading boundary can start a streamed HTTP 200 before
+    await otherHost.goto(`/customize?event=${eventId}`);
+    await expect(otherHost.getByRole("heading", { name: "This invitation hasn't arrived.", exact: true })).toBeVisible();
+    await expect(otherHost.getByText("SimranTest", { exact: false })).toHaveCount(0);
+    // Editor/dashboard loading boundaries can start a streamed HTTP 200 before
     // Next renders notFound. Verify the denial and absence of private content.
     await otherHost.goto(`/dashboard/events/${eventId}/preview`);
     await expect(otherHost.getByRole("heading", { name: "This invitation hasn't arrived.", exact: true })).toBeVisible();
@@ -293,6 +316,18 @@ test.describe("authenticated host and guest publication smoke", () => {
     await expect(freshLink).toBeVisible();
     const privatePath = new URL(await freshLink.inputValue()).pathname;
     expect(/^\/g\/[a-f0-9]{64}$/.test(privatePath)).toBe(true);
+    const secondGuest = `Another guest ${slug}`;
+    await host.getByLabel("Guest name", { exact: true }).fill(secondGuest);
+    await host.getByRole("button", { name: "Add guest & create link", exact: true }).click();
+    await expect(host.getByRole("textbox", { name: secondGuest, exact: true })).toBeVisible();
+    await expect(freshLink).toBeVisible();
+    expect(new URL(await freshLink.inputValue()).pathname === privatePath).toBe(true);
+    await host.getByRole("button", { name: "Dismiss private links", exact: true }).click();
+    await expect(host.getByRole("dialog")).toBeVisible();
+    await host.getByRole("dialog").getByRole("button", { name: "Cancel", exact: true }).click();
+    await expect(freshLink).toBeVisible();
+    await host.getByRole("button", { name: "Dismiss private links", exact: true }).click();
+    await host.getByRole("dialog").getByRole("button", { name: "Dismiss private links", exact: true }).click();
     expect((await guest.goto(privatePath))?.status()).toBe(200);
     await expect(guest.getByRole("heading", { name: "Farewell brunch", exact: true })).toBeVisible();
     await expect(guest.getByRole("heading", { name: "Haldi", exact: true })).toHaveCount(0);
@@ -301,7 +336,7 @@ test.describe("authenticated host and guest publication smoke", () => {
     await guest.getByLabel(/^People in your party, including you/).fill("2");
     await guest.getByLabel("A note for the hosts (optional)", { exact: true }).fill("One vegetarian meal, please.");
     await guest.getByRole("button", { name: "Send RSVP", exact: true }).click();
-    await expect(guest.getByText("Your RSVP has been sent to the hosts. You can update it here whenever your plans change.", { exact: true })).toBeVisible();
+    await expect(guest.locator(".rsvp-form .form-success")).toHaveText("Your RSVP has been sent to the hosts. You can update it here whenever your plans change.");
     const firstResponseAt = Date.now();
     await host.reload();
     let row = host.getByRole("row").filter({ hasText: guestName });
@@ -315,7 +350,7 @@ test.describe("authenticated host and guest publication smoke", () => {
     if (remaining) await guest.waitForTimeout(remaining);
     await guest.getByRole("combobox", { name: /^Your response/ }).selectOption("declined");
     await guest.getByRole("button", { name: "Update RSVP", exact: true }).click();
-    await expect(guest.getByText("Your RSVP has been sent to the hosts. You can update it here whenever your plans change.", { exact: true })).toBeVisible();
+    await expect(guest.locator(".rsvp-form .form-success")).toHaveText("Your RSVP has been sent to the hosts. You can update it here whenever your plans change.");
     await host.reload();
     row = host.getByRole("row").filter({ hasText: guestName });
     await expect(row).toContainText("declined");

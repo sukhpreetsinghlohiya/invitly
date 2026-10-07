@@ -90,6 +90,7 @@ test("custom MP3 uploads, persists, stays private, replaces and removes from the
     await expect(page.locator(".editor-uploaded-audio")).toContainText("dulhe-ki-behen-brigade.mp3");
     await page.getByRole("button", { name: "Share", exact: true }).click();
     await page.getByRole("button", { name: "Publish invitation", exact: true }).click();
+    await expect(page.locator(".editor-feedback .form-success")).toContainText("Your invitation is live", { timeout: 20000 });
     await expect.poll(async () => (await admin.from("events").select("is_published").eq("id", eventId).single()).data?.is_published).toBe(true);
     const publicAudio = await guest.request.get(firstUrl!, { headers: { Range: "bytes=0-9" } });
     expect(publicAudio.status()).toBe(206);
@@ -103,6 +104,8 @@ test("custom MP3 uploads, persists, stays private, replaces and removes from the
     await page.getByLabel("Your MP3 file").setInputFiles({ name: "Our welcome.mp3", mimeType: "audio/mpeg", buffer: await readFile("public/audio/dulhe-ki-behen-brigade.mp3") });
     await page.getByRole("button", { name: "Replace audio", exact: true }).click();
     await expect(page.locator(".editor-uploaded-audio")).toContainText("Our welcome.mp3", { timeout: 30000 });
+    // Replacing an unsaved draft must not interrupt the recording guests hear.
+    expect((await guest.request.get(firstUrl!, { headers: { Range: "bytes=0-1" } })).status()).toBe(206);
     await page.getByRole("button", { name: "Save draft", exact: true }).click();
     await expect(page.locator(".editor-feedback .form-success")).toBeVisible({ timeout: 20000 });
     expect((await guest.request.get(firstUrl!)).status()).toBe(404);
@@ -114,6 +117,12 @@ test("custom MP3 uploads, persists, stays private, replaces and removes from the
     await mkdir("artifacts/screenshots", { recursive: true });
     await page.locator(".editor-custom-audio").screenshot({ path: "artifacts/screenshots/custom-audio-mobile.png" });
     await page.getByRole("button", { name: "Remove custom audio", exact: true }).click();
+    const confirmation = page.getByRole("dialog");
+    await expect(confirmation).toBeVisible();
+    await confirmation.getByRole("button", { name: "Remove recording", exact: true }).click();
+    await expect(page.locator(".editor-uploaded-audio")).toHaveCount(0);
+    // Removal also takes effect for guests only after the host saves the draft.
+    expect((await guest.request.get(secondUrl!, { headers: { Range: "bytes=0-1" } })).status()).toBe(206);
     await page.getByRole("button", { name: "Save draft", exact: true }).click();
     await expect(page.locator(".editor-feedback .form-success")).toBeVisible({ timeout: 20000 });
     expect((await guest.request.get(secondUrl!)).status()).toBe(404);

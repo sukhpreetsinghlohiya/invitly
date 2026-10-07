@@ -5,3 +5,16 @@
 .song-dialog { padding:0; border:1px solid #d9c7b7; border-radius:20px; margin:auto; width:min(560px,calc(100vw - 24px)); max-height:calc(100dvh - 24px); overflow:auto; color:#493c36; background:#fffaf2; box-shadow:0 20px 80px #21141140; }.song-dialog::backdrop { background:#241b20bd; }.song-dialog-body { padding:24px; }.song-dialog-header { display:flex; align-items:start; justify-content:space-between; gap:12px; }.song-dialog-header h2 { font:32px/1.15 var(--serif); margin:8px 0; color:#713d4c; }.song-dialog-header button { flex-shrink:0; width:44px; height:44px; display:grid; place-items:center; border:1px solid #ccb9a8; border-radius:50%; background:transparent; color:#713d4c; }.song-dialog-body>p { font:14px/1.6 var(--sans); margin:12px 0 18px; }.song-dialog iframe { display:block; border:0; width:100%; aspect-ratio:16/9; min-height:200px; background:#181514; border-radius:8px; }.song-dialog-body>a { min-height:44px; display:flex; gap:8px; align-items:center; margin-top:12px; font:13px/1.5 var(--sans); color:#713d4c; text-decoration:underline; text-underline-offset:4px; }
 @media(max-width:380px) { .song-dialog-body { padding:18px; }.song-dialog-header h2 { font-size:27px; } }
 @media(prefers-reduced-motion:reduce) { .music-control .music-equalizer i { animation:none!important; } }
+
+.music-control { display:flex; align-items:center; flex-wrap:wrap; gap:6px; }
+.music-control>.form-feedback { flex-basis:100%; }
+.music-settings { position:relative; display:inline-flex; flex-shrink:0; }
+.music-settings-toggle { display:grid; place-items:center; width:44px; height:44px; border:1px solid #d9c7b7; background:#fffaf2; color:#713d4c; border-radius:50%; cursor:pointer; }
+.music-settings-toggle:hover,.music-settings-toggle[aria-expanded=true] { background:#eee6da; }
+.music-settings-toggle:focus-visible,.music-button:focus-visible { outline:2px solid currentColor; outline-offset:3px; }
+.music-settings .music-playing-panel { position:absolute; z-index:10; right:0; bottom:calc(100% + 12px); margin:0; width:240px; padding:16px 18px 8px; border-radius:14px; box-shadow:0 8px 32px #33251c1c; font-size:13px; }
+.music-playing-panel[hidden] { display:none!important; }
+.music-playing-panel>.music-track-label { font-size:9px; font-weight:400; letter-spacing:.13em; color:#786b5e; margin-bottom:5px; }
+.music-loading-icon { animation:music-loading 1.2s linear infinite; }
+@keyframes music-loading { to { transform:rotate(360deg); } }
+@media(prefers-reduced-motion:reduce) { .music-loading-icon { animation:none; } }

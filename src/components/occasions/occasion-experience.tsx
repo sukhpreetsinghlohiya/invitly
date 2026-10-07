@@ -1,7 +1,6 @@
-import { SaveDateIllustration } from "@/components/save-date-illustration";
 import { hasIndicText } from "@/lib/invitation-text";
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight, CalendarDays, CalendarPlus, ChevronUp, MapPin } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, CalendarDays, CalendarPlus, ChevronDown, ChevronUp, MapPin } from "lucide-react";
 import type { InvitationRenderProps } from "@/components/invitation-view";
 import type { OccasionId } from "@/types/invitation";
 import { Brand } from "@/components/brand";
@@ -66,7 +65,7 @@ export function OccasionExperience({ invitation, theme, mode, musicEnabled = mod
   const todayEvents = !isDemo ? events.filter(event => localDay(event.startsAt) === today) : [];
   const personalizeHref = `/customize?occasion=${occasion}&theme=${theme}&tradition=${invitation.tradition || "neutral"}`;
 
-  return <div className={`occasion-experience occasion-experience--${occasion} occasion-layout--${selectedTheme.layout}`} {...invitationPresentation(invitation)} data-motion={isQuiet ? "none" : design.motion || "gentle"}>
+  return <div className={`occasion-experience occasion-experience--${occasion} occasion-layout--${selectedTheme.layout} invitation-body`} data-body-theme={theme} {...invitationPresentation(invitation)} data-motion={isQuiet ? "none" : design.motion || "gentle"}>
     <InvitationMotion theme={theme} motion={isQuiet ? "none" : design.motion} />
     {(isDemo || isPreview) && <header className="occasion-preview-bar" data-preview-notice>
       <Link href={isPreview ? previewBackHref || "/dashboard" : `/templates?occasion=${occasion}`}><ArrowLeft size={15} /><span>{isPreview ? "Back to editing" : `${isQuiet ? "Remembrance" : config.name} designs`}</span></Link>
@@ -88,7 +87,7 @@ export function OccasionExperience({ invitation, theme, mode, musicEnabled = mod
       <section id="our-note" className="occasion-story occasion-section" data-section="story" aria-labelledby="occasion-story-title">
         <div data-reveal className="occasion-letter">
           {design.decoration && <ArchiveOrnament kind="flourish" className="occasion-letter-ornament" />}
-          {design.decoration && copy.romantic && <SaveDateIllustration />}<span className="occasion-overline">{words.storyLabel}</span>
+          <span className="occasion-overline">{words.storyLabel}</span>
           <h2 id="occasion-story-title">{words.storyTitle}</h2>
           {invitation.intro && <p className="occasion-intro" data-indic={hasIndicText(invitation.intro) || undefined}>{invitation.intro}</p>}
           {invitation.message && <p className="occasion-message" data-indic={hasIndicText(invitation.message) || undefined}>{invitation.message}</p>}
@@ -111,7 +110,7 @@ export function OccasionExperience({ invitation, theme, mode, musicEnabled = mod
         {!events.length && <p className="occasion-empty">Your hosts will share the time and place here.</p>}
         <div className="occasion-event-list">{events.map((event, index) => <article data-reveal key={event.id} className="occasion-event">
           <div className="occasion-event-date"><span className="occasion-event-index">{String(index + 1).padStart(2, "0")}</span><span>{formatEventDate(event.startsAt, invitation.timezone, { weekday: "long" })}</span><strong>{formatEventDate(event.startsAt, invitation.timezone, { day: "2-digit" })}</strong><span>{formatEventDate(event.startsAt, invitation.timezone, { month: "long", year: "numeric" })}</span>{design.decoration && <div className="occasion-event-art"><CeremonyArt title={event.name} fallbackIcon={event.icon} occasion={occasion} /></div>}</div>
-          <div className="occasion-event-content" data-reveal-content><h3 data-indic={hasIndicText(event.name) || undefined}>{event.name}</h3><time dateTime={event.startsAt}>{formatEventDate(event.startsAt, invitation.timezone, { hour: "numeric", minute: "2-digit" })} · {timezone}</time><LocalEventTime startsAt={event.startsAt} hostTimezone={invitation.timezone} /><CalendarActions event={event} names={invitation.couple} timezone={invitation.timezone} calendarHref={calendarHref} /><span className="sr-only">{calendarDate(event.startsAt)}</span>{event.description && <p className="occasion-event-description" data-indic={hasIndicText(event.description) || undefined}>{event.description}</p>}{event.dressCode && <p className="occasion-dress-note" data-indic={hasIndicText(event.dressCode) || undefined}><strong>Dress note</strong> {event.dressCode}</p>}<VenueCard venue={event.venue} address={event.address} mapUrl={event.mapUrl} eventName={event.name} /></div>
+          <div className="occasion-event-content" data-reveal-content><h3 data-indic={hasIndicText(event.name) || undefined}>{event.name}</h3><time dateTime={event.startsAt}>{formatEventDate(event.startsAt, invitation.timezone, { hour: "numeric", minute: "2-digit" })} · {timezone}</time><LocalEventTime startsAt={event.startsAt} hostTimezone={invitation.timezone} /><CalendarActions event={event} names={invitation.couple} timezone={invitation.timezone} calendarHref={calendarHref} /><span className="sr-only">{calendarDate(event.startsAt)}</span>{(event.description || event.dressCode) && <details className="invitation-event-notes"><summary>Details{event.dressCode ? " & dress code" : ""}<ChevronDown size={15} /></summary><div>{event.description && <p data-indic={hasIndicText(event.description) || undefined}>{event.description}</p>}{event.dressCode && <p data-indic={hasIndicText(event.dressCode) || undefined}><strong>Dress note</strong> {event.dressCode}</p>}</div></details>}<VenueCard venue={event.venue} address={event.address} mapUrl={event.mapUrl} eventName={event.name} /></div>
         </article>)}</div>
         {isDemo && <p className="occasion-demo-note">Fictional names, dates and venue details for this demo. Add and check your own details before sharing.</p>}
       </section>

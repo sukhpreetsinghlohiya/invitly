@@ -79,9 +79,10 @@ test("unconfigured welcome and auth/private pages do not block visitors", async 
 test("real browser requests reach validation through the local hostname alias", async ({ page }) => {
   await page.goto("/");
   const response = await page.evaluate(async () => {
+    const settings = await fetch("/api/visitor-welcome").then(result => result.json());
     const result = await fetch("/api/visitor-welcome", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
-    return { status: result.status, body: await result.json() };
+    return { enabled: settings.enabled, status: result.status, body: await result.json() };
   });
-  expect(response.status).toBe(400);
-  expect(response.body.error).toContain("Add your name");
+  expect(response.status).toBe(response.enabled ? 400 : 503);
+  expect(response.body.error).toContain(response.enabled ? "Add your name" : "unavailable");
 });

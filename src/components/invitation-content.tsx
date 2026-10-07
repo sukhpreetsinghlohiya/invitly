@@ -1,4 +1,3 @@
-import { SaveDateIllustration } from "@/components/save-date-illustration";
 import { hasIndicText } from "@/lib/invitation-text";
 import Link from "next/link";
 import { HeroPhotoSlideshow } from "@/components/hero-photo-slideshow";
@@ -11,7 +10,7 @@ import type { InvitationRenderProps } from "./invitation-view";
 import { getDesign, guestWording } from "@/data/occasions";
 import { invitationPresentation } from "./invitation-presentation";
 import "./invitation-personalization.css";
-import { ArrowLeft, ArrowUpRight, CalendarPlus, Heart, MapPin } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, CalendarPlus, ChevronDown, Heart, MapPin } from "lucide-react";
 import { Brand, Flower } from "@/components/brand";
 import { Botanical } from "@/components/invitation-art";
 import { Countdown } from "@/components/demo/countdown";
@@ -53,7 +52,7 @@ export function InvitationContent({ invitation, theme, mode, musicEnabled = mode
   const cover = images.find(photo => photo.id === invitation.coverPhotoId) || images[0];
   const coupleName = invitation.couple.filter(Boolean).join(" & ");
 
-  return <div className={`demo-page demo-${theme}`} {...invitationPresentation(invitation)}>
+  return <div className={`demo-page demo-${theme} invitation-body`} data-body-theme={theme} {...invitationPresentation(invitation)}>
     <InvitationMotion theme={theme} motion={design.motion} />
     {!isDemo && <header className="demo-toolbar"><div className="container">
       {isDemo ? <><Link href="/templates" className="back-link"><ArrowLeft size={16} /><span>The collection</span></Link><span className="demo-label">A DEMO CELEBRATION</span></> : <Brand />}
@@ -69,7 +68,7 @@ export function InvitationContent({ invitation, theme, mode, musicEnabled = mode
           <h1 id="couple-heading" data-indic={hasIndicText(coupleName) || undefined}>{invitation.couple[0] || "Your invitation"}{invitation.couple[1] && <> <em>&</em> {invitation.couple[1]}</>}</h1>
           <p className="invite-intro" data-indic={hasIndicText(invitation.intro) || undefined}>{invitation.intro}</p><p data-indic={hasIndicText(invitation.message) || undefined}>{invitation.message}</p>
           {invitation.blessing && <p className="invitation-blessing" data-indic={hasIndicText(invitation.blessing) || undefined}>{invitation.blessing}</p>}<div className="family-names">{invitation.families.filter(Boolean).map((family, index) => <span key={index} data-indic={hasIndicText(family) || undefined}>{family}</span>)}</div>
-          {design.decoration && <SaveDateIllustration />}<span className="invite-location" data-indic={hasIndicText(invitation.city) || undefined}><MapPin size={15} /> {invitation.city}</span>
+          <span className="invite-location" data-indic={hasIndicText(invitation.city) || undefined}><MapPin size={15} /> {invitation.city}</span>
           {design.countdown && Number.isFinite(Date.parse(countdownDate)) && <Countdown key={countdownDate} date={countdownDate} timezone={invitation.timezone} initialRemaining={Math.max(0, Date.parse(countdownDate) - renderTimestamp)} />}
           <div className="invite-hero-actions"><a className="button" href={showRsvp ? "#rsvp" : "#celebrations"}>{showRsvp ? copy.remembrance ? "Join our gathering" : "We saved you a seat" : "View the schedule"} <Heart size={16} /></a>{musicEnabled && <MusicControl key={`${design.music?.source}:${design.music?.track}:${design.music?.audioTrack}:${design.music?.uploadedAudio?.id}:${design.music?.youtubeUrl}`} music={design.music} />}</div>
         </div>
@@ -88,16 +87,16 @@ export function InvitationContent({ invitation, theme, mode, musicEnabled = mode
             <div className={`function-top${design.decoration ? " ceremony-card-art" : ""}`}>{design.decoration && <CeremonyArt title={event.name} fallbackIcon={event.icon} />}<span className="function-number">{String(index + 1).padStart(2, "0")}</span></div>
             <div className="function-details" data-reveal-content><span className="eyebrow">{formatEventDate(event.startsAt, invitation.timezone, { weekday: "long", day: "numeric", month: "short" })}</span><h3 data-indic={hasIndicText(event.name) || undefined}>{event.name}</h3>
               <time dateTime={event.startsAt}>{formatEventDate(event.startsAt, invitation.timezone, { hour: "numeric", minute: "2-digit", ...(invitation.timezone === "Asia/Kolkata" ? {} : { timeZoneName: "short" as const }) })}{invitation.timezone === "Asia/Kolkata" ? " IST" : ""}</time><LocalEventTime startsAt={event.startsAt} hostTimezone={invitation.timezone} /><CalendarActions event={event} names={invitation.couple} timezone={invitation.timezone} calendarHref={calendarHref} />
-              {event.description && <p data-indic={hasIndicText(event.description) || undefined}>{event.description}</p>}{event.dressCode && <span className="dress-code" data-indic={hasIndicText(event.dressCode) || undefined}>A little dress note: {event.dressCode}</span>}
+              {(event.description || event.dressCode) && <details className="invitation-event-notes"><summary>Details{event.dressCode ? " & dress code" : ""}<ChevronDown size={15} /></summary><div>{event.description && <p data-indic={hasIndicText(event.description) || undefined}>{event.description}</p>}{event.dressCode && <p className="dress-code" data-indic={hasIndicText(event.dressCode) || undefined}><strong>Dress note</strong> {event.dressCode}</p>}</div></details>}
             </div>
             <VenueCard venue={event.venue} address={event.address} mapUrl={event.mapUrl} eventName={event.name} />
           </article>;
         })}</div>
         {isDemo && <p className="demo-disclaimer">Fictional names and venue details for this preview. Confirm your own venue before sharing.</p>}
       </section>
-      {!!images.length && <section id="memories" className="invite-section invitation-photos" data-section="photos" aria-labelledby="photos-heading"><div data-reveal className="invite-section-heading"><span className="eyebrow">LITTLE MOMENTS, OUR STORY</span><h2 id="photos-heading">{copy.photos}</h2></div><PhotoGallery photos={images} motion={design.motion} theme={theme} occasion={invitation.occasion} />{isDemo && <p className="demo-disclaimer">Original AI-created imagery for this fictional couple.</p>}</section>}
+      {!!images.length && <section id="memories" className="invite-section invitation-photos" data-section="photos" aria-labelledby="photos-heading"><div data-reveal className="invite-section-heading"><span className="eyebrow">LITTLE MOMENTS, OUR STORY</span><h2 id="photos-heading">{copy.photos}</h2></div><PhotoGallery photos={images} motion={design.motion} theme={theme} occasion={invitation.occasion} />{isDemo && <p className="demo-disclaimer">Sample wedding photographs. Names and event details are fictional.</p>}</section>}
       <InvitationVideo video={invitation.video} />
-      {showRsvp && <section className="rsvp-section invite-section" data-section="rsvp" id="rsvp"><div className="rsvp-intro"><Flower /><span className="eyebrow">YOU ARE WELCOME HERE</span><h2>{copy.rsvp}</h2><p>{copy.rsvpIntro}</p>{isDemo && <p className="local-demo-note">RSVP preview · Your response stays in this browser and is not sent to the hosts.</p>}</div>{isDemo || isPreview ? <RsvpForm /> : rsvpContent}</section>}
+      {showRsvp && <section className="rsvp-section invite-section" data-section="rsvp" id="rsvp"><div className="rsvp-intro"><Flower /><span className="eyebrow">YOU ARE WELCOME HERE</span><h2>{copy.rsvp}</h2><p>{copy.rsvpIntro}</p><p className="invitation-rsvp-signature" data-indic={hasIndicText(coupleName) || undefined}>With love, {coupleName}</p></div>{isDemo || isPreview ? <RsvpForm /> : rsvpContent}</section>}
       {showUpdates && <section className="updates-section invite-section" data-section="updates" id="updates"><div data-reveal className="invite-section-heading"><span className="eyebrow">A LITTLE CLOSER, EVEN FROM HERE</span><h2>From our <em>celebration desk.</em></h2><p>{isDemo ? "The latest little details, all in one place." : "A note from the hosts. Refresh this invitation for the latest details."}</p></div>
         {isDemo ? <UpdatesPreview updates={invitation.updates} /> : liveUpdates ? <LiveAnnouncements {...liveUpdates} timezone={invitation.timezone} /> : <div className="update-feed">{invitation.updates.map(update => <article className="update-card" key={update.id}><span className="update-dot" aria-hidden="true" /><div><p className="update-time" data-indic={hasIndicText(update.time) || undefined}>{update.time}</p><p data-indic={hasIndicText(update.message) || undefined}>{update.message}</p></div></article>)}</div>}
       </section>}

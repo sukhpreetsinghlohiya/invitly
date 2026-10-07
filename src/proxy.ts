@@ -6,4 +6,4 @@ export async function proxy(request: NextRequest) {
 }
 
 // Public demo/marketing routes do not need an auth round trip.
-export const config = { matcher: ["/account/:path*", "/dashboard/:path*", "/customize", "/login", "/signup", "/forgot-password", "/reset-password", "/auth/:path*"] };
+export const config = { matcher: ["/account/:path*", "/dashboard/:path*", "/customize", "/login", "/signup", "/forgot-password", "/reset-password", "/resend-confirmation", "/auth/:path*"] };

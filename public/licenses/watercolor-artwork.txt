@@ -1,0 +1,14 @@
+Invitly original watercolor illustration set — 7 October 2026
+
+Files: /images/watercolor/{wedding,engagement,birthday,baby-shower,housewarming,marigold}.webp
+
+Created with the built-in image_gen tool from descriptive prompts for this project.
+Full prompts and generation provenance: assets/source/watercolor-prompts.json.
+Prepared by scripts/prepare-watercolor-art.mjs, preserving the generated alpha.
+
+The IconScout Indian Wedding and Housewarming pages and Magnific were research
+references for the requested subjects. No marketplace preview, downloaded stock
+asset, or watermark-removed artwork is included in this set. These files were
+not generated or upscaled using Magnific.
+
+Do not describe these files as licensed IconScout or Magnific assets.

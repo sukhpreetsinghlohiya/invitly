@@ -96,6 +96,11 @@ test('photo autoplay runs only while visible and stops for a user pause', async 
 
 test('the three-photo album supports manual rotation, lightbox keyboard navigation and closing', async ({ page }, info) => {
   await preview(page, invitation());
+  await page.evaluate(() => {
+    const fixture = window as unknown as { previewCloseMessages: number };
+    fixture.previewCloseMessages = 0;
+    window.addEventListener('message', event => { if (event.data?.type === 'invitly-preview-close') fixture.previewCloseMessages += 1; });
+  });
   const album = page.getByRole('region', { name: 'Photo album', exact: true });
   await album.scrollIntoViewIfNeeded();
   await expect(album.locator('[data-position=center]')).toHaveCount(1);
@@ -115,6 +120,9 @@ test('the three-photo album supports manual rotation, lightbox keyboard navigati
   await expect(lightbox.getByRole('img')).toHaveAttribute('alt', photographs[1].alt);
   await page.keyboard.press('Escape');
   await expect(lightbox).not.toBeVisible();
+  expect(await page.evaluate(() => (window as unknown as { previewCloseMessages: number }).previewCloseMessages)).toBe(0);
+  await page.keyboard.press('Escape');
+  await expect.poll(() => page.evaluate(() => (window as unknown as { previewCloseMessages: number }).previewCloseMessages)).toBe(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
 });
 

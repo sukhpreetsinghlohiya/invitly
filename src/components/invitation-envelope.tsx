@@ -61,6 +61,7 @@ function Envelope({ invitation }: { invitation: Invitation }) {
 
   function open(skip = false) {
     if (phase === "open" || (phase === "opening" && !skip)) return;
+    if (!skip) document.dispatchEvent(new Event("invitly:open"));
     findDestination();
     if (timer.current) clearTimeout(timer.current);
     moveFocus.current = true;

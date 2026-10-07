@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-07",
+  "provenance": "Direct Canva image URLs supplied by the project owner for matching invitation artwork.",
+  "processing": "WebP quality 88, transparency preserved, metadata removed. No generative edits.",
+  "assets": [
+    {
+      "id": "gurdwara",
+      "source": "https://media-public.canva.com/yv7Ac/MAGWYHyv7Ac/1/s.png",
+      "file": "public/images/stationery/gurdwara.webp",
+      "width": 800,
+      "height": 540,
+      "bytes": 59726
+    },
+    {
+      "id": "pink-floral-garland",
+      "source": "https://media-public.canva.com/DwJPk/MAFTTNDwJPk/1/s.png",
+      "file": "public/images/stationery/pink-floral-garland.webp",
+      "width": 800,
+      "height": 204,
+      "bytes": 44986
+    },
+    {
+      "id": "peach-mandap-frame",
+      "source": "https://media-public.canva.com/YvtCc/MAG4I-YvtCc/1/s2.png",
+      "file": "public/images/stationery/peach-mandap-frame.webp",
+      "width": 1000,
+      "height": 1600,
+      "bytes": 106044
+    },
+    {
+      "id": "red-wedding-couple",
+      "source": "https://media-public.canva.com/1fd9U/MAG4I01fd9U/1/s.png",
+      "file": "public/images/stationery/red-wedding-couple.webp",
+      "width": 545,
+      "height": 800,
+      "bytes": 73836
+    },
+    {
+      "id": "lavender-wedding-couple",
+      "source": "https://media-public.canva.com/bYYQA/MAG4aybYYQA/1/s.png",
+      "file": "public/images/stationery/lavender-wedding-couple.webp",
+      "width": 677,
+      "height": 800,
+      "bytes": 127528
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import type { OccasionId } from "@/types/invitation";
+import { getOccasionArtwork } from "@/data/occasion-art";
 
 export type CeremonyArtId = "haldi" | "sangeet" | "mehndi" | "wedding" | "reception" | "baraat" | "engagement" | "birthday" | "baby-shower" | "housewarming" | "naming" | "anniversary" | "remembrance" | "other";
 export type CeremonyArtwork = {
@@ -7,6 +8,7 @@ export type CeremonyArtwork = {
   src: string;
   width: number;
   height: number;
+  motion?: "ambient";
   aliases: readonly string[];
 };
 
@@ -15,17 +17,17 @@ export const ceremonyArtwork: readonly CeremonyArtwork[] = [
   { id: "haldi", label: "Haldi", src: "/images/ceremonies/haldi.webp", width: 600, height: 450, aliases: ["haldi", "haldee", "हल्दी", "ਹਲਦੀ"] },
   { id: "sangeet", label: "Sangeet", src: "/images/ceremonies/sangeet.webp", width: 600, height: 450, aliases: ["sangeet", "sangit", "संगीत", "ਸੰਗੀਤ"] },
   { id: "mehndi", label: "Mehndi", src: "/images/ceremonies/mehndi.webp", width: 600, height: 450, aliases: ["mehndi", "mehendi", "mehandi", "henna", "मेहंदी", "मेहन्दी", "मेंहदी", "ਮੇਹੰਦੀ", "ਮਹਿੰਦੀ"] },
-  { id: "wedding", label: "Wedding", src: "/images/occasions/wedding.webp", width: 480, height: 360, aliases: ["wedding", "shaadi", "shadi", "vivah", "marriage", "pheras", "phere", "शादी", "विवाह", "फेरे", "ਵਿਆਹ", "ਫੇਰੇ"] },
+  { id: "wedding", label: "Wedding", ...getOccasionArtwork("wedding"), aliases: ["wedding", "shaadi", "shadi", "vivah", "marriage", "pheras", "phere", "शादी", "विवाह", "फेरे", "ਵਿਆਹ", "ਫੇਰੇ"] },
   { id: "reception", label: "Reception", src: "/images/ceremonies/reception.webp", width: 600, height: 450, aliases: ["reception", "रिसेप्शन", "रिसेप्‍शन", "ਰਿਸੈਪਸ਼ਨ", "ਰਿਸੈਪਸ਼ਨ"] },
   { id: "baraat", label: "Baraat", src: "/images/ceremonies/baraat.webp", width: 600, height: 450, aliases: ["baraat", "barat", "बारात", "ਬਰਾਤ"] },
-  { id: "engagement", label: "Engagement", src: "/images/occasions/engagement.webp", width: 480, height: 360, aliases: ["engagement", "ring ceremony", "roka", "sagai", "सगाई", "रोका", "ਮੰਗਣੀ", "ਰੋਕਾ"] },
-  { id: "birthday", label: "Birthday", src: "/images/occasions/birthday.webp", width: 480, height: 360, aliases: ["birthday", "cake cutting", "जन्मदिन", "ਜਨਮਦਿਨ"] },
-  { id: "baby-shower", label: "Baby shower", src: "/images/occasions/baby-shower.webp", width: 480, height: 360, aliases: ["baby shower", "god bharai", "गोद भराई"] },
-  { id: "housewarming", label: "Housewarming", src: "/images/occasions/housewarming.webp", width: 480, height: 360, aliases: ["housewarming", "griha pravesh", "grih pravesh", "गृह प्रवेश"] },
-  { id: "naming", label: "Naming ceremony", src: "/images/occasions/naming.webp", width: 480, height: 360, aliases: ["naming", "naamkaran", "namkaran", "नामकरण", "ਨਾਮਕਰਨ"] },
-  { id: "anniversary", label: "Anniversary", src: "/images/occasions/anniversary.webp", width: 480, height: 360, aliases: ["anniversary", "सालगिरह", "ਵਰ੍ਹੇਗੰਢ"] },
+  { id: "engagement", label: "Engagement", ...getOccasionArtwork("engagement"), aliases: ["engagement", "ring ceremony", "roka", "sagai", "सगाई", "रोका", "ਮੰਗਣੀ", "ਰੋਕਾ"] },
+  { id: "birthday", label: "Birthday", ...getOccasionArtwork("birthday"), aliases: ["birthday", "cake cutting", "जन्मदिन", "ਜਨਮਦਿਨ"] },
+  { id: "baby-shower", label: "Baby shower", ...getOccasionArtwork("baby-shower"), aliases: ["baby shower", "god bharai", "गोद भराई"] },
+  { id: "housewarming", label: "Housewarming", ...getOccasionArtwork("housewarming"), aliases: ["housewarming", "griha pravesh", "grih pravesh", "गृह प्रवेश"] },
+  { id: "naming", label: "Naming ceremony", ...getOccasionArtwork("naming"), aliases: ["naming", "naamkaran", "namkaran", "नामकरण", "ਨਾਮਕਰਨ"] },
+  { id: "anniversary", label: "Anniversary", ...getOccasionArtwork("anniversary"), aliases: ["anniversary", "सालगिरह", "ਵਰ੍ਹੇਗੰਢ"] },
   { id: "remembrance", label: "Remembrance", src: "/images/occasions/remembrance.webp", width: 480, height: 360, aliases: ["remembrance", "memorial", "श्रद्धांजलि", "ਸ਼ਰਧਾਂਜਲੀ"] },
-  { id: "other", label: "Together", src: "/images/occasions/other.webp", width: 480, height: 360, aliases: [] },
+  { id: "other", label: "Together", ...getOccasionArtwork("other"), aliases: [] },
 ];
 
 function normalizeTitle(value: string) {

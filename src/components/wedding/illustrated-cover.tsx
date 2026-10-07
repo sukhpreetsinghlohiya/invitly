@@ -1,9 +1,11 @@
 import { useId } from "react";
 import Image from "next/image";
 import { getDesign, guestWording } from "@/data/occasions";
+import { watercolorArtwork } from "@/data/occasion-art";
 import { formatEventDate } from "@/data/demo-invitation";
 import { hasIndicText } from "@/lib/invitation-text";
 import { ArchiveOrnament } from "@/components/archive-ornament";
+import { TraditionSymbol, hasTraditionSymbol } from "@/components/tradition-symbol";
 import type { Invitation, ThemeId } from "@/types/invitation";
 import "@fontsource/cormorant-garamond/latin-400.css";
 import "@fontsource/cormorant-garamond/latin-400-italic.css";
@@ -149,7 +151,7 @@ function TopOrnament({ id, theme }: { id: string; theme: ThemeId }) {
     <g fill="none" stroke="var(--art-paper)" strokeWidth="1"><ellipse cx="330" cy="102" rx="8" ry="10" transform="rotate(-22 330 102)" /><ellipse cx="340" cy="102" rx="8" ry="10" transform="rotate(22 340 102)" /><path d="m333 89 2-3 2 3-2 3Z" /></g>
     <path d="M80 108h61m-61 9h34" stroke="var(--art-line)" strokeWidth="1" />
   </>;
-  if (theme === "floral") return <><use href={`#${id}-sprig`} transform="translate(164 79) rotate(-64) scale(.65)" /><use href={`#${id}-sprig`} transform="translate(296 79) rotate(64) scale(-.65 .65)" /><use href={`#${id}-flower`} transform="translate(230 71) scale(.9)" /></>;
+  if (theme === "floral") return null;
   if (theme === "kesar") return <use href={`#${id}-flower`} transform="translate(230 120) scale(.75)" />;
   if (theme === "lotus") return <use href={`#${id}-lotus`} transform="translate(230 100) scale(.63)" />;
   if (theme === "pichwai") return <use href={`#${id}-lotus`} transform="translate(230 110) scale(.45)" />;
@@ -176,7 +178,7 @@ function DateOrnament({ id, theme }: { id: string; theme: ThemeId }) {
 function BotanicalSpray({ source, compact }: { source: string; compact: boolean }) {
   if (source.endsWith("engraved-rose.svg")) return <span className={styles.botanicalFoil} />;
   const blue = source.endsWith("blue-bouquet.svg");
-  return <Image src={source} alt="" width={blue ? 1145 : 356} height={blue ? 990 : 486} sizes={compact ? "150px" : "260px"} />;
+  return <Image src={source} alt="" width={blue ? 1145 : 356} height={blue ? 990 : 486} sizes={compact ? "150px" : "260px"} loading={compact ? "lazy" : "eager"} />;
 }
 
 function BotanicalEdges({ theme, compact }: { theme: ThemeId; compact: boolean }) {
@@ -184,15 +186,17 @@ function BotanicalEdges({ theme, compact }: { theme: ThemeId; compact: boolean }
   return <div className={styles.botanicalEdges} data-cover-botanical={theme} data-decoration aria-hidden="true">
     <span className={styles.cornerEngraving} />
     <span className={styles.cornerEngravingEcho} />
-    {source && <>{["top", "bottom"].map(position => <span className={position === "top" ? styles.botanicalTop : styles.botanicalBottom} key={position}>
+    {theme === "floral" && <span className={styles.floralGarland}><Image src="/images/stationery/pink-floral-garland.webp" alt="" width={800} height={204} sizes={compact ? "300px" : "600px"} loading={compact ? "lazy" : "eager"} /></span>}
+    {source && <>{(theme === "floral" ? ["bottom"] : ["top", "bottom"]).map(position => <span className={position === "top" ? styles.botanicalTop : styles.botanicalBottom} key={position}>
       <span className={styles.sprigMotion} data-cover-motion="botanical"><BotanicalSpray source={source} compact={compact} /></span>
     </span>)}</>}
     {source && (theme === "royal" || theme === "mehfil") && <>{["top", "bottom"].map(position => <span className={position === "top" ? styles.botanicalTopEcho : styles.botanicalBottomEcho} key={`echo-${position}`}><BotanicalSpray source={source} compact={compact} /></span>)}</>}
-    {theme === "kesar" && <>{["top", "bottom"].map(position => <span className={position === "top" ? styles.marigoldTop : styles.marigoldBottom} key={position}><span className={styles.sprigMotion} data-cover-motion="botanical"><Image src="/images/marketing/marigold-branch.webp" alt="" width={180} height={270} sizes={compact ? "100px" : "160px"} /></span></span>)}</>}
+    {theme === "kesar" && <>{["top", "bottom"].map(position => <span className={position === "top" ? styles.marigoldTop : styles.marigoldBottom} key={position}><span className={styles.sprigMotion} data-cover-motion="botanical"><Image src={watercolorArtwork.marigold.src} alt="" width={watercolorArtwork.marigold.width} height={watercolorArtwork.marigold.height} sizes={compact ? "120px" : "190px"} loading={compact ? "lazy" : "eager"} /></span></span>)}</>}
   </div>;
 }
 
-function CoverIllustration({ id, theme }: { id: string; theme: ThemeId }) {
+function CoverIllustration({ id, theme, sikh }: { id: string; theme: ThemeId; sikh: boolean }) {
+  if (sikh) return <div className={styles.gurdwara} data-cover-ornament="bottom" data-decoration aria-hidden="true"><Image src="/images/stationery/gurdwara.webp" alt="" width={800} height={540} sizes="300px" /></div>;
   if (theme === "pichwai") return <div className={styles.peacockGarden} data-cover-ornament="bottom" data-decoration aria-hidden="true"><span className={styles.peacockLeft} /><span className={styles.peacockRight} /><ArchiveOrnament kind="branch" className={styles.gardenVine} /></div>;
   if (theme === "lotus") return <div className={styles.lotusGarden} data-cover-ornament="bottom" data-decoration aria-hidden="true"><span className={styles.pondRipples} data-cover-motion="water" /><Image src="/images/art/patterned-lotus.svg" alt="" width={480} height={346} sizes="150px" /></div>;
   if (theme === "modern") return <div className={styles.botanicalSpecimen} data-cover-ornament="bottom" data-decoration aria-hidden="true"><span className={styles.specimenRule} /><span className={styles.sprigMotion} data-cover-motion="botanical"><ArchiveOrnament kind="branch" /></span></div>;
@@ -209,12 +213,17 @@ export function IllustratedCover({ invitation, theme, compact = false }: Props) 
   const firstEvent = invitation.functions.filter(event => event.visibility !== "hidden").sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt))[0];
   const date = invitation.weddingAt || firstEvent?.startsAt || "";
   const dateLabel = formatEventDate(date, invitation.timezone, { day: "numeric", month: "long", year: "numeric" });
+  const weekday = Number.isFinite(Date.parse(date)) ? formatEventDate(date, invitation.timezone, { weekday: "long" }) : "";
   const location = invitation.city || firstEvent?.venue;
   const coverText = guestWording(invitation).cover;
-  const extendedCopy = Boolean(invitation.blessing) || coverText.length > 64 || (location?.length || 0) > 40 || nameLength > 20;
-  return <div className={`${styles.cover} ${compact ? styles.compact : styles.full}`} data-illustrated-cover={theme} data-cover-illustration={botanicalArt[theme] ? "botanical" : "engraved"} data-motion={design.motion || "gentle"} data-compact={compact} data-extended-copy={extendedCopy} data-palette={design.palette} data-typography={design.typography} data-artwork={design.decoration ? "on" : "off"} data-long-names={nameLength > 20 ? "very" : nameLength > 11 ? "true" : undefined} aria-hidden={compact || undefined}>
+  const sikhArtwork = invitation.tradition === "sikh" && hasTraditionSymbol(invitation) && design.decoration;
+  const hinduArtwork = invitation.tradition === "hindu" && hasTraditionSymbol(invitation) && design.decoration;
+  const mandapArtwork = hinduArtwork && theme === "sindoor";
+  const coupleArtwork = hinduArtwork && (theme === "sindoor" || theme === "lotus");
+  const extendedCopy = hasTraditionSymbol(invitation) || Boolean(invitation.blessing) || coverText.length > 64 || (location?.length || 0) > 40 || nameLength > 20;
+  return <div className={`${styles.cover} ${compact ? styles.compact : styles.full}`} data-illustrated-cover={theme} data-cover-illustration={botanicalArt[theme] ? "botanical" : "engraved"} data-cover-tradition-art={sikhArtwork ? "sikh" : coupleArtwork ? "hindu" : undefined} data-motion={design.motion || "gentle"} data-compact={compact} data-extended-copy={extendedCopy} data-palette={design.palette} data-typography={design.typography} data-artwork={design.decoration ? "on" : "off"} data-long-names={nameLength > 20 ? "very" : nameLength > 11 ? "true" : undefined} aria-hidden={compact || undefined}>
     <div className={styles.sheet}>
-      {design.decoration && <>
+      {design.decoration && (mandapArtwork ? <Image className={styles.mandapFrame} src="/images/stationery/peach-mandap-frame.webp" alt="" fill sizes={compact ? "300px" : "600px"} loading={compact ? "lazy" : "eager"} data-decoration aria-hidden="true" /> : <>
         {extendedCopy ? <>
           <svg className={styles.frameTop} viewBox="0 0 460 322" data-cover-frame-slice="top" data-decoration aria-hidden="true" focusable="false"><Motifs id={id} theme={theme} /><defs><g id={`${id}-frame`}><Border id={id} theme={theme} /></g></defs><use href={`#${id}-frame`} /></svg>
           <svg className={styles.frameMiddle} viewBox="0 0 460 1" preserveAspectRatio="none" data-cover-frame-slice="middle" data-decoration aria-hidden="true" focusable="false"><FrameMiddle theme={theme} /></svg>
@@ -225,17 +234,18 @@ export function IllustratedCover({ invitation, theme, compact = false }: Props) 
         <div className={styles.engravedGarden} data-decoration aria-hidden="true"><ArchiveOrnament kind="branch" className={styles.engravedLeft} /><ArchiveOrnament kind="branch" className={styles.engravedRight} /></div>
         {theme === "ocean" && <span className={styles.shellSpecimen} data-decoration aria-hidden="true" />}
         <div className={styles.edgePetals} data-decoration aria-hidden="true">{[0, 1, 2, 3].map(index => <span key={index} data-cover-motion="petal" />)}</div>
-      </>}
+      </>)}
       <div className={styles.copy} data-cover-copy>
         <div className={styles.readingArea} data-cover-reading-area>
+          <TraditionSymbol invitation={invitation} />
           {invitation.blessing && <p className={styles.blessing} data-indic={hasIndicText(invitation.blessing) || undefined}>{invitation.blessing}</p>}
           <p className={styles.eyebrow} data-indic={hasIndicText(coverText) || undefined}>{coverText}</p>
           <div className={styles.names} data-indic={hasIndicText(names.join(" ")) || undefined}>{names.length ? names.map((name, index) => <span className={styles.person} key={index}>{index > 0 && <span className={styles.ampersand}>&</span>}<span>{name}</span></span>) : <span>Your names</span>}</div>
-          {design.decoration && <DateOrnament id={id} theme={theme} />}
-          <div className={styles.details}><p>{dateLabel}</p>{location && <p className={styles.location} data-indic={hasIndicText(location) || undefined}>{location}</p>}</div>
+          {design.decoration && (mandapArtwork ? <ArchiveOrnament kind="flourish" className={styles.dateFlourish} /> : <DateOrnament id={id} theme={theme} />)}
+          <div className={styles.details}>{weekday && <span className={styles.weekday}>{weekday}</span>}<p className={styles.date}>{dateLabel}</p>{location && <p className={styles.location} data-indic={hasIndicText(location) || undefined}>{location}</p>}</div>
         </div>
       </div>
-      {design.decoration && <CoverIllustration id={id} theme={theme} />}
+      {coupleArtwork ? <div className={styles.weddingCouple} data-cover-ornament="bottom" data-decoration aria-hidden="true"><Image src={`/images/stationery/${mandapArtwork ? "red" : "lavender"}-wedding-couple.webp`} alt="" width={mandapArtwork ? 545 : 677} height={800} sizes={compact ? "220px" : "350px"} loading={compact ? "lazy" : "eager"} /></div> : design.decoration && <CoverIllustration id={id} theme={theme} sikh={sikhArtwork} />}
     </div>
   </div>;
 }

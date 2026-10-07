@@ -21,13 +21,13 @@ import { getOccasionTheme } from "@/data/occasion-themes";
 import { ceremonyArtwork } from "@/data/ceremony-art";
 import { defaultMusic, youtubeVideoId } from "@/data/music";
 import { isValidInvitationDate, validateInvitationDraft, validateMapUrl, type InvitationDraft } from "@/lib/invitation-draft";
+import { accountDraftBackup, INVITATION_DRAFT_STORAGE_KEY as STORAGE_KEY, readAccountDraftBackup } from "@/lib/invitation-draft-storage";
 import { saveInvitation, setPublication } from "@/app/dashboard/actions";
 import { fromZonedInput, toZonedInput } from "@/lib/timezone";
 import { uploadEventPhoto, deleteEventPhoto } from "@/app/dashboard/media-actions";
 import type { EventPhoto } from "@/types/media";
 import type { Invitation, ThemeId, OccasionId, TraditionId } from "@/types/invitation";
 
-const STORAGE_KEY = "invitly:invitation-draft:v2";
 const subscribeHydration = () => () => {};
 export type EditorPhoto = EventPhoto;
 type Props = { initialPhotos?: EditorPhoto[]; photoError?: string; publishedAt?: string | null; initialDraft: InvitationDraft; eventId?: string; published: boolean; configured: boolean; signedIn: boolean; siteUrl: string; preferredTheme?: ThemeId; preferredOccasion?: OccasionId; preferredTradition?: TraditionId };
@@ -49,6 +49,11 @@ export function InvitationEditor(props: Props) {
   let initial = props.initialDraft;
   let restoredLocalDraft = false;
   let savedLocalSnapshot: string | null = null;
+  let recoverableDraft: InvitationDraft | null = null;
+  if (hydrated && props.eventId) {
+    try { recoverableDraft = readAccountDraftBackup(localStorage.getItem(`${STORAGE_KEY}:${props.eventId}`), props.eventId, props.initialDraft); }
+    catch { /* A private browsing session may not allow local storage. */ }
+  }
   if (hydrated && !props.eventId) {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -64,7 +69,7 @@ export function InvitationEditor(props: Props) {
   // A first save changes the URL from a local draft to its new event ID. Keep
   // that workspace mounted so refreshed server props cannot erase its feedback.
   const workspaceId = props.eventId === createdEventId ? "local" : props.eventId || "local";
-  return <EditorWorkspace key={`${workspaceId}:${hydrated}`} {...props} initialDraft={initial} restoredLocalDraft={restoredLocalDraft} restoredWithChanges={restoredWithChanges} onCreated={setCreatedEventId} />;
+  return <EditorWorkspace key={`${workspaceId}:${hydrated}`} {...props} initialDraft={initial} restoredLocalDraft={restoredLocalDraft} restoredWithChanges={restoredWithChanges} recoverableDraft={recoverableDraft} onCreated={setCreatedEventId} />;
 }
 
 const TIME_ZONES = [
@@ -132,7 +137,7 @@ function publishingChecklist(draft: InvitationDraft): ReadinessItem[] {
   ];
 }
 
-function EditorWorkspace({ initialDraft, eventId: initialId, published: initiallyPublished, publishedAt, initialPhotos = [], photoError, configured, signedIn, siteUrl, onCreated, restoredLocalDraft, restoredWithChanges }: Props & { onCreated: (eventId: string) => void; restoredLocalDraft: boolean; restoredWithChanges: boolean }) {
+function EditorWorkspace({ initialDraft, eventId: initialId, published: initiallyPublished, publishedAt, initialPhotos = [], photoError, configured, signedIn, siteUrl, onCreated, restoredLocalDraft, restoredWithChanges, recoverableDraft }: Props & { onCreated: (eventId: string) => void; restoredLocalDraft: boolean; restoredWithChanges: boolean; recoverableDraft: InvitationDraft | null }) {
   const actionBusy = useRef(false);
   const mediaBusy = useRef(false);
   const copying = useRef(false);
@@ -140,6 +145,7 @@ function EditorWorkspace({ initialDraft, eventId: initialId, published: initiall
   const publishedLink = useRef<HTMLInputElement>(null);
   const { confirm, confirmationDialog } = useConfirmDialog();
   const [draft, setDraft] = useState(initialDraft);
+  const [recovery, setRecovery] = useState(recoverableDraft);
   const [tab, setTab] = useState<Tab>("Occasion");
   const [eventId, setEventId] = useState(initialId);
   const [published, setPublished] = useState(initiallyPublished);
@@ -240,6 +246,15 @@ function EditorWorkspace({ initialDraft, eventId: initialId, published: initiall
       window.history.replaceState(null, "", `/customize?${parameters}`);
     }
   }
+  function restoreBackup() {
+    if (!recovery) return;
+    change(recovery); setRecovery(null);
+    setMessage("Your device backup is restored. Review the details, then save it to your account.");
+  }
+  function discardBackup() {
+    try { localStorage.removeItem(`${STORAGE_KEY}:${eventId}`); setRecovery(null); }
+    catch { setError("This browser could not remove the backup. You can continue editing the saved invitation."); }
+  }
   function chooseTheme(themeId: ThemeId) {
     change({ ...draft, themeId });
   }
@@ -267,7 +282,7 @@ function EditorWorkspace({ initialDraft, eventId: initialId, published: initiall
     if (!checked.data) { setError(checked.error); return; }
     setError(""); setMessage("");
     let deviceBackupSaved = false;
-    try { localStorage.setItem(eventId ? `${STORAGE_KEY}:${eventId}` : STORAGE_KEY, JSON.stringify(checked.data)); deviceBackupSaved = true; }
+    try { localStorage.setItem(eventId ? `${STORAGE_KEY}:${eventId}` : STORAGE_KEY, eventId ? accountDraftBackup(checked.data, eventId) : JSON.stringify(checked.data)); deviceBackupSaved = true; }
     catch { if (!signedIn) { setError("This browser could not save your draft. Allow local storage or sign in to save to your account."); return; } }
     if (!signedIn) {
       setDirty(false); setHasSaved(true);
@@ -282,6 +297,8 @@ function EditorWorkspace({ initialDraft, eventId: initialId, published: initiall
       if (result.upgradeRequired) { setUpgradeRequired(true); setError(result.error || "Your free invitation allowance is used."); return; }
       if (result.error || !result.eventId) { setError(result.error || "Your invitation could not be saved. Please try again."); return; }
       if (!eventId) { onCreated(result.eventId); try { localStorage.removeItem(STORAGE_KEY); } catch {} }
+      try { localStorage.removeItem(`${STORAGE_KEY}:${result.eventId}`); } catch { /* Matching backups are ignored on reload. */ }
+      setRecovery(null);
       setEventId(result.eventId); setSavedSlug(result.slug || invitation.slug); setPublished(Boolean(result.published)); setEverPublished(Boolean(result.publishedAt || result.published || everPublished)); setDirty(false); setHasSaved(true);
       window.history.replaceState(null, "", `/customize?event=${result.eventId}`);
       if (publish) {
@@ -363,6 +380,7 @@ function EditorWorkspace({ initialDraft, eventId: initialId, published: initiall
     <div className="editor-workspace-status" role="status" aria-live="polite" data-save-state={saveState} data-storage={eventId ? "account" : "device"} inert={previewVisible || undefined}><div className="editor-status-copy"><span>{saveState === "saving" ? <Loader2 size={16} className="editor-spinner" /> : saveState === "saved" ? <CheckCircle2 size={16} /> : saveState === "unsaved" ? <Circle size={13} /> : <Save size={15} />}{saveLabel}</span><small>{eventId ? "Saved to your account" : hasSaved ? "Available only in this browser" : signedIn ? "Save to your account when ready" : "Save draft keeps your work on this device"}</small></div><span className="editor-publication-state">{published ? "Live invitation" : everPublished ? "Unpublished" : "Private draft"}</span></div>
     <main id="main" className="editor-layout">
       <section className="editor-controls" inert={previewVisible || undefined}><div className="editor-heading"><span className="eyebrow">A LITTLE OF YOU, IN EVERY DETAIL</span><h1>Make it <em>yours.</em></h1><p>From a first idea to a thoughtful invitation. Save anytime and finish at your own pace.</p></div>
+        {recovery && <section className="editor-recovery" aria-label="Unsynced device backup"><h2>A device backup is available.</h2><p>An earlier save did not reach your account. Your saved invitation is open below. Restore the backup to review those changes.</p><div><button type="button" className="button button-secondary" disabled={pending || mediaPending} onClick={restoreBackup}>Restore device backup</button><button type="button" className="text-link" disabled={pending || mediaPending} onClick={discardBackup}>Keep account version</button></div></section>}
         <nav className="editor-steps" aria-label="Customization steps">{steps.map((step, index) => <button type="button" key={step.name} disabled={mediaPending} aria-label={stepName(step.name)} aria-pressed={tab === step.name} aria-current={tab === step.name ? "step" : undefined} onClick={() => setTab(step.name)}><step.icon size={16} /><span>{stepName(step.name)}</span><small>0{index + 1}</small></button>)}</nav>
         <div className="editor-step-progress"><div className="editor-current-step" role="status">Step {stepIndex + 1} of {steps.length} · {stepName(tab)}</div><progress aria-label="Invitation editor progress" aria-valuetext={`Step ${stepIndex + 1} of ${steps.length}: ${stepName(tab)}`} value={stepIndex + 1} max={steps.length} /><p>{stepGuidance[tab]}</p></div>
         <div aria-live="polite" className="editor-feedback" ref={feedbackPanel} tabIndex={-1}>{visibleError && <p className="form-error" role="alert"><AlertCircle size={18} />{visibleError}</p>}{visibleMessage && <p className="form-success"><CheckCircle2 size={18} />{visibleMessage}</p>}{upgradeRequired && <InvitationLimitNotice />}</div>

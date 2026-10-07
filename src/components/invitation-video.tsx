@@ -17,7 +17,7 @@ function VideoPlayer({ source, title }: { source: NonNullable<ReturnType<typeof 
   return <section className={styles.section} data-section="video" data-invitation-video aria-labelledby="invitation-video-heading">
     <header data-reveal><span>OUR STORY, IN MOTION</span><h2 id="invitation-video-heading">{title}</h2></header>
     <div className={styles.screen}>
-      {loaded ? <iframe src={source.embedUrl} title={title} allow="fullscreen; picture-in-picture; encrypted-media" allowFullScreen referrerPolicy="no-referrer" /> : <button type="button" onClick={() => setLoaded(true)} className={styles.load}><span className={styles.play}><Play size={28} fill="currentColor" /></span><strong>Watch our film</strong><span>Load video from {source.provider === "youtube" ? "YouTube" : "Vimeo"}</span></button>}
+      {loaded ? <iframe src={source.embedUrl} title={title} allow="fullscreen; picture-in-picture; encrypted-media" allowFullScreen referrerPolicy={source.provider === "youtube" ? "strict-origin" : "no-referrer"} /> : <button type="button" onClick={() => setLoaded(true)} className={styles.load}><span className={styles.play}><Play size={28} fill="currentColor" /></span><strong>Watch our film</strong><span>Load video from {source.provider === "youtube" ? "YouTube" : "Vimeo"}</span></button>}
     </div>
     <a href={source.externalUrl} target="_blank" rel="noopener noreferrer">Open on {source.provider === "youtube" ? "YouTube" : "Vimeo"} <ArrowUpRight size={15} /><span className="sr-only"> (opens in a new tab)</span></a>
   </section>;

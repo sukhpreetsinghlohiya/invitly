@@ -72,8 +72,11 @@ test('hosts can rename ceremonies, remove their artwork and reload the real prev
   await page.getByLabel('Function name', { exact: true }).fill('Haldi');
   await expectLoadedArtwork(event.locator('[data-ceremony-art]'), 'haldi');
   await page.getByRole('button', { name: 'Design', exact: true }).click();
-  for (const theme of ['Royal Indian', 'Modern Minimal']) {
+  for (const [theme, id] of [['Royal Indian', 'royal'], ['Modern Minimal', 'modern']] as const) {
     await page.getByRole('button', { name: theme, exact: true }).click();
+    // The iframe receives changes after the editor’s 200ms debounce. The old
+    // theme also contains Haldi, so its artwork cannot signal the new preview.
+    await expect(frame.locator('[data-signature-cover]')).toHaveAttribute('data-signature-cover', id);
     await expectLoadedArtwork(event.locator('[data-ceremony-art]'), 'haldi');
     await page.getByLabel('Decorative artwork').uncheck();
     await expect(event.locator('[data-ceremony-art]')).toHaveCount(0);

@@ -155,9 +155,9 @@
 .cover[data-illustrated-cover=modern] .cornerEngraving { width:33cqi; left:-15cqi; top:23cqi; background:var(--art-leaf); opacity:.15; }
 .cover[data-illustrated-cover=modern] .cornerEngravingEcho { display:none; }
 .cover[data-illustrated-cover=modern] .engravedGarden { display:none; }
-.marigoldTop,.marigoldBottom { position:absolute; display:block; width:24cqi; }
-.marigoldTop { top:-11cqi; right:0; transform:rotate(17deg); }
-.marigoldBottom { bottom:-9cqi; left:0; transform:rotate(197deg); }
+.marigoldTop,.marigoldBottom { position:absolute; display:block; width:34cqi; }
+.marigoldTop { top:-2cqi; right:-3cqi; transform:rotate(17deg); }
+.marigoldBottom { bottom:-2cqi; left:-3cqi; transform:rotate(197deg); }
 .cover[data-illustrated-cover=kesar] .cornerEngraving,.cover[data-illustrated-cover=kesar] .cornerEngravingEcho { opacity:.18; }
 .botanicalSpecimen { position:absolute; z-index:2; bottom:9cqi; left:17cqi; width:67cqi; height:25cqi; color:var(--art-leaf); pointer-events:none; }
 .botanicalSpecimen>.sprigMotion { position:absolute; width:22cqi; right:-3cqi; bottom:0; }
@@ -189,3 +189,57 @@
 .botanicalFoil { display:block; width:100%; aspect-ratio:267.188 / 289.688; background:var(--art-gold); mask:url('/images/stationery/engraved-rose.svg') center/contain no-repeat; }
 .cover[data-illustrated-cover=champagne] .botanicalTop { width:34cqi; top:-10cqi; left:-12cqi; opacity:.72; }
 .cover[data-illustrated-cover=champagne] .botanicalBottom { width:34cqi; bottom:-10cqi; right:-12cqi; opacity:.72; }
+
+/* A calmer print hierarchy: generous names, a deliberate date block, and
+   enough unprinted paper between the words and each theme’s own illustration. */
+.cover:is(.full,.compact) .copy { padding:32cqi 20cqi 29cqi; }
+.cover:is(.full,.compact) .names { margin-block:5cqi 4.6cqi; font-size:14.5cqi; line-height:1.08; }
+.cover:is(.full,.compact) .ampersand { margin-block:2cqi; font-size:6cqi; }
+.cover:is(.full,.compact) .eyebrow { text-wrap:balance; }
+.cover .details { gap:1cqi; padding-top:1.5cqi; }
+.weekday { font:400 2.3cqi/1.5 var(--sans); letter-spacing:.18em; text-transform:uppercase; }
+.cover .date { font:400 4.25cqi/1.35 "Cormorant Garamond",var(--serif); letter-spacing:.015em; text-wrap:balance; }
+.cover.full .weekday { font-size:max(9px,2.3cqi); }
+.cover.full .date { font-size:max(16px,4.25cqi); }
+.cover .location { margin-top:1.4cqi; }
+.cover .dateFlourish { margin-bottom:2.4cqi; }
+.cover:is(.full,.compact)[data-illustrated-cover=royal] .copy { padding:33cqi 20cqi 29cqi; }
+.cover:is(.full,.compact)[data-illustrated-cover=modern] .copy { padding:31cqi 20cqi 29cqi; }
+.cover:is(.full,.compact)[data-illustrated-cover=modern] .names { font-size:15.8cqi; }
+.cover:is(.full,.compact)[data-illustrated-cover=floral] .copy { padding:34cqi 21cqi 29cqi; }
+.cover:is(.full,.compact)[data-illustrated-cover=floral] .names { font-size:16.3cqi; line-height:1.13; }
+.cover:is(.full,.compact)[data-illustrated-cover=mehfil] .copy { padding:39cqi 21cqi 29cqi; }
+.cover:is(.full,.compact)[data-illustrated-cover=mehfil] .names { font-size:15.5cqi; line-height:1.17; }
+.cover:is(.full,.compact)[data-illustrated-cover=kesar] .copy { padding:34cqi 22cqi 28cqi; }
+.cover:is(.full,.compact)[data-illustrated-cover=lotus] .copy { padding:33cqi 23cqi 32cqi; }
+.cover:is(.full,.compact)[data-illustrated-cover=pichwai] .copy { padding:32cqi 21cqi 35cqi; }
+.cover:is(.full,.compact)[data-illustrated-cover=ocean] .copy { padding:32cqi 19cqi 29cqi; }
+.cover:is(.full,.compact)[data-illustrated-cover=champagne] .copy { padding:32cqi 21cqi; }
+.cover:is(.full,.compact)[data-illustrated-cover=champagne] .names { font-size:12.8cqi; letter-spacing:.055em; }
+.cover:is(.full,.compact)[data-illustrated-cover=sindoor] .copy { padding:30cqi 23cqi; }
+.cover[data-illustrated-cover=floral] .botanicalTop { width:36cqi; top:-11cqi; left:-11cqi; }
+.cover[data-illustrated-cover=floral] .botanicalBottom { width:36cqi; bottom:-11cqi; right:-11cqi; }
+.cover[data-illustrated-cover=ocean] .botanicalTop { width:38cqi; left:-12cqi; top:-13cqi; }
+.cover[data-illustrated-cover=ocean] .botanicalBottom { width:38cqi; right:-12cqi; bottom:-13cqi; }
+.cover[data-illustrated-cover=royal] .botanicalTop { width:40cqi; left:-16cqi; top:-16cqi; }
+.cover[data-illustrated-cover=royal] .botanicalBottom { width:38cqi; right:-14cqi; bottom:-17cqi; }
+.cover:is(.full,.compact)[data-long-names=true] .names { font-size:12.2cqi; }
+.cover:is(.full,.compact)[data-long-names=very] .names { font-size:10cqi; line-height:1.2; }
+.cover.full[data-long-names=very] .names { font-size:max(26px,10cqi); }
+.cover:is(.full,.compact)[data-typography=sans] .names { font-size:11cqi; line-height:1.2; }
+.cover:is(.full,.compact)[data-typography=script] .names { line-height:1.25; }
+.cover:is(.full,.compact) .names[data-indic=true] { line-height:1.45; }
+.cover:is(.full,.compact)[data-artwork=off] .copy { padding:18cqi 13cqi; }
+.cover[data-extended-copy=true] .details { padding-bottom:2cqi; }
+.floralGarland { position:absolute; z-index:2; inset:0 0 auto; width:100%; }
+.floralGarland img { display:block; width:100%; height:auto; }
+.gurdwara { position:absolute; z-index:2; width:48cqi; left:26cqi; bottom:5cqi; pointer-events:none; }
+.gurdwara img { display:block; width:100%; height:auto; }
+.cover:is(.full,.compact)[data-cover-tradition-art=sikh] .copy { padding-bottom:41cqi; }
+.mandapFrame { z-index:1; pointer-events:none; }
+.cover:is(.full,.compact)[data-cover-tradition-art=hindu] .copy { min-height:0; padding-bottom:4cqi; }
+.cover[data-cover-tradition-art=hindu][data-illustrated-cover=sindoor]:is([data-palette=original],:not([data-palette])) { --art-ground:#fff9e8; --art-paper:#fff9e8; --art-ink:#9a102b; --art-line:#a84736; }
+.cover:is(.full,.compact)[data-cover-tradition-art=hindu][data-illustrated-cover=sindoor] .copy { padding-top:24cqi; padding-inline:18cqi; }
+.weddingCouple { position:relative; z-index:2; width:52cqi; margin:0 auto; pointer-events:none; }
+.weddingCouple img { display:block; width:100%; height:auto; }
+.cover[data-cover-tradition-art=hindu][data-illustrated-cover=lotus] .weddingCouple { width:48cqi; margin-bottom:7cqi; }

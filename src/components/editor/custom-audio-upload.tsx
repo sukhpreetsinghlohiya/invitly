@@ -35,17 +35,21 @@ export function CustomAudioUpload({ music, change, eventId, signedIn, saveForAud
       setFeedback("Checking your MP3…");
       const result = await finishAudioUpload(eventId, prepared.id, file.name);
       if (result.error || !result.audio) throw new Error(result.error || "Your recording could not be checked.");
-      if (current && current.id !== result.audio.id) await discardAudioUpload(eventId, current.id);
+      // The saved (possibly live) invitation still points to its old recording
+      // until Save succeeds. Replacing a draft must not delete that recording.
       change({ ...music, source: "upload", youtubeUrl: "", uploadedAudio: result.audio });
       toast({ title: "Recording uploaded" });
       form.reset(); setFeedback("Audio uploaded. Preview it below, then save your invitation to apply it.");
     } catch (error) {
-      if (uploadedId) await discardAudioUpload(eventId, uploadedId);
+      if (uploadedId) {
+        try { await discardAudioUpload(eventId, uploadedId); }
+        catch { /* Cleanup failure must not hide the original upload error. */ }
+      }
       setFeedback(error instanceof Error ? error.message : "Your upload could not finish. Please retry.");
     } finally { active.current = false; setPending(false); busy?.(false); }
   }
   async function remove() {
-    if (!eventId || !current || active.current || !await confirm({ title: "Remove this recording?", description: "This recording will be removed from your invitation storage. Upload it again if you want to use it later.", confirmLabel: "Remove recording" })) return;
+    if (!eventId || !current || active.current || !await confirm({ title: "Remove this recording from your draft?", description: "Your draft will switch to an instrumental. Save the invitation to update what your guests hear.", confirmLabel: "Remove recording" })) return;
     if (active.current) return;
     active.current = true; setPending(true); busy?.(true);
     try {

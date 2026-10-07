@@ -17,7 +17,7 @@ test("two free invitations, stale editor gate, coming-soon plan, and edits after
   const userId = account.data.user!.id;
   try {
     await page.goto("/signup");
-    await expect(page.getByText(/save your first 2 invitations free/)).toBeVisible();
+    await expect(page.getByText(/Your first two invitations are on us/)).toBeVisible();
     await page.goto("/login");
     await page.getByLabel("Email address", { exact: true }).fill(email);
     await page.locator("#password").fill(password);

@@ -8,10 +8,10 @@ import type { UploadedAudio } from "@/types/invitation";
 
 export async function prepareAudioUpload(eventId: string, name: string, size: number): Promise<{ error?: string; id?: string; path?: string; token?: string }> {
   try {
-    await requireHostEvent(eventId);
+    const { event } = await requireHostEvent(eventId);
     if (typeof name !== "string" || !/\.mp3$/i.test(name) || name.length > 180 || /[\u0000-\u001f\u007f]/.test(name) || !Number.isSafeInteger(size) || size < 1 || size > MAX_AUDIO_BYTES) return { error: "Choose an MP3 up to 10 MB with a shorter file name." };
     const id = crypto.randomUUID();
-    const path = uploadedAudioPath({ eventId, id });
+    const path = uploadedAudioPath({ eventId: event.id, id });
     const { data, error } = await createMediaServiceClient().storage.from(EVENT_AUDIO_BUCKET).createSignedUploadUrl(path, { upsert: false });
     if (error || !data) return { error: "Audio storage is unavailable. Please try again after storage setup is complete." };
     return { id, path, token: data.token };
@@ -38,8 +38,8 @@ export async function discardAudioUpload(eventId: string, id: string): Promise<{
     const { event } = await requireHostEvent(eventId);
     if (!isUuid(id)) return { error: "Choose a valid recording." };
     // The saved selection remains available until the host saves its replacement.
-    if (selectedUploadedAudio(event.invitation_content)?.id === id) return {};
-    const { error } = await createMediaServiceClient().storage.from(EVENT_AUDIO_BUCKET).remove([uploadedAudioPath({ eventId, id })]);
+    if (selectedUploadedAudio(event.invitation_content)?.id === id.toLowerCase()) return {};
+    const { error } = await createMediaServiceClient().storage.from(EVENT_AUDIO_BUCKET).remove([uploadedAudioPath({ eventId: event.id, id: id.toLowerCase() })]);
     return error ? { error: "The unused recording could not be removed. Please retry." } : {};
   } catch { return { error: "You can only remove recordings from your own invitation." }; }
 }

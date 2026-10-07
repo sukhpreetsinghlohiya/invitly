@@ -46,6 +46,8 @@ test("authenticated host signup, logout, recovery callback and password change",
     const recovery = await admin.auth.admin.generateLink({ type: "recovery", email });
     if (recovery.error) throw new Error("Local recovery token creation failed.");
     await page.goto(`/auth/callback?token_hash=${encodeURIComponent(recovery.data.properties.hashed_token)}&type=recovery`);
+    await expect(page).toHaveURL(/\/auth\/confirm\?/);
+    await page.getByRole("button", { name: "Continue to reset password", exact: true }).click();
     await expect(page).toHaveURL(/\/reset-password$/);
     await page.locator("#password").fill(replacement);
     await page.getByLabel("Confirm password", { exact: true }).fill(replacement);

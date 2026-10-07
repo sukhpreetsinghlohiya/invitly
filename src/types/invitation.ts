@@ -11,6 +11,7 @@ export type InvitationDesign = {
   palette: "original" | "rose" | "sage" | "indigo";
   typography: "original" | "serif" | "sans" | "script";
   decoration: boolean;
+  traditionSymbol?: boolean;
   countdown: boolean;
   rsvp?: boolean;
   opening?: InvitationOpening;

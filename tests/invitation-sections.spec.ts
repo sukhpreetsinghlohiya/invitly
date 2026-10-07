@@ -133,7 +133,11 @@ test('video embeds are loaded only after a guest chooses to watch and never requ
   test.skip(info.project.name !== 'mobile-360', 'External embed behavior checked once');
   const requests: string[] = [];
   page.on('request', request => { if (/youtube-nocookie|player\.vimeo/.test(request.url())) requests.push(request.url()); });
-  await page.route('https://www.youtube-nocookie.com/**', route => route.fulfill({ contentType: 'text/html', body: '<p>Video provider fixture</p>' }));
+  let videoReferrer = '';
+  await page.route('https://www.youtube-nocookie.com/**', route => {
+    videoReferrer = route.request().headers().referer || '';
+    return route.fulfill({ contentType: 'text/html', body: '<p>Video provider fixture</p>' });
+  });
   const invitation = createOccasionInvitation('wedding');
   invitation.couple = ['Meher', 'Arjun'];
   invitation.video = { enabled: true, url: 'https://youtu.be/M7lc1UVf-VE', title: 'Our little film' };
@@ -151,4 +155,7 @@ test('video embeds are loaded only after a guest chooses to watch and never requ
   await section.getByRole('button', { name: /Watch our film/ }).click();
   await expect(section.locator('iframe')).toHaveAttribute('src', /youtube-nocookie\.com\/embed\/M7lc1UVf-VE\?autoplay=0/);
   await expect.poll(() => requests.length).toBe(1);
+  // YouTube requires client identification, but private invitation paths and
+  // guest tokens must never be included in that identification.
+  expect(videoReferrer).toBe(`${new URL(page.url()).origin}/`);
 });

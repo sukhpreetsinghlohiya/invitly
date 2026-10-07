@@ -38,7 +38,7 @@ function PhotoAlbum({ photos, motion, theme, occasion }: { photos: EventPhoto[];
         {photos.map((item, position) => {
           const side = position === index ? "center" : position === (index + 1) % photos.length ? "right" : position === (index + photos.length - 1) % photos.length ? "left" : "hidden";
           return <button key={item.id} type="button" className={album.card} data-position={side} aria-hidden={side === "hidden"} tabIndex={side === "hidden" ? -1 : 0} aria-label={`View photo ${position + 1}: ${item.alt}`} onClick={() => open(position)}>
-            <span className={album.cardImage}>{side !== "hidden" && <Image src={item.url} alt={item.alt} fill sizes="(max-width: 650px) 60vw, 400px" loading="lazy" draggable={false} />}</span>
+            <span className={album.cardImage}>{side !== "hidden" && <Image src={item.url} alt={item.alt} fill sizes="(max-width: 650px) 60vw, 400px" style={item.objectPosition ? { objectPosition: item.objectPosition } : undefined} loading="lazy" draggable={false} />}</span>
             <span className={album.cardNumber}>{String(position + 1).padStart(2, "0")}</span><span className={album.expand}><Expand size={15} /></span>
           </button>;
         })}
@@ -46,7 +46,7 @@ function PhotoAlbum({ photos, motion, theme, occasion }: { photos: EventPhoto[];
       <div className={album.controls}><button type="button" onClick={() => move(-1)} aria-label="Previous album photo" disabled={photos.length < 2}><ArrowLeft size={18} /></button><span className={album.counter} aria-live={paused ? "polite" : "off"}>{String(index + 1).padStart(2, "0")} / {String(photos.length).padStart(2, "0")}</span><button type="button" onClick={() => move(1)} aria-label="Next album photo" disabled={photos.length < 2}><ArrowRight size={18} /></button>{photos.length > 1 && motion !== "none" && <button type="button" className={album.playback} onClick={() => setPaused(!paused)} aria-label={paused ? "Play album slideshow" : "Pause album slideshow"}>{paused ? <Play size={15} /> : <Pause size={15} />}</button>}</div>
       <p className={album.caption}>{photos[index].alt}</p>
     </div>
-    <dialog ref={dialog} className={styles.lightbox} aria-label="Invitation photo gallery" onClick={event => { if (event.target === event.currentTarget) dialog.current?.close(); }} onKeyDown={event => { if (event.key === "ArrowLeft") { event.preventDefault(); moveLightbox(-1); } if (event.key === "ArrowRight") { event.preventDefault(); moveLightbox(1); } }}>
+    <dialog ref={dialog} className={styles.lightbox} aria-label="Invitation photo gallery" onClick={event => { if (event.target === event.currentTarget) dialog.current?.close(); }} onKeyDown={event => { if (event.key === "Escape") event.stopPropagation(); if (event.key === "ArrowLeft") { event.preventDefault(); moveLightbox(-1); } if (event.key === "ArrowRight") { event.preventDefault(); moveLightbox(1); } }}>
       <div className={styles.lightboxBody}>
         <button type="button" autoFocus className={styles.closePhoto} aria-label="Close photo gallery" onClick={() => dialog.current?.close()}><X size={23} /></button>
         <Image src={photo.url} alt={photo.alt} width={photo.width} height={photo.height} sizes="90vw" />

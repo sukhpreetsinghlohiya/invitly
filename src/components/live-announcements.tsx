@@ -2,10 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { getSupabaseConfig } from "@/lib/env";
+import { readGuestUpdates } from "@/lib/guest-updates";
 import type { LiveAnnouncement } from "@/types/announcements";
 
 export type LiveUpdatesConfig = { eventId: string; endpoint: string; initial: LiveAnnouncement[] };
-export function LiveAnnouncements({ eventId, endpoint, initial, timezone }: LiveUpdatesConfig & { timezone: string }) {
+export function LiveAnnouncements(props: LiveUpdatesConfig & { timezone: string }) {
+  return <AnnouncementFeed key={`${props.eventId}:${props.endpoint}`} {...props} />;
+}
+
+function AnnouncementFeed({ eventId, endpoint, initial, timezone }: LiveUpdatesConfig & { timezone: string }) {
   const [updates, setUpdates] = useState(initial);
   const [transport, setTransport] = useState<"connecting" | "realtime" | "polling">("connecting");
   const [checkedAt, setCheckedAt] = useState("");
@@ -20,18 +25,15 @@ export function LiveAnnouncements({ eventId, endpoint, initial, timezone }: Live
       if (stopped || inFlight || document.visibilityState === "hidden") return;
       inFlight = true;
       try {
-        const response = await fetch(endpoint, { cache: "no-store", signal: controller.signal, credentials: "omit" });
+        const body = await readGuestUpdates(endpoint, controller.signal);
         if (stopped) return;
-        if (response.status === 404 || response.status === 410) {
+        if (body.unavailable) {
           setUpdates([]); setUnavailable(true); setError("");
           // Revalidate the entire invitation too: an unpublished event must not
           // remain displayed just because this browser opened it earlier.
           window.location.reload();
           return;
         }
-        if (!response.ok) throw new Error("Unavailable");
-        const body = await response.json() as { updates: LiveAnnouncement[]; checkedAt: string };
-        if (!Array.isArray(body.updates)) throw new Error("Invalid response");
         setUpdates(body.updates); setCheckedAt(body.checkedAt); setTransport(via); setError("");
       } catch {
         if (!stopped) { setTransport("polling"); setError("We couldn’t check for new updates. Showing the last available notes; we’ll retry shortly."); }

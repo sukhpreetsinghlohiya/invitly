@@ -2,11 +2,13 @@ import Image from "next/image";
 import { CalendarDays, MapPin, ArrowDown, ArrowUpRight } from "lucide-react";
 import { getDesign, getOccasion, invitationDirections } from "@/data/occasions";
 import { getOccasionTheme } from "@/data/occasion-themes";
+import { getOccasionArtwork } from "@/data/occasion-art";
 import { formatEventDate } from "@/data/demo-invitation";
 import { hasIndicText } from "@/lib/invitation-text";
 import { InvitationImage } from "@/components/invitation-image";
 import { ArchiveOrnament } from "@/components/archive-ornament";
 import { HeroPhotoSlideshow } from "@/components/hero-photo-slideshow";
+import { TraditionSymbol } from "@/components/tradition-symbol";
 import "@fontsource/cormorant-garamond/latin-400.css";
 import "@fontsource/cormorant-garamond/latin-400-italic.css";
 import type { Invitation, ThemeId } from "@/types/invitation";
@@ -35,12 +37,10 @@ function ArtAccents({ occasion }: { occasion: string }) {
 }
 
 /** The botanical arrangement keeps its own print area, even when the hosts add longer copy. */
-function EngagementGarden({ keepsake, compact }: { keepsake: boolean; compact: boolean }) {
-  const bouquet = `/images/stationery/${keepsake ? "blue" : "rose"}-bouquet.svg`;
+function EngagementGarden({ compact }: { compact: boolean }) {
+  const art = getOccasionArtwork("engagement");
   return <div className={styles.engagementGarden} data-decoration aria-hidden="true">
-    <span className={styles.gardenLeft}><Image src={bouquet} alt="" width={640} height={640} sizes={compact ? "140px" : "240px"} /></span>
-    <span className={styles.gardenRight}><Image src={bouquet} alt="" width={640} height={640} sizes={compact ? "140px" : "240px"} /></span>
-    <span className={styles.gardenRings}><Image src="/images/occasions/engagement.webp" alt="" width={480} height={360} sizes={compact ? "100px" : "160px"} /></span>
+    <Image src={art.src} alt="" width={art.width} height={art.height} sizes={compact ? "230px" : "(max-width: 700px) 80vw, 400px"} loading={compact ? "lazy" : "eager"} />
     <ArtAccents occasion="engagement" />
   </div>;
 }
@@ -50,6 +50,7 @@ export function OccasionCover({ invitation, theme, compact = false, cover, photo
   const occasion = getOccasion(invitation.occasion);
   const design = getDesign(invitation);
   const selected = getOccasionTheme(occasion.id, theme);
+  const illustration = getOccasionArtwork(occasion.id);
   const event = invitation.functions.filter(item => item.visibility !== "hidden").sort((first, second) => {
     const firstDate = Date.parse(first.startsAt), secondDate = Date.parse(second.startsAt);
     return (Number.isFinite(firstDate) ? firstDate : Infinity) - (Number.isFinite(secondDate) ? secondDate : Infinity);
@@ -64,12 +65,12 @@ export function OccasionCover({ invitation, theme, compact = false, cover, photo
   const stationeryLabel = occasion.id === "remembrance" ? "A life remembered" : occasion.id === "other" ? "An invitation" : occasion.name;
   const editorialCaption = invitation.intro ?? occasion.intro;
   const Heading = compact ? "h2" : "h1";
-  const engraved = !cover && selected.layout === "editorial" && (occasion.id === "birthday" || occasion.id === "baby-shower");
-  const artwork = <div className={`${styles.artwork} ${cover ? styles.photograph : ""} ${engraved ? styles.engraved : ""}`} data-occasion-art={occasion.id}>
+  const artwork = <div className={`${styles.artwork} ${cover ? styles.photograph : ""}`} data-occasion-art={occasion.id}>
     {cover ? (compact ? <InvitationImage src={cover.url} alt={cover.alt} width={cover.width} height={cover.height} sizes="230px" /> : <HeroPhotoSlideshow photos={photos.length ? photos : [cover]} coverPhotoId={cover.id} motion={occasion.id === "remembrance" ? "none" : design.motion || "gentle"} />)
-      : design.decoration && (occasion.id === "engagement" ? <EngagementGarden keepsake={selected.layout === "keepsake"} compact={compact} /> : <>{engraved ? <span className={styles.balloonMotion} data-cover-motion="balloon"><ArchiveOrnament kind="balloon" /></span> : <Image src={`/images/occasions/${occasion.id}.webp`} alt="" width={480} height={360} sizes={compact ? "230px" : "(max-width: 700px) 88vw, 480px"} preload={!compact} />}<ArtAccents occasion={occasion.id} /></>)}
+      : design.decoration && (occasion.id === "engagement" ? <EngagementGarden compact={compact} /> : <><Image src={illustration.src} alt="" width={illustration.width} height={illustration.height} sizes={compact ? "230px" : "(max-width: 700px) 88vw, 480px"} preload={!compact} /><ArtAccents occasion={occasion.id} /></>)}
   </div>;
   const title = <div className={styles.identity}>
+    <TraditionSymbol invitation={invitation} />
     <p className={styles.coverText} data-indic={hasIndicText(invitation.coverText ?? occasion.cover) || undefined}>{invitation.coverText ?? occasion.cover}</p>
     <Heading id={compact ? undefined : "occasion-cover-title"} className={styles.names} data-long={longNames ? "true" : undefined} data-indic={hasIndicText(names.join(" ")) || undefined}>
       {names.length ? names.map((name, index) => <span key={index}>{index > 0 && <i> & </i>}<span>{name}</span></span>) : "Your invitation"}

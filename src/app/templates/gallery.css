@@ -81,20 +81,86 @@
 }
 @media(prefers-reduced-motion:reduce) { .collection-card-art,.collection-filters button,.occasion-collection,.occasion-card-art img { transition:none; translate:none!important; transform:none!important; } }
 
-/* A stationery catalogue: generous paper mounts and readable design notes. */
-.collection-gallery:not([data-gallery-occasion=wedding]) .collection-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:28px; }
-.collection-card { border-radius:3px; box-shadow:none; }
-.collection-card-preview { padding:22px 24px 63px; background-image:repeating-linear-gradient(90deg,#fff2 0 1px,transparent 1px 5px); }
-.collection-card-art { filter:drop-shadow(0 8px 9px #44342124); }
-.collection-card-preview-label { border-radius:3px; background:#fffcf7; font-weight:500; box-shadow:none; }
-.collection-card-copy { padding:20px; }
-.collection-card-heading h3 { font-size:26px; letter-spacing:-.035em; }
-.collection-card-tags>span { border:0; padding-left:0; background:none; letter-spacing:.07em; text-transform:uppercase; }
-.collection-card-tags>span+span { margin-left:5px; padding-left:9px; border-left:1px solid var(--collection-line); border-radius:0; background:none; }
-.collection-card-category { font-size:9px; }.collection-card-description { color:#6d5d50; }
-.collection-card-actions { gap:12px; }.collection-card-actions a+a { border-radius:3px; }
-.collection-search-controls { border-radius:3px; background:#f2ece1; }
+/* A quieter catalogue lets the stationery and the choice of design lead. */
+.collection-hero { padding-block:30px 35px; }
+.collection-hero h1 { font-size:clamp(42px,4.4vw,60px); }
+.collection-hero-art { height:280px; transform:scale(.88); }
+.collection-hero-copy>p { color:#66584c; font-size:15px; line-height:1.7; }
+.collection-hero-note { font-size:12px; color:#6d5b48; }
+.collection-catalog { padding-top:28px; }
+.collection-section-heading { margin-bottom:22px; }
+.collection-section-heading>p { font-size:13px; max-width:340px; }
+.collection-gallery[data-gallery-occasion] .collection-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:32px 26px; }
+.collection-card { border-radius:6px; box-shadow:0 4px 15px #44342106; }
+.collection-card-preview { padding:25px 30px 63px; background-image:repeating-linear-gradient(90deg,#fff2 0 1px,transparent 1px 5px); }
+.collection-card-art { width:min(100%,300px); margin-inline:auto; filter:drop-shadow(0 8px 9px #44342124); }
+.collection-card-preview-label { border-radius:4px; background:#fffcf7; font-size:12px; min-height:36px; font-weight:500; box-shadow:none; }
+.collection-card-copy { padding:22px; }
+.collection-card-heading h3 { font-size:29px; line-height:1.15; letter-spacing:-.035em; }
+.collection-card-tags { justify-content:space-between; margin-bottom:10px; }
+.collection-card-tags>span { border:0; border-radius:0; padding:0; color:#715a46; background:none; font-size:11px; letter-spacing:.055em; text-transform:uppercase; }
+.collection-card-tags>span+span { color:#556048; background:none; font-size:10px; letter-spacing:.025em; }
+.collection-card-description { font-size:14px; line-height:1.75; margin-top:12px; color:#65584d; }
+.collection-card-actions { gap:10px; margin-top:20px; padding-top:17px; }
+.collection-card-actions a { justify-content:center; min-height:46px; padding:10px; border:1px solid #cbb7a0; border-radius:4px; font-size:13px; gap:8px; }
+.collection-card-actions a+a { border-radius:4px; justify-content:space-between; padding-inline:14px; }
+.collection-search-controls { padding:0; border:0; border-radius:0; background:none; gap:18px; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr); }
+.collection-search-controls .form-field { font-size:12px; color:#5f4b3b; gap:7px; }
+.collection-search-controls input,.collection-search-controls select { border-radius:4px; font-size:15px; }
+.collection-search-controls select:disabled { opacity:.65; cursor:wait; }
+.collection-filter-bar { margin:18px 0 26px; padding-bottom:14px; }
+.collection-filters { gap:6px; }
+.collection-filters button { padding:9px 14px; background:#f2ecdf; border-color:#e5daca; border-radius:4px; color:#604b3c; }
+.collection-filters button[aria-pressed=true] { border-color:var(--maroon); }
+.collection-count { font-size:12px; color:#6b5542; }
+.collection-adapt-note { max-width:840px; font-size:13px; }
 .collection-gallery .collection-card-art>.invitation-art { height:auto; min-height:0; }
-@media(min-width:1100px) { .collection-gallery:not([data-gallery-occasion=wedding]) .collection-card-preview { padding:28px 30px 68px; }.collection-gallery:not([data-gallery-occasion=wedding]) .collection-card-heading h3 { font-size:30px; }.collection-gallery:not([data-gallery-occasion=wedding]) .collection-card-description { font-size:13px; } }
-@media(max-width:900px) { .collection-gallery:not([data-gallery-occasion=wedding]) .collection-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px; } }
-@media(max-width:600px) { .collection-gallery[data-gallery-occasion] .collection-grid { grid-template-columns:1fr; gap:28px; }.collection-card-preview { padding:20px 22px 62px; }.collection-card-copy { padding:18px; }.collection-card-heading h3 { font-size:26px; } }
+@media(max-width:1099px) {
+ .collection-gallery[data-gallery-occasion] .collection-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:28px 22px; }
+ .collection-hero h1 { font-size:50px; }
+ .collection-card-preview { padding-inline:28px; }
+}
+@media(max-width:760px) {
+ .collection-header { min-height:72px; }
+ .collection-hero { padding-block:23px 25px; }
+ .collection-hero h1 { font-size:40px; line-height:1.04; margin:12px 0; max-width:390px; }
+ .collection-title-break { display:none; }
+ .collection-hero-copy>.eyebrow { font-size:9px; letter-spacing:.1em; }
+ .collection-hero-copy>p { font-size:14px; line-height:1.65; max-width:430px; }
+ .collection-hero-links,.collection-hero-note { display:none; }
+ .collection-catalog { padding-block:20px 34px; }
+ .collection-section-heading { margin-bottom:16px; }
+ .collection-section-heading .eyebrow { display:none; }
+ .collection-section-heading h2 { font-size:29px; margin:0; }
+ .collection-search-controls { grid-template-columns:1fr 1fr; gap:12px; }
+ .collection-search-controls .collection-search-field { grid-column:1/-1; gap:0; }
+ .collection-search-label { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+ .collection-search-controls input,.collection-search-controls select { font-size:16px; min-height:46px; padding:10px 11px; }
+ .collection-search-controls .collection-search-input input { padding-left:39px; }
+ .collection-search-input>svg { top:15px; }
+ .collection-filter-bar { display:block; margin:16px 0 21px; padding-bottom:12px; }
+ .collection-filters { flex-wrap:nowrap; overflow-x:auto; padding:3px 3px 6px; margin-inline:-3px; scrollbar-width:thin; }
+ .collection-filters button { flex-shrink:0; font-size:12px; min-height:44px; padding-inline:13px; }
+ .collection-count { margin-top:8px; font-size:12px; }
+ .collection-card-heading h3 { font-size:28px; }
+ .collection-card-copy { padding:20px; }
+ .collection-card-description { font-size:14px; }
+ .collection-card-actions a { min-height:48px; font-size:13px; }
+ .collection-card-preview-label { font-size:12px; }
+ .collection-card-tags>span { font-size:11px; }
+ .collection-card-tags>span+span { font-size:10px; }
+}
+@media(max-width:600px) {
+ .collection-gallery[data-gallery-occasion] .collection-grid { grid-template-columns:1fr; gap:26px; }
+ .collection-card-preview { padding:24px 27px 62px; }
+}
+@media(max-width:360px) {
+ .collection-hero h1 { font-size:36px; }
+ .collection-section-heading h2 { font-size:27px; }
+ .collection-card-copy { padding:18px; }
+ .collection-card-heading h3 { font-size:27px; }
+ .collection-card-actions { gap:8px; }
+ .collection-card-actions a { padding-inline:8px; }
+ .collection-card-actions a+a { padding-inline:10px; }
+ .collection-card-preview { padding-inline:22px; }
+}

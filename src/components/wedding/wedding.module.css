@@ -126,3 +126,85 @@
   .hero:has([data-photo-slideshow] button) .heroCopy { bottom:92px; }
   .hero:has([data-photo-slideshow] button) .heroScroll { display:none; }
 }
+
+/* A royal invitation reads as a keepsake, with practical details close at hand. */
+.page { --wine:var(--body-accent,#743b35); --paper:var(--body-paper,#fbf7ef); }
+.hero { width:min(1160px,calc(100% - 80px)); height:620px; min-height:0; max-height:none; margin:48px auto 0; border-radius:180px 180px 8px 8px; overflow:hidden; }
+.heroTop,.heroScroll { display:none; }
+.heroCopy { left:6%; width:44%; top:50%; transform:translateY(-42%); }
+.heroCopy h1 { font:400 clamp(62px,6.5vw,90px)/1.02 var(--wedding-serif); margin:24px 0; }
+.heroCopy h1>em { font-size:32px; }
+.heroQuickLinks { margin-top:25px; }
+.nav { position:relative; top:auto; min-height:62px; background:var(--paper); padding-inline:30px; border-color:var(--body-line); }
+.nav>div>a { font-size:13px; min-height:48px; }
+.blessings { padding:68px 30px 55px; }
+.blessingCenter { max-width:700px; }
+.blessingCenter h2 { font-size:52px; margin:15px 0 22px; }
+.blessingMark { margin-bottom:18px; }
+.blessingMark>svg { width:28px; height:28px; }
+.message { font:15px/1.9 var(--sans); color:var(--body-muted); max-width:570px; }
+.intro { font-size:24px; }
+.familyNames { font-size:17px; margin-top:22px; }
+.datePlaque { margin-top:24px; gap:18px; }
+.datePlaque>strong { font-size:45px; padding-inline:22px; }
+.location { margin-top:14px; font-size:12px; }
+.counting { padding:30px 24px; background:var(--body-tint); border-block:1px solid var(--body-line); }
+.counting h2 { font-size:34px; margin:6px 0 23px; }
+.counting>svg { display:none; }
+.counting :global(.countdown-number) { font-size:40px; }
+.counting :global(.countdown-label) { font-size:10px; margin-top:7px; }
+.sectionHeading { margin-bottom:38px; }
+.sectionHeading h2 { font-size:54px; color:var(--wine); }
+.sectionHeading>p { font:14px/1.75 var(--sans); color:var(--body-muted); margin-top:14px; }
+.timeline { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px; max-width:1080px; }
+.timeline::before,.timelineDot { display:none; }
+.event { display:block; padding:30px 26px 22px; border:1px solid var(--body-line); border-top:4px solid #ab8142; border-radius:24px 24px 4px 4px; background:var(--paper); }
+.eventMotif,.event:nth-child(even) .eventMotif { display:flex; justify-content:space-between; min-height:94px; margin-bottom:18px; background:none; }
+.eventMotif>div { display:block; }
+.eventMotif>div>span { display:none; }
+.eventMotif :global(.ceremony-art) { width:130px; height:96px; }
+.eventNumber { position:static; order:2; align-self:center; font:italic 28px/1 var(--wedding-serif); color:var(--wine); opacity:.5; }
+.eventContent>.eyebrow { font:500 11px/1.7 var(--sans); letter-spacing:.07em; color:var(--body-muted); }
+.eventContent>h3 { font-size:36px; margin:8px 0; }
+.eventContent>time { font:600 14px/1.6 var(--sans); }
+.eventDetails { border-color:var(--body-line); }
+.eventDetails summary { font-size:12px; color:var(--wine); }
+.eventDetails>div { font:13px/1.8 var(--sans); color:var(--body-muted); }
+.demoNote { font-size:11px; }
+.rsvpCopy>.eyebrow { color:#f2dfbd; }
+.rsvpSignature { font:italic 24px/1.5 var(--wedding-serif); color:#f2e9dd; }
+.signoff h2 { font-family:var(--wedding-serif); }
+@media(max-width:760px) {
+  .hero { width:calc(100% - 40px); height:490px; margin:28px auto 0; border-radius:150px 150px 6px 6px; }
+  .heroCopy { left:20px; right:20px; width:auto; top:auto; transform:none; bottom:75px; }
+  .heroCopy h1 { font:400 52px/1.05 var(--wedding-serif); margin:14px 0; gap:8px; }
+  .heroCopy h1>em { font-size:29px; }
+  .heroCopy>.eyebrow { font-size:10px; letter-spacing:.1em; }
+  .heroDate { font-size:15px; }
+  .heroQuickLinks { margin-top:16px; }
+  .hero:has([data-photo-slideshow] button) .heroCopy { bottom:82px; }
+  .heroWithoutPhoto { height:auto; min-height:400px; }
+  .heroWithoutPhoto .heroCopy { margin:55px auto; }
+  .blessings { padding:42px 25px 35px; }
+  .blessingCenter h2 { font-size:39px; }
+  .intro { font-size:22px; }
+  .message { font-size:14px; }
+  .datePlaque>span { font-size:14px; }
+  .counting { padding:26px 20px; }
+  .counting h2 { font-size:31px; margin-bottom:18px; }
+  .counting :global(.countdown-number) { font-size:35px; }
+  .timeline { grid-template-columns:1fr; gap:18px; }
+  .event { padding:24px 22px 17px; }
+  .event .eventMotif,.event:nth-child(even) .eventMotif { position:absolute; min-height:0; width:92px; height:80px; right:14px; top:19px; margin:0; display:block; }
+  .eventMotif :global(.ceremony-art) { width:92px; height:80px; }
+  .eventNumber { display:none; }
+  .eventContent>.eyebrow { max-width:calc(100% - 80px); font-size:10px; min-height:34px; }
+  .eventContent>h3 { max-width:calc(100% - 75px); font-size:34px; margin-top:5px; }
+  .eventContent>time { font-size:13px; }
+  .sectionHeading { margin-bottom:28px; }
+  .sectionHeading h2 { font-size:39px; }
+  .sectionHeading>p { font-size:13px; }
+  .rsvpCopy h2 { color:inherit; }
+}
+
+.page[data-decorations=off] .eventContent>:is(.eyebrow,h3) { max-width:none; }

@@ -74,3 +74,7 @@
  .stationery-botanical-left { width:115px; left:-63px; }.stationery-botanical-right { width:110px; right:-60px; }
 }
 @media(prefers-reduced-motion:reduce) { .stationery-hero-copy,.stationery-stack .stationery-stack-card { animation:none; transition:none; }.stationery-stack:hover .stationery-stack-front { transform:rotate(2deg); }.stationery-stack:hover .stationery-stack-left { transform:rotate(-4deg); }.stationery-stack:hover .stationery-stack-right { transform:rotate(8deg); } }
+
+.stationery-demo-link { display: inline-flex; align-items: center; justify-content: center; gap: 9px; margin: 12px auto 0; padding: 10px 16px; border: 1px solid #d7bda2; border-radius: 999px; background: #fffaf2; font-size: 11px; color: #733d43; box-shadow: 0 4px 16px #75472509; }
+.stationery-demo-link:hover { background: #f3e7d8; }
+.stationery-demo-dot { width: 6px; height: 6px; border-radius: 50%; background: #799377; }

@@ -1,14 +1,14 @@
 "use server";
 
-import { createHash, randomBytes } from "node:crypto";
+import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
-import { isUuid, requireHostEvent } from "@/lib/host-event";
+import { hostActionError, isUuid, requireHostEvent } from "@/lib/host-event";
 import { parseGuestCsv, validateGuest, type GuestInput } from "@/lib/guest-validation";
 
-type Result = { error?: string; success?: string; links?: { name: string; path: string }[] };
+type Result = { error?: string; success?: string; links?: { guestId: string; name: string; path: string }[] };
 const refresh = (eventId: string) => revalidatePath(`/dashboard/events/${eventId}/guests`);
 const newToken = () => { const token = randomBytes(32).toString("hex"); return { token, hash: createHash("sha256").update(token).digest("hex") }; };
-const failure = (error: unknown): Result => ({ error: error instanceof Error ? error.message : "The guest service is unavailable. Please try again." });
+const failure = (error: unknown): Result => ({ error: hostActionError(error, "The guest service is unavailable. Please try again.") });
 
 export async function saveGuest(eventId: string, input: GuestInput): Promise<Result> {
   try {
@@ -26,9 +26,10 @@ export async function saveGuest(eventId: string, input: GuestInput): Promise<Res
       refresh(eventId); return { success: "Guest updated. Their existing private link still works." };
     }
     const { token, hash } = newToken();
-    const { error } = await client.from("guests").insert({ ...values, token_hash: hash });
+    const guestId = randomUUID();
+    const { error } = await client.from("guests").insert({ ...values, id: guestId, token_hash: hash });
     if (error) return { error: "We couldn’t add this guest. Check your database migrations and try again." };
-    refresh(eventId); return { success: "Guest added. Copy their private link now; only its hash is stored.", links: [{ name: values.name, path: `/g/${token}` }] };
+    refresh(eventId); return { success: "Guest added. Copy their private link now; only its hash is stored.", links: [{ guestId, name: values.name, path: `/g/${token}` }] };
   } catch (error) { return failure(error); }
 }
 
@@ -39,7 +40,7 @@ export async function rotateGuestLink(eventId: string, guestId: string): Promise
     const { token, hash } = newToken();
     const { data, error } = await client.from("guests").update({ token_hash: hash }).eq("id", guestId).eq("event_id", eventId).select("name").maybeSingle();
     if (error || !data) return { error: "We couldn’t replace this guest link." };
-    refresh(eventId); return { success: "A new private link is ready. The old link no longer works.", links: [{ name: data.name, path: `/g/${token}` }] };
+    refresh(eventId); return { success: "A new private link is ready. The old link no longer works.", links: [{ guestId: guestId.toLowerCase(), name: data.name, path: `/g/${token}` }] };
   } catch (error) { return failure(error); }
 }
 
@@ -56,7 +57,7 @@ export async function deleteGuest(eventId: string, guestId: string): Promise<Res
 export async function saveGuestGroup(eventId: string, input: { id?: string; name: string; functionIds: string[] | null }): Promise<Result> {
   try {
     const { client, event } = await requireHostEvent(eventId);
-    if (!input || typeof input.name !== "string" || !input.name.trim() || input.name.trim().length > 80) return { error: "Use a group name between 1 and 80 characters." };
+    if (!input || typeof input.name !== "string" || !input.name.trim() || input.name.trim().length > 80 || /[\u0000-\u001f\u007f]/.test(input.name)) return { error: "Use a group name between 1 and 80 characters, without unsupported characters." };
     if (input.id !== undefined && !isUuid(input.id)) return { error: "Choose a valid group." };
     if (input.functionIds !== null) {
       if (!Array.isArray(input.functionIds) || input.functionIds.length > 100 || !input.functionIds.every(id => typeof id === "string" && id.length <= 80)) return { error: "Choose valid functions for this group." };
@@ -81,8 +82,8 @@ export async function importGuests(eventId: string, csv: string): Promise<Result
     if (groupError) return { error: "We couldn’t load guest groups. Please try again." };
     const byName = new Map(groups?.map(group => [group.name.toLowerCase(), group.id]));
     for (const [index, row] of parsed.rows.entries()) if (row.group && !byName.has(row.group.toLowerCase())) return { error: `Row ${index + 2}: create the “${row.group}” group first, or leave its group column blank.` };
-    const links: { name: string; path: string }[] = [];
-    const rows = parsed.rows.map(row => { const { token, hash } = newToken(); links.push({ name: row.name, path: `/g/${token}` }); return { event_id: eventId, name: row.name, email: row.email, phone: row.phone, group_id: byName.get(row.group.toLowerCase()) || null, max_party_size: row.maxPartySize, token_hash: hash }; });
+    const links: { guestId: string; name: string; path: string }[] = [];
+    const rows = parsed.rows.map(row => { const { token, hash } = newToken(); const guestId = randomUUID(); links.push({ guestId, name: row.name, path: `/g/${token}` }); return { id: guestId, event_id: eventId, name: row.name, email: row.email, phone: row.phone, group_id: byName.get(row.group.toLowerCase()) || null, max_party_size: row.maxPartySize, token_hash: hash }; });
     const { error } = await client.from("guests").insert(rows);
     if (error) return { error: "The import failed. No guests were added. Check your database setup and retry." };
     refresh(eventId); return { success: `${rows.length} guests imported. Download their new private links before leaving this page.`, links };

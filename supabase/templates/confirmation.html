@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Confirm your email · Invitly</title></head>
+<body style="margin:0;padding:0;background-color:#f4efe6;color:#40332e;font-family:Arial,Helvetica,sans-serif;">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">Your next celebration starts here. Confirm my email to continue securely.</div>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f4efe6;"><tr><td align="center" style="padding:36px 16px;">
+<table role="presentation" width="560" cellspacing="0" cellpadding="0" style="width:100%;max-width:560px;">
+<tr><td align="center" style="padding:0 0 26px;"><a href="{{ .SiteURL }}" style="font-family:Georgia,serif;font-size:36px;letter-spacing:-2px;text-decoration:none;color:#743b46;">invitly<span style="color:#b77b43;">.</span></a></td></tr>
+<tr><td style="background-color:#fffdf8;border:1px solid #ded3c0;border-top:4px solid #783d48;padding:40px 28px;">
+<p style="margin:0 0 20px;color:#987653;font-size:10px;letter-spacing:2px;">ONE LITTLE STEP</p>
+<h1 style="font-family:Georgia,serif;font-weight:normal;font-size:34px;line-height:1.2;letter-spacing:-.6px;color:#66343f;margin:0 0 22px;">Your next celebration starts here.</h1>
+<p style="font-size:15px;line-height:1.8;color:#685b50;margin:0 0 26px;">Welcome to Invitly. Confirm your email to save your invitation, collect RSVPs, and keep every thoughtful detail in one place.</p>
+<table role="presentation" cellspacing="0" cellpadding="0"><tr><td bgcolor="#783d48" style="border-radius:5px;text-align:center;mso-padding-alt:16px 26px;"><a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=email" style="display:inline-block;padding:16px 26px;font-size:14px;line-height:20px;font-weight:bold;text-decoration:none;color:#ffffff;">Confirm my email &rarr;</a></td></tr></table>
+<p style="font-size:12px;line-height:1.8;color:#837366;margin:26px 0 0;">This secure link can be used once. If it has expired, request a fresh email from Invitly.</p>
+<hr style="border:0;border-top:1px solid #e9dfd1;margin:28px 0;">
+<p style="font-size:12px;line-height:1.8;color:#837366;margin:0;">Button not working? Copy this link into your browser:</p>
+<p style="font-size:11px;line-height:1.8;margin:8px 0 0;word-break:break-all;overflow-wrap:anywhere;"><a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=email" style="color:#783d48;">{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=email</a></p>
+</td></tr>
+<tr><td align="center" style="padding:24px 12px;"><p style="font-family:Georgia,serif;font-style:italic;font-size:17px;color:#886d54;margin:0 0 14px;">A little link. A lot of togetherness.</p><p style="font-size:11px;line-height:1.8;color:#8c7e70;margin:0;">If you didn’t create an Invitly account, you can safely ignore this email.</p><p style="font-size:11px;color:#8c7e70;margin-top:16px;"><a href="{{ .SiteURL }}/privacy" style="color:#8c7e70;">Privacy</a> &nbsp;·&nbsp; <a href="{{ .SiteURL }}/terms" style="color:#8c7e70;">Terms</a></p></td></tr>
+</table></td></tr></table></body></html>

@@ -28,3 +28,12 @@ export function getSiteUrl() {
     return new URL("https://invitly.co.in");
   }
 }
+
+// Auth callbacks must share the host that stores the session cookies. Use one
+// origin for signup, recovery, OAuth and verification, including local dev.
+export function getAuthSiteUrl() {
+  const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  const url = new URL(configured || (process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://invitly.co.in"));
+  if (!["https:", "http:"].includes(url.protocol) || url.username || url.password) throw new Error("Invalid auth site URL.");
+  return new URL(url.origin);
+}

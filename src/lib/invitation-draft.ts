@@ -77,6 +77,7 @@ function design(value: unknown, allowIncompleteMusic: boolean): InvitationDesign
   if (!["original", "rose", "sage", "indigo"].includes(String(source.palette)) || !["original", "serif", "sans", "script"].includes(String(source.typography))) throw new Error("Choose an available colour palette and typography style.");
   if (typeof source.decoration !== "boolean" || typeof source.countdown !== "boolean") throw new Error("Choose valid decoration and countdown settings.");
   if (source.rsvp !== undefined && typeof source.rsvp !== "boolean") throw new Error("Choose whether to show RSVP.");
+  if (source.traditionSymbol !== undefined && typeof source.traditionSymbol !== "boolean") throw new Error("Choose whether to show the tradition symbol.");
   let opening: InvitationDesign["opening"];
   if (source.opening !== undefined) {
     const entry = record(source.opening, "Invitation opening");
@@ -99,7 +100,7 @@ function design(value: unknown, allowIncompleteMusic: boolean): InvitationDesign
   if (music.source === "library" && !audioTrack) throw new Error("Choose an available wedding song.");
   const uploadedAudio = music.source === "upload" ? parseUploadedAudio(music.uploadedAudio) : null;
   if (music.source === "upload" && !uploadedAudio) throw new Error("Upload your MP3 before selecting custom audio.");
-  return { palette: source.palette as InvitationDesign["palette"], typography: source.typography as InvitationDesign["typography"], decoration: source.decoration, countdown: source.countdown, rsvp: source.rsvp ?? true, ...(opening ? { opening } : {}), sectionOrder: order as SectionId[], motion: motion as InvitationDesign["motion"], music: { source: music.source as NonNullable<InvitationDesign["music"]>["source"], track: track.id, youtubeUrl: videoId ? `https://www.youtube.com/watch?v=${videoId}` : "", ...(audioTrack ? { audioTrack: audioTrack.id } : {}), ...(uploadedAudio ? { uploadedAudio } : {}) } };
+  return { palette: source.palette as InvitationDesign["palette"], typography: source.typography as InvitationDesign["typography"], decoration: source.decoration, ...(source.traditionSymbol === undefined ? {} : { traditionSymbol: source.traditionSymbol as boolean }), countdown: source.countdown, rsvp: source.rsvp ?? true, ...(opening ? { opening } : {}), sectionOrder: order as SectionId[], motion: motion as InvitationDesign["motion"], music: { source: music.source as NonNullable<InvitationDesign["music"]>["source"], track: track.id, youtubeUrl: videoId ? `https://www.youtube.com/watch?v=${videoId}` : "", ...(audioTrack ? { audioTrack: audioTrack.id } : {}), ...(uploadedAudio ? { uploadedAudio } : {}) } };
 }
 
 /** Shared client/server validation. Copies an allowlist of fields as plain text. */

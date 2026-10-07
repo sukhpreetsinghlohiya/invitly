@@ -19,7 +19,7 @@ function HeroSlides({ photos, motion = "gentle", className = "", preload = false
   if (!photos.length) return null;
   return <div ref={root} className={`${styles.hero} ${className}`} data-photo-slideshow data-photo-index={index} data-motion={motion} data-paused={paused} data-photo-playing={playing} {...interaction} role="region" aria-label="Invitation photographs" aria-roledescription="carousel">
     {photos.map((photo, position) => <div key={photo.id} className={styles.heroSlide} data-active={position === index} aria-hidden={position !== index}>
-      {(position === 0 || position === index || position === (index + 1) % photos.length) && <InvitationImage src={photo.url} alt={photo.alt} fill sizes="(max-width: 650px) 100vw, 1200px" preload={preload && position === 0} loading={preload && position === 0 ? undefined : "lazy"} />}
+      {(position === 0 || position === index || position === (index + 1) % photos.length) && <InvitationImage src={photo.url} alt={photo.alt} fill sizes="(max-width: 650px) 100vw, 1200px" style={photo.objectPosition ? { objectPosition: photo.objectPosition } : undefined} preload={preload && position === 0} loading={preload && position === 0 ? undefined : "lazy"} />}
     </div>)}
     {photos.length > 1 && <div className={styles.heroControls}>
       <button type="button" aria-label="Previous cover photo" onClick={() => move(-1)}><ChevronLeft size={17} /></button>

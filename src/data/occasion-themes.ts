@@ -9,17 +9,17 @@ const collections: Record<Exclude<OccasionId, "wedding">, CollectionEntry[]> = {
   engagement: [
     ["lotus", "The Promise Letter", "A PROMISE IN BLOOM", "A garden of antique roses, intertwined rings, and graceful names within a fine double arch on blush paper."],
     ["royal", "The Engagement Edit", "A NEW CHAPTER", "An ivory announcement with generous serif names, a rose-filled illustration, and a burgundy date ribbon."],
-    ["floral", "Pressed Promises", "A LITTLE FOREVER", "Blue botanicals and golden rings in a sage portrait mount, with a dated seal and delicate engraved details."],
+    ["floral", "Pressed Promises", "A LITTLE FOREVER", "Watercolor roses and golden rings in a sage portrait mount, with a dated seal and delicate engraved details."],
   ],
   birthday: [
     ["kesar", "The Birthday Ticket", "ONE VERY HAPPY DAY", "A sunshine-yellow party ticket with a perforated detail line, birthday cake, and big joyful type."],
-    ["modern", "Birthday, In Print", "YOUR DAY. YOUR EDITION.", "A teal birthday edition with oversized type and a vintage balloon engraving, ready for your own photo."],
-    ["ocean", "Birthday Postcard", "SENT WITH A LITTLE MAGIC", "An airmail-striped border, birthday cake and balloons, and a small circular date seal."],
+    ["modern", "Birthday, In Print", "YOUR DAY. YOUR EDITION.", "A teal birthday edition with oversized type and a floral watercolor cake, ready for your own photo."],
+    ["ocean", "Birthday Postcard", "SENT WITH A LITTLE MAGIC", "An airmail-striped border, a floral birthday cake, and a small circular date seal."],
   ],
   "baby-shower": [
-    ["floral", "Little Cloud Letter", "A LITTLE LOVE ON THE WAY", "A soft sage letter beneath a sleepy cloud, with arched paper and a gentle welcome."],
-    ["lotus", "The Arrival Journal", "A NEW LITTLE CHAPTER", "Apricot paper, flowing serif names, and an antique balloon drawing for a new little adventure."],
-    ["modern", "Tiny Beginnings", "SMALL MOMENTS. SO MUCH LOVE.", "A cream keepsake with a moon-and-cloud illustration, engraved floral corners, and a date seal."],
+    ["floral", "Little Cloud Letter", "A LITTLE LOVE ON THE WAY", "A soft sage letter with a botanical cradle, with arched paper and a gentle welcome."],
+    ["lotus", "The Arrival Journal", "A NEW LITTLE CHAPTER", "Apricot paper, flowing serif names, and a floral cradle painting for a new little adventure."],
+    ["modern", "Tiny Beginnings", "SMALL MOMENTS. SO MUCH LOVE.", "A cream keepsake with a watercolor cradle illustration, engraved floral corners, and a date seal."],
   ],
   housewarming: [
     ["pichwai", "The Open Door", "MAKE YOURSELF AT HOME", "An arched doorway, marigold garlands, and an address card ready to welcome your guests."],

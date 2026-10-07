@@ -44,8 +44,9 @@ test('homepage login, keyboard FAQs and footer navigation work at every viewport
   }
   await expect(faq).toContainText('personal invitation links');
   await expect(faq).toContainText('demo RSVPs stay in the browser');
-  await expect(faq).toContainText('up to 5 MB each');
-  await expect(faq).toContainText('music never starts automatically');
+  await expect(faq).toContainText('up to 4 MB each');
+  await expect(faq).toContainText('On your published invitation, guests choose when to play music');
+  await expect(faq).toContainText('Our demos try to play music automatically');
   await questions.first().locator('summary').press('Enter');
   await faq.screenshot({ path: `artifacts/home-editor-after/faq-${info.project.name}.png` });
   await questions.first().locator('summary').press('Space');

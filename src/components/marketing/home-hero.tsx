@@ -22,18 +22,18 @@ export function HomeHero() {
         <span className="eyebrow stationery-kicker"><span />FOR YOUR PEOPLE. FOR YOUR MOMENTS.</span>
         <h1 id="home-title">A little link.<br />A lot of<br /><em>togetherness.</em></h1>
         <p className="stationery-description">For the moments that bring us close. Create a thoughtful wedding or engagement invitation with your story, schedule, directions and RSVPs, all in one beautiful link.</p>
-        <div className="stationery-hero-actions"><Link href="/templates#occasion-collections-title" className="button">Create your invitation <ArrowRight size={18} aria-hidden="true" /></Link><Link href="/demo" className="text-link">View the demo <ArrowUpRight size={18} aria-hidden="true" /></Link></div>
-        <p className="stationery-small-note">Made for your moment. Shared with your people.</p>
+        <div className="stationery-hero-actions"><Link href="/templates#occasion-collections-title" className="button">Create your invitation <ArrowRight size={18} aria-hidden="true" /></Link><Link href="/demo" className="text-link">Open a live invitation <ArrowUpRight size={18} aria-hidden="true" /></Link></div>
+        <p className="stationery-small-note">Your first 2 invitations free · Photos, music & RSVPs included.</p>
       </div>
       <div className="stationery-scene">
         <span className="stationery-scene-label"><Flower /><span>MADE FOR YOUR MOMENTS</span><i /></span>
-        <Link href="/templates#occasion-collections-title" className="stationery-stack" aria-label="Explore invitation designs">
+        <Link href="/demo" className="stationery-stack" aria-label="Open the live wedding invitation demo">
           <StationeryCard variant="mehndi" className="stationery-stack-card stationery-stack-left" />
           <StationeryCard variant="engagement" className="stationery-stack-card stationery-stack-right" />
           <StationeryCard variant="wedding" className="stationery-stack-card stationery-stack-front" />
           <Flower className="stationery-scatter stationery-scatter-one" /><Flower className="stationery-scatter stationery-scatter-two" /><Flower className="stationery-scatter stationery-scatter-three" />
         </Link>
-        <span className="stationery-scene-caption">A little tradition. A little you.</span>
+        <Link href="/demo" className="stationery-demo-link"><span className="stationery-demo-dot" /> Step inside the invitation <ArrowUpRight size={14} aria-hidden="true" /></Link>
       </div>
     </section>
     <BotanicalThread />

@@ -17,6 +17,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ medi
     if (error || !photo) return new Response(null, { status: 404, headers });
     const { data, error: downloadError } = await createMediaServiceClient().storage.from(EVENT_MEDIA_BUCKET).download(photo.storagePath);
     if (downloadError || !data) return new Response(null, { status: 404, headers });
-    return mediaResponse(data, request, photo.contentType);
+    return await mediaResponse(data, request, photo.contentType);
   } catch { return new Response(null, { status: 404, headers }); }
 }

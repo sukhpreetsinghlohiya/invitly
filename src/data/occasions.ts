@@ -15,7 +15,7 @@ export const occasions: { id: OccasionId; name: string; people: 1 | 2; firstLabe
 ];
 
 // These are host-chosen preferences, never inferred from personal information.
-// No sacred symbol or religious phrase is automatically added to an invitation.
+// A selected tradition can show its symbol; religious wording remains host-written.
 export const traditions: { id: TraditionId; name: string }[] = [
   { id: "neutral", name: "Neutral / non-religious" }, { id: "hindu", name: "Hindu" },
   { id: "sikh", name: "Sikh" }, { id: "muslim", name: "Muslim" }, { id: "christian", name: "Christian" },

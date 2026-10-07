@@ -52,13 +52,13 @@ test('stationery homepage has readable navigation, loaded artwork and real occas
     for (const link of await header.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('link').all()) await expect(link).toBeInViewport({ ratio: 1 });
   }
   await expect(hero.getByRole('link', { name: 'Create your invitation', exact: true })).toHaveAttribute('href', '/templates#occasion-collections-title');
-  await expect(hero.getByRole('link', { name: 'View the demo', exact: true })).toHaveAttribute('href', '/demo');
-  await expect(hero.getByRole('link', { name: 'Explore invitation designs', exact: true })).toHaveAttribute('href', '/templates#occasion-collections-title');
+  await expect(hero.getByRole('link', { name: 'Open a live invitation', exact: true })).toHaveAttribute('href', '/demo');
+  await expect(hero.getByRole('link', { name: 'Open the live wedding invitation demo', exact: true })).toHaveAttribute('href', '/demo');
   await expect(hero.locator('button,[aria-roledescription="carousel"]')).toHaveCount(0);
   await expect(page.locator('audio[autoplay],video[autoplay]')).toHaveCount(0);
   await expectNoOverflow(page);
 
-  await expectArtworkLoaded(hero.getByRole('link', { name: 'Explore invitation designs', exact: true }));
+  await expectArtworkLoaded(hero.getByRole('link', { name: 'Open the live wedding invitation demo', exact: true }));
   await expect(heroWrap.locator('img.stationery-botanical')).toHaveCount(2);
   for (const image of await heroWrap.locator('img.stationery-botanical').all()) {
     await expect.poll(() => image.evaluate(node => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
@@ -109,7 +109,7 @@ test('stationery homepage has readable navigation, loaded artwork and real occas
   await expect(page).toHaveURL(/\/templates#occasion-collections-title$/);
   await expect(page.locator('#occasion-collections-title')).toBeInViewport();
   await page.goto('/');
-  await hero.getByRole('link', { name: 'View the demo', exact: true }).click();
+  await hero.getByRole('link', { name: 'Open a live invitation', exact: true }).click();
   await expect(page).toHaveURL(/\/demo$/);
   await expect(page.getByText('Aanya', { exact: false }).first()).toBeVisible();
 

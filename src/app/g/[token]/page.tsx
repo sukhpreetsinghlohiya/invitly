@@ -18,5 +18,5 @@ export default async function GuestInvitationPage({ params }: { params: Promise<
   const event = data.invitation;
   return <InvitationView invitation={event.invitation} theme={event.themeId} mode="guest" musicEnabled={event.musicEnabled} photos={event.photos}
     calendarHref={`/g/${token}/calendar`} liveUpdates={{ eventId: event.id, endpoint: `/g/${token}/updates`, initial: event.announcements }}
-    rsvpContent={<GuestRsvp token={token} name={data.guest.name} maxPartySize={data.guest.max_party_size} response={data.response} />} />;
+    rsvpContent={<GuestRsvp key={token} token={token} name={data.guest.name} maxPartySize={data.guest.max_party_size} response={data.response} />} />;
 }

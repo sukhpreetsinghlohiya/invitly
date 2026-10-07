@@ -207,3 +207,40 @@
 
 .occasion-event-art { width:min(210px,100%); margin:22px auto 0; }.occasion-event-art [data-ceremony-art] { width:100%; }
 @media(max-width:650px) { .occasion-event-art { width:140px; margin:16px 0 0; } }
+
+/* A personal note, a clear plan and a response: a shorter path for guests. */
+.occasion-experience.invitation-body { --occasion-accent:var(--body-accent); --occasion-rule:var(--body-line); --occasion-paper:var(--body-paper); --occasion-surface:var(--body-tint); }
+.occasion-experience.invitation-body .occasion-story { padding:64px 36px 38px; }
+.occasion-experience.invitation-body .occasion-letter { max-width:740px; padding:36px 42px; background:var(--body-paper); border-radius:var(--body-radius); }
+.occasion-experience.invitation-body .occasion-letter h2 { font-size:46px; margin:14px auto 22px; }
+.occasion-experience.invitation-body .occasion-letter-ornament { height:28px; width:140px; margin:0 auto 23px; }
+.occasion-experience.invitation-body .occasion-message { font-size:15px; line-height:1.9; }
+.occasion-experience.invitation-body .occasion-families { margin-top:24px; padding-top:20px; }
+.occasion-experience.invitation-body .occasion-families p { font-size:21px; }
+.occasion-experience.invitation-body .occasion-countdown { padding-bottom:30px; }
+.occasion-experience.invitation-body .occasion-countdown .countdown-wrap { padding:22px 26px; }
+.occasion-experience.invitation-body .occasion-event-list { max-width:1080px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px; }
+.occasion-experience.invitation-body .occasion-event { display:grid; grid-template-columns:minmax(0,1fr); width:100%; max-width:none; border:1px solid var(--body-line); border-radius:var(--body-radius); background:var(--body-paper); }
+.occasion-experience.invitation-body .occasion-event:only-child { grid-column:1/-1; max-width:690px; justify-self:center; }
+.occasion-experience.invitation-body .occasion-event-date { position:relative; display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:10px; padding:22px 24px; border:0; border-bottom:1px solid var(--body-line); text-align:left; background:var(--body-paper); }
+.occasion-experience.invitation-body .occasion-event-date>strong { font-size:42px; line-height:1; }
+.occasion-experience.invitation-body .occasion-event-date>span { font-size:11px; max-width:78px; }
+.occasion-experience.invitation-body .occasion-event-date .occasion-event-index { display:none; }
+.occasion-experience.invitation-body .occasion-event-art { margin:0 0 0 auto; width:78px; flex-shrink:0; }
+.occasion-experience.invitation-body .occasion-event-art .ceremony-art { width:78px; height:64px; }
+.occasion-experience.invitation-body .occasion-event-content { padding:25px 24px 20px; }
+.occasion-experience.invitation-body .occasion-event-content h3 { font-size:33px; margin-bottom:10px; color:var(--body-accent); }
+.occasion-experience.invitation-body .occasion-event-content>time { font-size:14px; }
+@media(max-width:760px) {
+  .occasion-experience.invitation-body .occasion-story { padding:42px 24px 26px; }
+  .occasion-experience.invitation-body .occasion-letter { padding:26px 23px; }
+  .occasion-experience.invitation-body .occasion-letter h2 { font-size:36px; }
+  .occasion-experience.invitation-body .occasion-intro { font-size:21px; }
+  .occasion-experience.invitation-body .occasion-message { font-size:14px; }
+  .occasion-experience.invitation-body .occasion-event-list { grid-template-columns:1fr; gap:18px; }
+  .occasion-experience.invitation-body .occasion-event-content { padding:22px 20px 16px; }
+  .occasion-experience.invitation-body .occasion-event-date { padding:18px 20px; gap:9px; }
+  .occasion-experience.invitation-body .occasion-event-date>strong { font-size:36px; }
+  .occasion-experience.invitation-body .occasion-event-date>span { max-width:65px; font-size:10px; }
+  .occasion-experience.invitation-body .occasion-event-content h3 { font-size:31px; }
+}

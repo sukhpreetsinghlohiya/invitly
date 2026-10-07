@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-07",
+  "provenance": "Direct Canva image URLs supplied by the project owner for demo invitations. These are sample photographs; demo names and event details are fictional.",
+  "processing": "Orientation normalized, metadata stripped, no enlargement, maximum 1600 pixels, WebP quality 84. No generative edits.",
+  "photos": [
+    {
+      "id": "wedding-embrace",
+      "source": "https://media-public.canva.com/aDLK0/MAEMYtaDLK0/1/s.jpg",
+      "file": "public/images/demo/wedding-embrace.webp",
+      "width": 800,
+      "height": 533,
+      "bytes": 47850
+    },
+    {
+      "id": "wedding-portrait",
+      "source": "https://media-public.canva.com/wJuok/MAEui8wJuok/1/s.jpg",
+      "file": "public/images/demo/wedding-portrait.webp",
+      "width": 800,
+      "height": 533,
+      "bytes": 50966
+    },
+    {
+      "id": "garden-dance",
+      "source": "https://media-public.canva.com/TkH_Y/MAEui-TkH_Y/1/s.jpg",
+      "file": "public/images/demo/garden-dance.webp",
+      "width": 647,
+      "height": 800,
+      "bytes": 79174
+    },
+    {
+      "id": "bridal-hands",
+      "source": "https://media-public.canva.com/UzTv8/MAFBQOUzTv8/1/s.jpg",
+      "file": "public/images/demo/bridal-hands.webp",
+      "width": 800,
+      "height": 533,
+      "bytes": 45878
+    },
+    {
+      "id": "bridal-details",
+      "source": "https://media-public.canva.com/mg6pY/MADyQwmg6pY/1/s2.jpg",
+      "file": "public/images/demo/bridal-details.webp",
+      "width": 1600,
+      "height": 1067,
+      "bytes": 259446
+    },
+    {
+      "id": "bridal-veil",
+      "source": "https://media-public.canva.com/sNmGY/MAFVYdsNmGY/1/s2.jpg",
+      "file": "public/images/demo/bridal-veil.webp",
+      "width": 1600,
+      "height": 1065,
+      "bytes": 90846
+    },
+    {
+      "id": "wedding-ritual",
+      "source": "https://media-public.canva.com/tgEpU/MAEMYitgEpU/1/s2.jpg",
+      "file": "public/images/demo/wedding-ritual.webp",
+      "width": 1600,
+      "height": 1067,
+      "bytes": 227796
+    }
+  ]
+}

@@ -26,7 +26,6 @@
 .artwork:not(.photograph)>img { position:relative; z-index:1; filter:drop-shadow(0 1cqi .8cqi #3c302414); }
 .artAccents { position:absolute; z-index:2; inset:0; display:block; width:100%; height:100%; color:var(--occasion-accent); pointer-events:none; overflow:visible; }
 .leafMotion { transform-box:fill-box; transform-origin:50% 100%; }.glimmerMotion { transform-box:fill-box; transform-origin:center; }
-.balloonMotion { width:30.75cqi; height:41cqi; display:block; }.balloonMotion>span { width:100%; height:100%; }
 .photograph { aspect-ratio:4/3; overflow:hidden; border-radius:50% 50% 3px 3px; }.photograph img { width:100%; height:100%; object-fit:cover; }
 .details { position:relative; z-index:2; width:100%; margin:3cqi auto 0; display:flex; flex-direction:column; align-items:center; gap:2cqi; }
 .date { font:500 2.9cqi/1.6 var(--sans); letter-spacing:.1em; text-transform:uppercase; }
@@ -101,7 +100,6 @@
 .editorialCopy .names>span>i { display:inline; margin-right:2cqi; font-size:.7em; }
 .editorialVisual { display:grid; grid-template-columns:minmax(0,1fr) 25cqi; width:100%; align-items:stretch; border-block:1px solid var(--cover-line); background:var(--cover-wash); margin-top:auto; }
 .editorialVisual .artwork { padding:4cqi 2cqi; }.editorialVisual .photograph { padding:0; border-radius:0; aspect-ratio:1; }
-.engraved { height:48cqi; display:grid; place-items:center; }.engraved>span { height:41cqi; max-width:100%; color:var(--occasion-ink); }
 .visualCaption { border-left:1px solid var(--cover-line); padding:5cqi 2cqi; display:flex; flex-direction:column; align-items:center; justify-content:space-between; gap:4cqi; }
 .visualCaption:has(.dateStamp:only-child) { justify-content:center; }
 .visualCaption>span { font:italic 3.7cqi/1.4 var(--cover-serif); text-align:center; overflow-wrap:anywhere; }
@@ -147,14 +145,8 @@
 .cover[data-layout=keepsake][data-occasion=other] { --occasion-ink:#4b5c43; --occasion-paper:#f4f0e3; --occasion-accent:#8a9064; --cover-wash:#d9ddc7; }
 
 /* Engagement stationery has one spacing rhythm at every size, with art kept clear of editable copy. */
-.engagementGarden { position:relative; width:100%; aspect-ratio:1.55; isolation:isolate; }
-.engagementGarden>span { position:absolute; display:block; pointer-events:none; }
-.engagementGarden .gardenLeft,.engagementGarden .gardenRight { width:60%; height:108%; top:-7%; }
-.engagementGarden .gardenLeft { left:-6%; transform:rotate(-24deg); }
-.engagementGarden .gardenRight { right:-6%; transform:scaleX(-1) rotate(-24deg); }
-.engagementGarden .gardenLeft img,.engagementGarden .gardenRight img { width:100%; height:100%; object-fit:contain; }
-.engagementGarden .gardenRings { z-index:1; width:48%; left:26%; bottom:-1%; }
-.engagementGarden .gardenRings img { filter:drop-shadow(0 .8cqi .5cqi #49362716); }
+.engagementGarden { position:relative; width:100%; aspect-ratio:4/3; isolation:isolate; }
+.engagementGarden>img { display:block; width:100%; height:100%; object-fit:contain; }
 .engagementGarden .artAccents { opacity:.6; }
 .cover[data-occasion=engagement] .composition { min-height:150cqi; justify-content:center; }
 .cover[data-occasion=engagement] .coverText { max-width:28em; line-height:1.85; margin-bottom:3.5cqi; }
@@ -178,9 +170,6 @@
 .cover[data-occasion=engagement][data-layout=editorial] .editorialVisual { position:relative; z-index:1; margin-top:auto; grid-template-columns:minmax(0,1fr) 24cqi; border:1px solid var(--cover-line); }
 .cover[data-occasion=engagement][data-layout=editorial] .editorialVisual .artwork { padding:5cqi 2cqi; }
 .cover[data-occasion=engagement][data-layout=editorial] .engagementGarden { aspect-ratio:1.1; }
-.cover[data-occasion=engagement][data-layout=editorial] .gardenLeft { width:90%; height:112%; left:-21%; top:-13%; transform:rotate(-27deg); }
-.cover[data-occasion=engagement][data-layout=editorial] .gardenRight { width:69%; height:92%; right:-14%; top:16%; transform:scaleX(-1) rotate(-29deg); }
-.cover[data-occasion=engagement][data-layout=editorial] .gardenRings { width:61%; left:19.5%; bottom:-1%; }
 .cover[data-occasion=engagement][data-layout=editorial] .visualCaption { position:relative; z-index:2; padding:5cqi 2cqi; justify-content:center; gap:4cqi; background:var(--occasion-ink); color:var(--occasion-paper); border:0; }
 .cover[data-occasion=engagement][data-layout=editorial] .dateStamp { color:inherit; }
 .cover[data-occasion=engagement][data-layout=editorial] .details { max-width:none; margin-top:5cqi; }
@@ -190,9 +179,6 @@
 .cover[data-occasion=engagement][data-layout=keepsake] .keepsakeVisual { width:66cqi; max-width:100%; margin:3cqi auto 6cqi; padding:1.5cqi; }
 .cover[data-occasion=engagement][data-layout=keepsake] .keepsakeVisual .artwork { padding:2cqi 3cqi; }
 .cover[data-occasion=engagement][data-layout=keepsake] .engagementGarden { aspect-ratio:1.4; }
-.cover[data-occasion=engagement][data-layout=keepsake] .gardenLeft { left:-18%; width:77%; height:120%; top:-10%; transform:rotate(-23deg); }
-.cover[data-occasion=engagement][data-layout=keepsake] .gardenRight { right:-18%; width:77%; height:120%; top:-10%; transform:scaleX(-1) rotate(-23deg); }
-.cover[data-occasion=engagement][data-layout=keepsake] .gardenRings { width:52%; left:24%; bottom:-1%; }
 .cover[data-occasion=engagement][data-layout=keepsake] .keepsakeVisual .dateStamp { right:-3cqi; bottom:-2cqi; }
 .cover[data-occasion=engagement][data-layout=keepsake] .names { font-size:14.2cqi; line-height:1.07; }
 .cover[data-occasion=engagement][data-cover-photo=true] .signatureVisual,
@@ -233,7 +219,6 @@
   .actions a:hover { transform:translateY(-2px); }
   .full:not([data-motion=none]) .leafMotion { animation:leaf-sway 8s ease-in-out infinite alternate; animation-play-state:paused; }
   .full:not([data-motion=none]) .glimmerMotion { animation:illustration-glimmer 6s ease-in-out infinite alternate; animation-play-state:paused; }
-  .full:not([data-motion=none]) .balloonMotion { animation:balloon-float 8s ease-in-out infinite alternate; animation-play-state:paused; }
   .full:not([data-motion=none]) .paperTrim>span { transform-origin:50% 100%; animation:trim-sway 10s ease-in-out infinite alternate; animation-play-state:paused; }
   .full .composition[data-cover-art-active=true] [data-cover-motion],.full .composition[data-cover-art-active=true] .paperTrim>span { animation-play-state:running; }
   .full[data-motion=expressive] { --leaf-angle:4deg; --float-distance:2cqi; --trim-angle:1.5deg; }

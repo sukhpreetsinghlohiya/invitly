@@ -32,8 +32,21 @@ if (mode === 'prepare') {
 }
 const accounts = JSON.parse(await readFile(credentialsPath, 'utf8'));
 if (mode === 'fixture') {
-  // Native type stripping is available in the recommended Node 24 runtime.
-  const { demoInvitation } = await import('../src/data/demo-invitation.ts');
+  // App data uses extensionless TypeScript imports which Node's native type
+  // stripping cannot resolve. Load just these two trusted fixture modules.
+  const { default: ts } = await import('typescript');
+  const { runInNewContext } = await import('node:vm');
+  async function fixtureModule(file, imports = {}) {
+    const exports = {};
+    const source = ts.transpileModule(await readFile(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
+    runInNewContext(source, { exports, require: name => {
+      if (Object.hasOwn(imports, name)) return imports[name];
+      throw new Error(`Unexpected fixture import: ${name}`);
+    } });
+    return exports;
+  }
+  const wording = await fixtureModule('src/data/invitation-wording.ts');
+  const { demoInvitation } = await fixtureModule('src/data/demo-invitation.ts', { './invitation-wording': wording });
   const invitation = { ...demoInvitation, slug: 'invitly-local-preview' };
   const { error } = await admin.from('events').upsert({ owner_id: accounts.A.id, slug: invitation.slug, title: invitation.couple.join(' & '), description: invitation.message, starts_at: invitation.weddingAt, venue: invitation.city, timezone: invitation.timezone, theme_id: 'royal', invitation_content: invitation, is_published: true, published_at: new Date().toISOString(), public_function_ids: null }, { onConflict: 'slug' });
   if (error) throw new Error('Could not create the fictional local preview.');
@@ -58,7 +71,11 @@ if (mode === 'fixture') {
 }
 const guestFixture = await readFile("artifacts/integration/guest-fixture.json","utf8").then(JSON.parse).catch(()=>null);
 const env = { ...process.env, ...(guestFixture ? {LIGHTHOUSE_GUEST_PATH:`/g/${guestFixture.token}`} : {}), NEXT_PUBLIC_SUPABASE_URL: settings.API_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: settings.PUBLISHABLE_KEY, SUPABASE_SECRET_KEY: settings.SECRET_KEY || settings.SERVICE_ROLE_KEY, NEXT_PUBLIC_SITE_URL: localOrigin, PLAYWRIGHT_BASE_URL: localOrigin, LIGHTHOUSE_BASE_URL: localOrigin, LIGHTHOUSE_INVITE_PATH: '/i/invitly-local-preview', INVITLY_INTEGRATION: '1', TEST_HOST_A_EMAIL: accounts.A.email, TEST_HOST_A_PASSWORD: accounts.A.password, TEST_HOST_B_EMAIL: accounts.B.email, TEST_HOST_B_PASSWORD: accounts.B.password };
+// Local journeys must never deliver introductions to a configured real webhook.
+// The welcome UI tests intercept availability and delivery explicitly.
+env.INVITLY_VISITOR_WELCOME_ENABLED = 'false';
 const commands = {
+  check: ['npm', ['run', 'test:e2e', '--', ...process.argv.slice(3)]],
   build: ['npm', ['run','build']],
   start: ['npm', ['run','start','--','--hostname','127.0.0.1','--port',String(localPort)]],
   test: ['npm', ['run','test:e2e','--','--project=mobile-360','--grep','authenticated host']],

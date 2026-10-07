@@ -81,18 +81,16 @@ test("demo RSVP persists, can be edited, and updates stay explicitly simulated",
   await expectNoHorizontalOverflow(page);
 });
 
-test("music only starts after a guest chooses play and can be stopped", async ({ page }) => {
-  const audioRequests: string[] = [];
-  page.on("request", request => { if (/\/audio\/.*\.mp3/.test(request.url())) audioRequests.push(request.url()); });
+test("demo music starts automatically or with the opening gesture, and can be paused", async ({ page }) => {
   await page.goto("/demo");
-  expect(audioRequests).toHaveLength(0);
-  await expect(page.locator("audio[autoplay]")).toHaveCount(0);
-  await page.getByRole("button", { name: "Play music", exact: true }).click();
+  await expect(page.locator("audio")).toHaveAttribute("src", /dulhe-ki-behen-brigade/);
+  await page.getByRole("button", { name: "Open invitation", exact: true }).click();
   await expect(page.getByRole("button", { name: "Pause music", exact: true })).toBeVisible();
   await expect.poll(() => page.locator("audio").evaluate((audio: HTMLAudioElement) => audio.currentTime)).toBeGreaterThan(0);
-  expect(audioRequests.length).toBeGreaterThan(0);
   await page.getByRole("button", { name: "Pause music", exact: true }).click();
   await expect(page.getByRole("button", { name: "Play music", exact: true })).toHaveAttribute("aria-pressed", "false");
+  expect(await page.locator("audio").evaluate((audio: HTMLAudioElement) => audio.paused)).toBe(true);
+  await page.evaluate(() => document.dispatchEvent(new Event("invitly:open")));
   expect(await page.locator("audio").evaluate((audio: HTMLAudioElement) => audio.paused)).toBe(true);
 });
 

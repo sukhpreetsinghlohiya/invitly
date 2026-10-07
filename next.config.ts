@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   distDir: process.env.INVITLY_BUILD_DIR || ".next",
   poweredByHeader: false,
+  allowedDevOrigins: ["127.0.0.1"],
   turbopack: { root: process.cwd() },
   outputFileTracingRoot: process.cwd(),
   // Guest uploads must always pass their current publication/ownership checks.

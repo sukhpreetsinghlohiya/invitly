@@ -92,7 +92,9 @@ function DholPerformance({ id }: { id: string }) {
 
 /** Layered native SVG, animated by CSS only while the shared viewport observer activates it. */
 export function CeremonyMotionArt({ art, id }: { art: CeremonyArtwork; id: string }) {
-  const layers = ceremonyParts(art.id);
+  // Original masks are registered to the older paintings. New watercolors use
+  // ambient accents so no displaced fragments are painted over their subjects.
+  const layers = art.motion === "ambient" ? [] : ceremonyParts(art.id);
   if (art.id === "remembrance") return null;
   return <svg className="ceremony-motion-art" viewBox="0 0 600 450" fill="none" aria-hidden="true" focusable="false">
     <defs>
@@ -108,6 +110,7 @@ export function CeremonyMotionArt({ art, id }: { art: CeremonyArtwork; id: strin
     {(art.id === "wedding" || art.id === "reception" || art.id === "baraat") && <Petals warm={art.id === "wedding"} />}
     {(art.id === "engagement" || art.id === "anniversary") && <><Sparkle x={330} y={203} /><Sparkle x={233} y={301} delay="-3.7s" /></>}
     {art.id === "housewarming" && <Petals warm />}
+    {art.id === "birthday" && <Petals />}
     {art.id === "baby-shower" && <><Sparkle x={337} y={113} /><Sparkle x={448} y={162} delay="-2.7s" /></>}
     {(art.id === "naming" || art.id === "other") && <Petals />}
   </svg>;

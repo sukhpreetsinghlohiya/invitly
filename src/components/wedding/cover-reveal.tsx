@@ -17,6 +17,7 @@ export function CoverReveal({ children, doors, motion = "gentle", names, date, c
 
   function open() {
     if (phase !== "closed") return;
+    document.dispatchEvent(new Event("invitly:open"));
     const reduced = motion === "none" || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     setPhase("opening");
     timer.current = setTimeout(() => {
@@ -32,9 +33,9 @@ export function CoverReveal({ children, doors, motion = "gentle", names, date, c
     {doors && phase !== "open" && <div className={styles.portal} data-section="opening">
       <div className={styles.doorArtwork} aria-hidden="true">{doors}</div>
       <button ref={trigger} type="button" className={styles.openButton} onClick={open} aria-label="Open invitation" disabled={phase === "opening"} aria-busy={phase === "opening"}>
-        <span className={styles.plaque} data-long-label={names.length > 50 || coverText.length > 90 || undefined}>{coverText && <span className={styles.plaqueEyebrow} data-indic={hasIndicText(coverText) || undefined}>{coverText}</span>}<span className={styles.plaqueNames} data-indic={hasIndicText(names) || undefined}>{names}</span><span className={styles.plaqueDate}>{date}</span><span className={styles.openHint}>Tap to open the doors <span aria-hidden="true">↗</span></span></span>
+        <span className={styles.plaque} data-long-label={names.length > 50 || coverText.length > 90 || undefined}>{coverText && <span className={styles.plaqueEyebrow} data-indic={hasIndicText(coverText) || undefined}>{coverText}</span>}<span className={styles.plaqueNames} data-indic={hasIndicText(names) || undefined}>{names}</span><span className={styles.plaqueDate}>{date}</span><span className={styles.openHint}>Open invitation <span aria-hidden="true">↗</span></span></span>
       </button>
-      <noscript><style>{`.${styles.portal}{display:none!important}`}</style></noscript>
+      <noscript><style>{`.${styles.portal}{display:none!important}.${styles.paper}{filter:none!important;transform:none!important}`}</style></noscript>
     </div>}
   </div>;
 }

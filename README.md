@@ -46,7 +46,9 @@ The scripts use Next.js's supported Webpack builder; Turbopack's CSS worker coul
 | `/dashboard/events/[eventId]/guests` | Host guest list and individual response links |
 | `/dashboard/events/[eventId]/announcements` | Post, edit, pin, hide, and remove guest announcements |
 | `/media/[mediaId]` | Image delivery that checks current publication status |
-| `/signup` | Host registration with email and password |
+| `/signup` | Host registration with Google or email/password |
+| `/resend-confirmation` | Request another signup confirmation email |
+| `/auth/confirm` | Scanner-safe confirmation landing; verifies token only on POST |
 | `/login` | Host sign-in |
 | `/forgot-password` | Request a password reset email |
 | `/auth/callback` | Verify an email link or exchange its PKCE code |
@@ -77,7 +79,7 @@ Under Guests, add guests individually or import a validated CSV, assign groups a
 
 In **Design → A soundtrack for your story**, choose a wedding song, an original instrumental, a YouTube link, or **Upload your audio**. New wedding starters and demos feature the supplied “Dulhe Ki Behen Brigade” recording. Four Bollywood presets use official T-Series/Zee Music Company YouTube uploads; they remain in the visible YouTube player. Existing saved music choices are preserved.
 
-Custom MP3 uploads require a signed-in host and a saved invitation. Files are limited to 10 MB and 15 minutes, uploaded directly to private storage with a signed upload token, then checked as actual MPEG Layer 3 audio. Save the invitation after uploading, replacing or removing a recording. Playback starts only after a guest presses Play, with pause/resume and volume controls. Removing a previously saved track detaches it; its private storage object is retained. Unused failed uploads are cleaned up.
+Custom MP3 uploads require a signed-in host and a saved invitation. Files are limited to 10 MB and 15 minutes, uploaded directly to private storage with a signed upload token, then checked as actual MPEG Layer 3 audio. Save the invitation after uploading, replacing or removing a recording. Published invitations start playback after a guest presses Play, with pause/resume and volume controls. Demos try to play automatically and retry when the invitation opening is clicked; browsers that block sound still expose a Play control. A manual pause is respected. Removing a previously saved track detaches it; its private storage object is retained. Unused failed uploads are cleaned up.
 
 Run `node scripts/setup-audio-storage.mjs --local` for the isolated local project or `node scripts/setup-audio-storage.mjs --hosted` for the project configured in `.env.local`. This idempotent Storage API setup creates a private `event-audio` bucket restricted to `audio/mpeg` and 10 MB. `SUPABASE_SECRET_KEY` is required server-side. No new SQL migration is required for audio. Upload actions check event ownership before issuing a token; direct authenticated bucket access is denied. The `/audio/[eventId]/[audioId]` proxy permits owner previews and otherwise serves only the currently selected track of a published, music-enabled invitation, with private/no-store byte-range responses.
 
@@ -130,7 +132,9 @@ Run `node scripts/local-integration.mjs allowance` for the SQL and real HTTP con
    ```
 
    On production, set both Supabase's Site URL and `NEXT_PUBLIC_SITE_URL` to `https://invitly.co.in`. Add any staging domains explicitly. Restart/rebuild after changing public environment variables.
-6. Default confirmation/recovery emails using `{{ .ConfirmationURL }}` are supported through PKCE. Open these links in the same browser that initiated the request. For server-verifiable links that can open in another browser, optionally change **Authentication → Email Templates**:
+6. The branded templates in `supabase/templates/` cover confirmation, recovery, and account invites. Local Supabase loads them from `config.toml`. Hosted templates need a separate upload after the app deployment; see the Google and email setup section below. Their `/auth/confirm` links work across browsers and wait for a button press before consuming the token.
+
+   Default confirmation/recovery emails using `{{ .ConfirmationURL }}` are supported through PKCE. Open these links in the same browser that initiated the request. For server-verifiable links that can open in another browser, optionally change **Authentication → Email Templates**:
 
    **Confirm signup** link:
    ```html
@@ -309,3 +313,56 @@ The auth smoke check additionally exercises local signup, logout, recovery callb
 The smoke suite is enabled only by `INVITLY_INTEGRATION=1` and runs on the `mobile-360` project. It checks saved edits and time zones, photos and owner preview, unsaved navigation, two-host isolation, public publication, private guest function selection, RSVP creation/updates, link rotation, live announcement changes, and unpublication. It disables authentication traces, videos, and screenshots. Announcement timing evidence is written to `artifacts/integration/announcement-latency.json`; check its `completed` flag and test output before treating the run as successful. The `api` mode runs focused permission checks separately. Commands documented here are reproducible instructions, not a claim that the latest run passed.
 
 Auth implementation follows [Supabase's Next.js SSR guide](https://supabase.com/docs/guides/auth/server-side/creating-a-client), [password authentication guide](https://supabase.com/docs/guides/auth/passwords), and [email template documentation](https://supabase.com/docs/guides/auth/auth-email-templates).
+
+
+## Google sign-in and branded account emails
+
+The app uses Supabase Auth's Google OAuth flow with PKCE cookies. Both account forms offer Google and email. The callback only navigates to the dashboard or password setup; provider errors are not reflected into the UI. Sign-in accepts existing passwords while new passwords require 8–128 characters. Unconfirmed users can request a new email at `/resend-confirmation`.
+
+Hosted setup (not performed by `next build`):
+
+1. Settle the production domain first. `NEXT_PUBLIC_SITE_URL`, Supabase **Authentication → URL Configuration → Site URL**, and the browser's actual origin must match. If `invitly.co.in` still redirects to the Vercel hostname, fix that redirect before using it for cookie-based OAuth. For a temporary Vercel deployment, use that exact origin consistently and allow its `/auth/callback` URL explicitly.
+2. In Google Auth Platform create/select a **Web application** OAuth client. Add the production origin to Authorized JavaScript origins, and copy the **Supabase Google provider callback URL** into Authorized redirect URIs. This is `https://<project-ref>.supabase.co/auth/v1/callback`, not the app callback. Configure app branding, audience and only the `openid`, email and profile scopes. Testing-mode clients are limited to their configured test users.
+3. In Supabase **Authentication → Sign In / Providers → Google**, enable Google and save the client ID and secret there. Never put the Google client secret in a `NEXT_PUBLIC_` variable. Add the app's exact `https://YOUR-HOST/auth/callback` to Supabase's redirect allowlist. The app checks provider availability before redirecting so a disabled provider produces an inline fallback instead of a raw API error.
+4. Deploy the app, including `/auth/confirm`. Under Supabase **Authentication → Email Templates**, copy the matching HTML from `supabase/templates/confirmation.html`, `recovery.html`, and `invite.html`; subjects are in `supabase/config.toml`. The Invite template is an **account invite**, not an event guest email. Existing event sharing remains public/private invitation links.
+5. Alternatively, preview the upload with `node scripts/configure-auth-emails.mjs --project-ref=YOUR_PROJECT_REF`. After deploying the app, set a scoped `SUPABASE_ACCESS_TOKEN` securely and append `--apply`. The script updates only these three templates and their subjects and reads them back for verification. A Supabase project secret key is not a Management API token. Do not push the entire local `config.toml` to production; it contains local-only confirmation and callback settings.
+6. Configure custom SMTP with a verified sender and domain authentication at your email provider. Use sender name **Invitly**, disable link tracking for auth emails, and test delivery to real inboxes. No email provider credentials are included in this repository.
+7. Verify Google signup and returning login in a private window, email confirmation in another browser, expired links/resend, password reset, logout, and the actual redirect host. Email previews and mocked tests do not establish production email delivery or a completed Google consent flow.
+
+Media remains in **private Supabase Storage**. Photos use `event-media`, a maximum of 12 per invitation and 4 MiB per input; Sharp validates them, removes metadata by re-encoding, resizes to fit 1600×1600, and stores WebP. Custom MP3s use `event-audio`, signed uploads, a 10 MB limit and a 15-minute duration limit. Authenticated ownership checks guard upload access; published guest media is streamed through app routes with publication checks. Demo music is a bundled public asset.
+
+References: [Google OAuth](https://supabase.com/docs/guides/auth/social-login/auth-google), [email templates](https://supabase.com/docs/guides/auth/auth-email-templates), [browser autoplay](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Autoplay).
+
+## Stability review and deployment notes
+
+The October 2026 review adds recoverable account-save backups, retained private guest links, inline auth/publication/RSVP failures, cancellable music loading, bounded announcement polling, safer media errors, and mobile dashboard readability. Guest RSVP answers remain intact after submissions and network errors. YouTube films send only the site origin as their referrer, so the player can identify the site without receiving private invitation paths.
+
+The template UI review covers all ten wedding designs and the shared engagement experience. Covers have clearer names/dates and larger schedule/RSVP links; theme colors and typography continue through story, family, schedule, and RSVP sections. Event notes expand on demand, directions stay prominent, and maps remain opt-in. The collection uses larger artwork and readable preview/customize actions, with a shorter mobile introduction. Demo music has compact controls and an optional volume panel; blocked autoplay leaves a usable Play button. Demo design changes lock the controls until the new design is ready.
+
+The watercolor refresh adds six original transparent illustrations: mandap, botanical rings, floral cake, cradle, griha pravesh doorway, and marigolds. `src/data/occasion-art.ts` shares the optimized local WebP assets across collection cards, covers, and schedules. Naming uses the cradle; anniversaries use the rings; general gatherings use marigolds. Remembrance keeps its quiet original artwork. These illustrations use ambient accents instead of the older paintings' position-specific motion masks. Generation prompts are recorded in `assets/source/watercolor-prompts.json`; asset provenance is in `public/licenses/watercolor-artwork.txt`. IconScout and Magnific were research references; their stock assets are not bundled. Occasion launch availability is unchanged.
+
+Selecting a tradition now displays a matching emblem on gallery, demo, editor, and guest covers: Om, Khanda, crescent/star, cross, ahimsa hand, Dharma wheel, or sacred-fire altar. Interfaith uses an abstract unity mark. Neutral/custom choices do not infer a religious emblem. Hosts can disable the emblem independently with **Show tradition symbol**; the optional `design.traditionSymbol` flag survives validation and draft storage. No religious wording is generated. Icons use open-source Material Design paths and two original SVG drawings; source and licence details are in `public/licenses/tradition-symbols.txt`.
+
+Wedding demos share seven project-owner supplied photographs in the cover slideshow and interactive album, with captions, full-size viewing, and focal positions for portrait crops. Local WebP assets total about 783 KiB and load as needed. Demo copy identifies the photos as samples and the event details as fictional. Source records are in `assets/source/demo-photo-sources.json`; host photos remain separate. Five supplied decorative assets are optimized under `public/images/stationery/`: gurdwara artwork on Sikh wedding covers, a peach mandap frame and red couple on Hindu Sindoor, a lavender couple on Hindu Lotus, and a pink garland on Floral. Tradition-specific artwork requires both the tradition symbol and decoration settings; the neutral versions keep their original compositions. The couple illustrations follow the copy in normal document flow, so longer names or blessings cannot overlap them. Source records and provenance are in `assets/source/provided-art-sources.json` and `public/licenses/provided-canva-imagery.txt`.
+
+For a visual review, run a local production server and `node scripts/capture-template-review.mjs after`. It captures all ten covers, story sections, event cards, and RSVP sections at 390px and 1440px, plus the collection, into ignored `artifacts/template-review-after/`. The capture manifest records horizontal overflow and browser runtime errors. Browser regressions also cover 320px layouts, long multilingual text, reduced motion, keyboard opening, music settings, and preserved customization parameters.
+
+Apply `supabase/migrations/20261006102232_enforce_event_photo_limit.sql` before deploying the new photo-limit behavior. It enforces the existing 12-photo limit atomically in a private database counter, including concurrent and direct Data API writes. Existing photos are preserved, including legacy overages; removing photos frees capacity. The migration and preceding story-options migration have been verified locally. Hosted application and migration deployment are separate steps.
+
+The local runner supports focused suites without exposing its test credentials:
+
+```bash
+node scripts/local-integration.mjs prepare
+node scripts/local-integration.mjs fixture
+node scripts/local-integration.mjs build
+node scripts/local-integration.mjs start
+# In another terminal:
+node scripts/local-integration.mjs check tests/auth.smoke.spec.ts tests/host-guest.smoke.spec.ts --project=mobile-360 --reporter=line
+node scripts/test-photo-limit.mjs
+```
+
+The runner refuses remote Supabase URLs and disables the real visitor webhook for local tests. The photo-limit script replays the actual migration against isolated tables, runs rollback/privilege checks, and tests simultaneous writes using disposable fixtures. It does not reset the database or apply hosted changes. Rebuild with deployment settings when finished with a local integration build.
+
+Dependency patches: `source-map-js` 1.2.2 and `sharp` 0.35.5 address their published advisories. A remaining development-only `braces` advisory affects the Next ESLint dependency chain; the audit's suggested Next 14 downgrade is incompatible with this Next 16 application. Track an upstream compatible fix; do not run `npm audit fix --force`. See [source-map-js release](https://github.com/7rulnik/source-map-js/releases/tag/v1.2.2), [Sharp advisory](https://github.com/lovell/sharp/security/advisories/GHSA-wq5f-xc86-pv6w), and [braces advisory](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm).
+
+Production follow-ups remain Google OAuth/SMTP configuration and the primary-domain redirect described above. Uploaded audio has per-file size/duration limits; a durable aggregate quota and orphan-retention policy remain operational follow-ups. Old recordings are not eagerly deleted because another editor tab may still reference them.

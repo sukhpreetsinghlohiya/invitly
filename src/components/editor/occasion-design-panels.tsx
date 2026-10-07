@@ -13,14 +13,17 @@ import { defaultMusic } from "@/data/music";
 import type { AudioUploadContext } from "./custom-audio-upload";
 import { MusicPicker } from "./music-picker";
 import { InvitationDesignOptions } from "./invitation-options";
+import { TraditionIcon, traditionSymbolLabel } from "@/components/tradition-symbol";
 
 type PanelProps = { draft: InvitationDraft; change: (draft: InvitationDraft) => void };
 
 export function OccasionPanel({ draft, change }: PanelProps) {
   const invitation = draft.invitation;
+  const symbolLabel = traditionSymbolLabel(invitation.tradition);
   return <><div className="editor-panel-heading"><h2 id="editor-step-heading" tabIndex={-1}>What brings you together?</h2><p>Wedding and engagement invitations are available now. More occasions are coming soon.</p></div>
     <div className="editor-occasion-grid" role="group" aria-label="Choose an occasion">{occasions.map((item, index) => <button type="button" key={item.id} disabled={!isOccasionAvailable(item.id)} aria-pressed={(invitation.occasion || "wedding") === item.id} onClick={() => change({ ...draft, themeId: getOccasionThemes(item.id)[0].id, invitation: applyOccasion(invitation, item.id) })}><span>{String(index + 1).padStart(2, "0")}</span><strong>{item.name}</strong>{!isOccasionAvailable(item.id) && <ComingSoonBadge />}{(invitation.occasion || "wedding") === item.id && <Check size={15} />}</button>)}</div>
-    <label className="form-field">Tradition or cultural style (optional)<select value={invitation.tradition || "neutral"} onChange={event => change({ ...draft, invitation: { ...invitation, tradition: event.target.value as TraditionId } })}>{traditions.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select><small>Choose what feels right to you. No religious phrase or symbol is added automatically.</small></label>
+    <label className="form-field">Tradition or cultural style (optional)<select value={invitation.tradition || "neutral"} onChange={event => change({ ...draft, invitation: { ...invitation, tradition: event.target.value as TraditionId } })}>{traditions.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select><small>Choose a tradition to add its symbol to your card. Neutral keeps the card without a religious symbol.</small></label>
+    {symbolLabel && invitation.tradition && <label className="editor-toggle"><input type="checkbox" checked={invitation.design?.traditionSymbol !== false} onChange={event => change({ ...draft, invitation: { ...invitation, design: { ...getDesign(invitation), traditionSymbol: event.target.checked } } })} /><span><strong>Show tradition symbol</strong><small>{symbolLabel} at the top of your card. Your wording stays yours.</small></span><span className="editor-tradition-symbol" aria-hidden="true"><TraditionIcon tradition={invitation.tradition} /></span></label>}
     {invitation.tradition === "other" && <label className="form-field">Your tradition or style<input maxLength={100} value={invitation.traditionLabel || ""} onChange={event => change({ ...draft, invitation: { ...invitation, traditionLabel: event.target.value } })} /></label>}
     <p className="editor-help-note">Changing the occasion keeps your names, schedule, photos, and custom wording. Suggested copy updates only where you haven’t changed it.</p>
   </>;
