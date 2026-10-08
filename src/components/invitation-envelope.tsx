@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { OpeningTransition, type OpeningPhase } from "./opening-transition";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { getDesign, getOccasion } from "@/data/occasions";
 import { formatEventDate } from "@/data/demo-invitation";
@@ -18,18 +19,26 @@ function SealIcon({ icon, initials }: { icon: InvitationOpening["icon"]; initial
   </svg>;
 }
 
-/** A separate, optional opening; it never hides or duplicates the invitation content. */
-export function InvitationEnvelope({ invitation }: { invitation: Invitation }) {
+/** The selected entrance reveals the real cover without duplicating it. */
+export function InvitationEnvelope({ invitation, children }: { invitation: Invitation; children: ReactNode }) {
   const design = getDesign(invitation);
-  if (!design.opening || design.opening.style === "theme" || design.opening.style === "none") return null;
-  if (design.opening.style !== "envelope") return <AnimatedOpening key={`${design.opening.style}:${design.palette}`} invitation={invitation} style={design.opening.style} />;
-  return <Envelope key={`${design.opening.icon}:${design.opening.line}:${design.palette}`} invitation={invitation} />;
+  if (!design.opening || design.opening.style === "theme" || design.opening.style === "none") return children;
+  return <Entrance key={`${design.opening.style}:${design.palette}`} invitation={invitation}>{children}</Entrance>;
 }
 
-function Envelope({ invitation }: { invitation: Invitation }) {
+function Entrance({ invitation, children }: { invitation: Invitation; children: ReactNode }) {
+  const design = getDesign(invitation);
+  const [phase, setPhase] = useState<OpeningPhase>("closed");
+  const style = design.opening!.style;
+  const opener = style === "envelope" ? <Envelope invitation={invitation} onPhaseChange={setPhase} /> : <AnimatedOpening invitation={invitation} style={style as Exclude<InvitationOpening["style"], "theme" | "none" | "envelope">} onPhaseChange={setPhase} />;
+  return <OpeningTransition phase={phase} opening={style} expressive={design.motion === "expressive"} opener={opener}>{children}</OpeningTransition>;
+}
+
+function Envelope({ invitation, onPhaseChange }: { invitation: Invitation; onPhaseChange: (phase: OpeningPhase) => void }) {
   const design = getDesign(invitation);
   const opening = design.opening;
-  const [phase, setPhase] = useState<"closed" | "opening" | "open">("closed");
+  const [phase, updatePhase] = useState<OpeningPhase>("closed");
+  function setPhase(value: OpeningPhase) { updatePhase(value); onPhaseChange(value); }
   const section = useRef<HTMLElement>(null);
   const target = useRef<HTMLElement | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -43,10 +52,10 @@ function Envelope({ invitation }: { invitation: Invitation }) {
 
   useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
   useEffect(() => {
-    const replay = () => { if (timer.current) clearTimeout(timer.current); setPhase("closed"); requestAnimationFrame(() => { section.current?.scrollIntoView({ behavior: "instant", block: "start" }); section.current?.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true }); }); };
+    const replay = () => { if (timer.current) clearTimeout(timer.current); updatePhase("closed"); onPhaseChange("closed"); requestAnimationFrame(() => { section.current?.scrollIntoView({ behavior: "instant", block: "start" }); section.current?.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true }); }); };
     document.addEventListener("invitly:replay-opening", replay);
     return () => document.removeEventListener("invitly:replay-opening", replay);
-  }, []);
+  }, [onPhaseChange]);
   useEffect(() => {
     if (phase !== "open" || !moveFocus.current) return;
     const frame = requestAnimationFrame(() => {
@@ -55,7 +64,6 @@ function Envelope({ invitation }: { invitation: Invitation }) {
       const temporaryTabIndex = !destination.hasAttribute("tabindex");
       if (temporaryTabIndex) destination.setAttribute("tabindex", "-1");
       destination.focus({ preventScroll: true });
-      destination.scrollIntoView({ behavior: "instant", block: "start" });
       if (temporaryTabIndex) destination.addEventListener("blur", () => destination.removeAttribute("tabindex"), { once: true });
     });
     return () => cancelAnimationFrame(frame);
@@ -87,7 +95,6 @@ function Envelope({ invitation }: { invitation: Invitation }) {
     <div className={styles.card}>
     <button className={styles.envelope} type="button" onClick={() => open()} disabled={phase === "opening"} aria-label="Break the seal and open invitation" aria-busy={phase === "opening"}>
       <span className={styles.back} aria-hidden="true" />
-      <span className={styles.letter} aria-hidden="true"><span>{occasion.name}</span><strong data-indic={hasIndicText(names) || undefined}>{names || "You’re invited"}</strong><span>{dateLabel}</span></span>
       <span className={styles.sideLeft} data-opening-part="left" aria-hidden="true" /><span className={styles.sideRight} data-opening-part="right" aria-hidden="true" />
       <span className={styles.lowerFold} aria-hidden="true" />
       <span className={styles.flap} data-opening-part="flap" aria-hidden="true"><span className={styles.flapLining} /></span>

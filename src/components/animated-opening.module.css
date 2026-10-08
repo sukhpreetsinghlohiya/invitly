@@ -18,3 +18,6 @@
 @media(max-width:480px) { .opening { padding:4px 10px 14px; }.card { max-width:360px; }.copy { padding:13px 14px 10px; }.copy h2 { font-size:29px; }.controls { padding-bottom:11px; }.open,.skip { padding-inline:13px; } }
 @media(prefers-reduced-motion:reduce) { .opening * { animation:none!important; transition:none!important; } }
 .opening[data-motion=none] * { animation:none!important; transition:none!important; }
+.opening[data-opening-phase=opening] .card { background:transparent; border-color:transparent; box-shadow:none; }
+.opening[data-opening-phase=opening] .copy { animation:caption-clear var(--opening-duration) ease both; }
+@keyframes caption-clear { 0%,28% { opacity:1; } 52%,100% { opacity:0; } }

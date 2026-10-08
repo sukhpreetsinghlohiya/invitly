@@ -4,8 +4,6 @@
 .envelope:disabled { cursor:default; opacity:1; }.envelope:focus-visible { outline:3px solid #f3d6a0; outline-offset:-6px; }
 .back,.sideLeft,.sideRight,.lowerFold,.flap { position:absolute; inset:0; display:block; background-color:#6d9990; background-image:var(--envelope-texture); background-position:center; background-size:100% 100%; }
 .back { background-image:linear-gradient(#284d4720,#1d363778),var(--envelope-texture); }
-.letter { position:absolute; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5cqi; inset:8% 8% 6%; padding:8cqi 5cqi; color:var(--envelope-ink); background:#fffaf0; border:1px solid #c8b79a; box-shadow:0 0 24px #18382d25; overflow:hidden; }
-.letter::before { content:""; position:absolute; inset:3cqi; border:1px solid #c9b7896e; }.letter>span { font:400 2.8cqi/1.5 var(--sans); letter-spacing:.09em; text-transform:uppercase; }.letter strong { font:400 9cqi/1.18 "Cormorant Garamond",var(--serif); overflow-wrap:anywhere; text-wrap:balance; }
 .sideLeft,.sideRight { z-index:2; transform-origin:left center; }.sideLeft { clip-path:polygon(0 0,57% 55%,0 100%); background-image:linear-gradient(110deg,#dbecd328,#203e3a47),var(--envelope-texture); }.sideRight { transform-origin:right center; clip-path:polygon(100% 0,43% 55%,100% 100%); background-image:linear-gradient(250deg,#ecf3d930,#1e403757),var(--envelope-texture); }
 .lowerFold { z-index:3; clip-path:polygon(0 100%,0 99%,48% 45%,52% 45%,100% 99%,100% 100%); background-image:linear-gradient(170deg,#204d454d,#d1e2c321 90%),var(--envelope-texture); }
 .lowerFold::after { content:""; position:absolute; width:73%; height:80%; left:13.5%; top:45%; border-top:1px solid #f8ebc136; border-left:1px solid #f8ebc136; transform:rotate(45deg); }
@@ -28,17 +26,19 @@
 .opening[data-envelope-phase=opening] .flap { animation:flap-open var(--envelope-duration) cubic-bezier(.25,.6,.4,1) forwards; }
 .opening[data-envelope-phase=opening] .seal { animation:seal-release var(--envelope-duration) ease forwards; }
 .opening[data-envelope-phase=opening] .foldLines { animation:crease-release var(--envelope-duration) ease forwards; }
-.opening[data-envelope-phase=opening] .letter { animation:letter-rise var(--envelope-duration) cubic-bezier(.3,.7,.4,1) forwards; }
-.opening[data-envelope-phase=opening] .sideLeft { animation:side-left var(--envelope-duration) ease forwards; }.opening[data-envelope-phase=opening] .sideRight { animation:side-right var(--envelope-duration) ease forwards; }
-.opening[data-envelope-phase=opening] .lowerFold { animation:lower-fold var(--envelope-duration) ease forwards; }
 }
-@keyframes flap-open { 0%,10% { transform:rotateX(0); } 64%,100% { transform:rotateX(172deg); z-index:0; } }
-@keyframes seal-release { 0% { opacity:1; transform:rotate(-8deg); } 25%,100% { opacity:0; transform:translateY(16px) rotate(9deg) scale(1.12); } }
+@keyframes flap-open { 0%,12% { transform:rotateX(0); } 48%,100% { transform:rotateX(172deg); z-index:0; } }
+@keyframes seal-release { 0% { opacity:1; transform:rotate(-8deg); } 8% { opacity:1; transform:translateY(-3px) rotate(-5deg) scale(1.06); } 20%,100% { opacity:0; transform:translateY(11px) rotate(8deg) scale(.96); } }
 @keyframes crease-release { 0% { opacity:1; } 18%,100% { opacity:0; } }
-@keyframes letter-rise { 0%,25% { transform:translateY(0); } 82%,100% { transform:translateY(-5%) scale(1.035); } }
-@keyframes side-left { 0%,27% { transform:rotateY(0); } 88%,100% { transform:rotateY(-105deg); } }
-@keyframes side-right { 0%,27% { transform:rotateY(0); } 88%,100% { transform:rotateY(105deg); } }
-@keyframes lower-fold { 0%,34% { transform:translateY(0); } 95%,100% { transform:translateY(100%); } }
 @media(max-width:480px) { .opening { padding:4px 10px 14px; }.card { max-width:360px; }.introduction { padding:13px 14px 10px; }.introduction h2 { font-size:29px; }.introduction h2[data-long=true] { font-size:25px; }.controls { padding-bottom:11px; }.openLink,.skip { padding-inline:13px; } }
 @media(prefers-reduced-motion:reduce) { .opening * { animation:none!important; transition:none!important; } }
 .opening[data-motion=none] * { animation:none!important; transition:none!important; }
+/* The paper behind these folds is the actual invitation, never a substitute. */
+.envelope { height:var(--opening-scene-height,auto); }
+.opening[data-envelope-phase=opening] .card,.opening[data-envelope-phase=opening] .envelope { background:transparent; box-shadow:none; border-color:transparent; }
+.opening[data-envelope-phase=opening] .back { animation:envelope-back-clear var(--envelope-duration) linear both; }
+.opening[data-envelope-phase=opening] .introduction { animation:envelope-caption-clear var(--envelope-duration) ease both; }
+.opening[data-envelope-phase=opening] .sideLeft,.opening[data-envelope-phase=opening] .sideRight,.opening[data-envelope-phase=opening] .lowerFold { animation:pocket-slide var(--envelope-duration) cubic-bezier(.3,.7,.3,1) both; }
+@keyframes envelope-back-clear { 0%,12% { opacity:1; } 28%,100% { opacity:0; } }
+@keyframes envelope-caption-clear { 0%,28% { opacity:1; } 52%,100% { opacity:0; } }
+@keyframes pocket-slide { 0%,33% { transform:translateY(0); } 90%,100% { transform:translateY(106%); } }

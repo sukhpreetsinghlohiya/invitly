@@ -16,7 +16,7 @@ export function SignatureCover({ invitation, theme, isDemo, showRsvp }: { invita
   const names = invitation.couple.filter(Boolean).join(" & ") || "You’re invited";
   const doors = (!design.opening || design.opening.style === "theme") && design.decoration && (theme === "royal" || theme === "mehfil");
   return <section id="invitation" tabIndex={-1} className={styles.stage} data-signature-cover={theme} data-cover-palette={design.palette} data-section="cover" aria-label={`An invitation for ${names}`}>
-    {!isDemo && <div className={styles.topline}><Link href="/" prefetch={false}>INVITLY</Link><span>AN INVITATION, JUST FOR YOU</span></div>}
+    {!isDemo && (!design.opening || design.opening.style === "theme" || design.opening.style === "none") && <div className={styles.topline}><Link href="/" prefetch={false}>INVITLY</Link><span>AN INVITATION, JUST FOR YOU</span></div>}
     <CoverReveal key={`${theme}-${design.decoration}-${design.opening?.style}`} coverText={guestWording(invitation).cover} names={names} date={formatEventDate(invitation.weddingAt, invitation.timezone, { day: "numeric", month: "long", year: "numeric" })} motion={design.motion} doors={doors ? <SignatureDoors lantern={theme === "mehfil"} /> : undefined}><IllustratedCover invitation={invitation} theme={theme} /></CoverReveal>
     <nav className={styles.quickLinks} aria-label="Quick invitation details"><a href="#celebrations">Schedule & directions <ArrowDown size={13} /></a>{showRsvp && <a href="#rsvp">RSVP <ArrowDown size={13} /></a>}</nav>
   </section>;

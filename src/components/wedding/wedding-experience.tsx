@@ -55,8 +55,7 @@ export function WeddingExperience({ invitation, mode, musicEnabled, photos = [],
   return <div className={`${styles.page} invitation-body`} data-body-theme="royal" {...invitationPresentation(invitation)}>
     <InvitationMotion theme="royal" motion={design.motion} />
     <main id="main" className="invitation-ordered">
-      <InvitationEnvelope invitation={invitation} />
-      <SignatureCover invitation={invitation} theme="royal" isDemo={isDemo} showRsvp={showRsvp} />
+      <InvitationEnvelope invitation={invitation}><SignatureCover invitation={invitation} theme="royal" isDemo={isDemo} showRsvp={showRsvp} /></InvitationEnvelope>
       {isPreview && <div className={styles.previewNotice} data-section="opening" data-preview-notice><span>Private host preview. Guests cannot use this address.</span><Link href={previewBackHref || "/dashboard"}>Back to editing <ArrowUpRight size={14} /></Link></div>}
       <section id="portrait" className={`${styles.hero} ${!cover ? styles.heroWithoutPhoto : ""}`} aria-labelledby="couple-heading" data-section="portrait">
         {cover ? <HeroPhotoSlideshow photos={images} coverPhotoId={cover.id} motion={design.motion} preload /> : <span data-decoration><Botanical className={styles.heroBotanical} /></span>}

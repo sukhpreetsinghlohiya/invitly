@@ -9,10 +9,12 @@ import { hasIndicText } from "@/lib/invitation-text";
 import type { Invitation } from "@/types/invitation";
 import { OpeningScene } from "./opening-scene";
 import styles from "./animated-opening.module.css";
+import type { OpeningPhase } from "./opening-transition";
 
-export function AnimatedOpening({ invitation, style }: { invitation: Invitation; style: AnimatedOpeningStyle }) {
+export function AnimatedOpening({ invitation, style, onPhaseChange }: { invitation: Invitation; style: AnimatedOpeningStyle; onPhaseChange: (phase: OpeningPhase) => void }) {
   const design = getDesign(invitation);
-  const [phase, setPhase] = useState<"closed" | "opening" | "open">("closed");
+  const [phase, updatePhase] = useState<OpeningPhase>("closed");
+  function setPhase(value: OpeningPhase) { updatePhase(value); onPhaseChange(value); }
   const root = useRef<HTMLElement>(null);
   const destination = useRef<HTMLElement | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -24,12 +26,12 @@ export function AnimatedOpening({ invitation, style }: { invitation: Invitation;
 
   useEffect(() => {
     const replay = () => {
-      clearTimeout(timer.current); setPhase("closed");
+      clearTimeout(timer.current); updatePhase("closed"); onPhaseChange("closed");
       requestAnimationFrame(() => { root.current?.scrollIntoView({ behavior: "instant", block: "start" }); root.current?.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true }); });
     };
     document.addEventListener("invitly:replay-opening", replay);
     return () => { clearTimeout(timer.current); document.removeEventListener("invitly:replay-opening", replay); };
-  }, []);
+  }, [onPhaseChange]);
 
   useEffect(() => {
     if (phase !== "open" || !moveFocus.current) return;
@@ -38,7 +40,7 @@ export function AnimatedOpening({ invitation, style }: { invitation: Invitation;
       if (!target?.isConnected) return;
       const temporary = !target.hasAttribute("tabindex");
       if (temporary) target.setAttribute("tabindex", "-1");
-      target.focus({ preventScroll: true }); target.scrollIntoView({ behavior: "instant", block: "start" });
+      target.focus({ preventScroll: true });
       if (temporary) target.addEventListener("blur", () => target.removeAttribute("tabindex"), { once: true });
     });
     return () => cancelAnimationFrame(frame);

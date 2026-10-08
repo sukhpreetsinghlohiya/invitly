@@ -61,8 +61,7 @@ export function InvitationContent({ invitation, theme, mode, musicEnabled = mode
     </div></header>}
     {isPreview && <p className="private-preview-notice" role="status">Private host preview. Guests cannot use this address.</p>}
     <main id="main" className="invitation-main invitation-ordered">
-      <InvitationEnvelope invitation={invitation} />
-      <SignatureCover invitation={invitation} theme={theme} isDemo={isDemo} showRsvp={showRsvp} />
+      <InvitationEnvelope invitation={invitation}><SignatureCover invitation={invitation} theme={theme} isDemo={isDemo} showRsvp={showRsvp} /></InvitationEnvelope>
       <section className={`invite-hero${!cover ? " invite-story-without-photo" : ""}`} aria-labelledby="couple-heading" data-section="story">
         {cover && <div className="invite-hero-art"><div className="invitation-cover-photo"><HeroPhotoSlideshow photos={images} coverPhotoId={cover.id} motion={design.motion} /></div></div>}
         <div className="invite-welcome"><span className="eyebrow" data-indic={hasIndicText(copy.cover) || undefined}>{copy.cover}</span>

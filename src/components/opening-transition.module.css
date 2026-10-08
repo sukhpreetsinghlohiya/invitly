@@ -1,0 +1,26 @@
+.stage { position:relative; display:grid; order:-20; min-width:0; isolation:isolate; overflow:clip; overflow-anchor:none; }
+.cover,.overlay { grid-area:1/1; min-width:0; width:100%; }
+.cover { visibility:hidden; }
+.overlay { position:relative; z-index:1; }
+.stage[data-measured=true] { display:block; height:var(--entrance-height); }
+.stage[data-measured=true]>.cover,.stage[data-measured=true]>.overlay { position:absolute; left:0; top:0; }
+.stage:is([data-entrance-phase=opening],[data-entrance-phase=open])>.cover { visibility:visible; }
+.stage[data-entrance-phase=open]>.overlay { display:none; }
+/* The live paper and the opening share one size and one position. */
+.cover :global(#invitation) { padding:8px 14px 20px; gap:16px; background:transparent; }
+.cover :global(#invitation [data-reveal-phase]),.cover :global(#invitation>div:first-child) { width:min(100%,380px); max-width:380px; margin-inline:auto; }
+.cover :global(#invitation [aria-label="Quick invitation details"]) { max-width:380px; }
+.stage:not([data-entrance-phase=open]) .cover :global(nav),.stage:not([data-entrance-phase=open]) .cover :global(#invitation>div:not([data-reveal-phase]):not(:first-child)) { visibility:hidden; }
+@media(prefers-reduced-motion:no-preference) {
+  .stage[data-entrance-phase=opening] { transition:height 650ms cubic-bezier(.22,1,.36,1); transition-delay:calc(var(--entrance-duration) - 700ms); }
+  .stage[data-entrance-phase=opening]>.cover { animation:paper-settle var(--entrance-duration) cubic-bezier(.22,.7,.3,1) both; }
+  .stage[data-entrance-phase=opening][data-entrance-style=envelope]>.cover { animation:letter-extract var(--entrance-duration) cubic-bezier(.22,.7,.3,1) both; }
+  .stage[data-entrance-phase=opening]>.overlay { animation:clear-foreground 400ms ease calc(var(--entrance-duration) - 450ms) both; }
+}
+@keyframes paper-settle { from { transform:scale(.98); } to { transform:none; } }
+@keyframes letter-extract { 0%,25% { transform:translateY(10%) scale(.88); } 88%,100% { transform:none; } }
+@keyframes clear-foreground { to { opacity:0; } }
+@media(max-width:480px) {
+ .cover :global(#invitation) { padding:4px 10px 14px; }
+ .cover :global(#invitation [data-reveal-phase]),.cover :global(#invitation>div:first-child) { max-width:360px; }
+}

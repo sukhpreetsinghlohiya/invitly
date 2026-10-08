@@ -30,6 +30,7 @@ export function OpeningScene({ style, phase = "closed", compact = false }: { sty
       <div className={styles.movingVehicle} data-opening-part="vehicle"><Art src={openingSceneAssets[scene]} /></div>
     </>}
     {scene === "sky" && <>
+      <span className={styles.skyBackdrop} />
       <span className={styles.skyGlow} /><span className={styles.moon} data-opening-part="center" />
       <span className={styles.stars} />
       <div className={`${styles.cloud} ${styles.cloudFar}`} data-opening-part="left" />

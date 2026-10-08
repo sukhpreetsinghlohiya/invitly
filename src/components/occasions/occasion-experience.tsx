@@ -75,8 +75,7 @@ export function OccasionExperience({ invitation, theme, mode, musicEnabled = mod
       <span>Private host preview</span>
     </header>}
     <main id="main" className="invitation-ordered">
-      <InvitationEnvelope invitation={invitation} />
-      <OccasionCover invitation={invitation} theme={theme} cover={cover} photos={photos} showRsvp={showRsvp} />
+      <InvitationEnvelope invitation={invitation}><OccasionCover invitation={invitation} theme={theme} cover={cover} photos={photos} showRsvp={showRsvp} /></InvitationEnvelope>
       {musicEnabled && <div className="occasion-music" data-section="music"><MusicControl key={`${design.music?.source}:${design.music?.track}:${design.music?.audioTrack}:${design.music?.uploadedAudio?.id}:${design.music?.youtubeUrl}`} music={design.music} /></div>}
       <nav className="occasion-nav" data-section="navigation" aria-label="Invitation sections">
         <a href="#invitation" className="occasion-nav-top" aria-label="Back to invitation cover"><ChevronUp size={17} /></a>

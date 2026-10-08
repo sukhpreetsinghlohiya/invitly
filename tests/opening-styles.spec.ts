@@ -137,6 +137,7 @@ test('all eight entrances visibly move before revealing the invitation', async (
     const opening = page.locator(`[data-opening-style="${style}"]`);
     await expect(opening).toBeVisible();
     await opening.evaluate(() => document.fonts.ready);
+    const originalCover = await page.locator('#invitation').elementHandle();
     await expect.poll(() => opening.locator('img').evaluateAll(images => images.every(image => image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0))).toBe(true);
     await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
     await page.screenshot({ path: info.outputPath(`${style}-opening.png`) });
@@ -146,10 +147,21 @@ test('all eight entrances visibly move before revealing the invitation', async (
       const bounds = nodes.map(() => ({ minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity, minW: Infinity, maxW: -Infinity, minH: Infinity, maxH: -Infinity }));
       const started = performance.now();
       let samples = 0;
+      let realCoverFrames = 0;
+      let fadedCoverFrames = 0;
+      let lastScroll = window.scrollY;
       await new Promise<void>(resolve => {
         const sample = () => {
           if (!stage.isConnected || performance.now() - started > 1600) { resolve(); return; }
           const root = stage.getBoundingClientRect();
+          const entrance = stage.closest('[data-entrance-phase]');
+          const paper = entrance?.querySelector('#invitation')?.parentElement;
+          if (entrance?.getAttribute('data-entrance-phase') === 'opening' && paper) {
+            const presentation = getComputedStyle(paper);
+            if (presentation.visibility === 'visible') realCoverFrames++;
+            if (Number(presentation.opacity) !== 1) fadedCoverFrames++;
+            lastScroll = window.scrollY;
+          }
           nodes.forEach((node, index) => {
             if (!node.isConnected) return;
             const rect = node.getBoundingClientRect();
@@ -169,7 +181,7 @@ test('all eight entrances visibly move before revealing the invitation', async (
         };
         requestAnimationFrame(sample);
       });
-      return { samples, movingLayers: nodes.flatMap((node, index) => {
+      return { samples, realCoverFrames, fadedCoverFrames, lastScroll, movingLayers: nodes.flatMap((node, index) => {
         const b = bounds[index];
         const distance = Math.max(b.maxX - b.minX, b.maxY - b.minY, b.maxW - b.minW, b.maxH - b.minH);
         return positions[index].size >= 3 && distance > 2 ? [{ layer: node.getAttribute('data-opening-part') || node.tagName, distance }] : [];
@@ -181,7 +193,11 @@ test('all eight entrances visibly move before revealing the invitation', async (
     await writeFile(measurementPath, JSON.stringify(measured, null, 2));
     await info.attach(`${style}-movement`, { path: measurementPath, contentType: 'application/json' });
     expect(measured.movingLayers.length, `${style}: actual artwork movement across frames: ${JSON.stringify(measured)}`).toBeGreaterThan(0);
+    expect(measured.realCoverFrames, `${style}: the real cover is underneath the moving artwork`).toBeGreaterThan(5);
+    expect(measured.fadedCoverFrames, `${style}: the invitation itself must not crossfade`).toBe(0);
     await expect(opening).toHaveCount(0);
+    expect(await page.locator('#invitation').evaluate((element, original) => element === original, originalCover), 'Opening reveals the same DOM card, not a replacement').toBe(true);
+    expect(Math.abs(await page.evaluate(() => window.scrollY) - measured.lastScroll), 'Finishing the entrance must not jump the page').toBeLessThanOrEqual(1);
     await expect(page.locator('[data-section="opening"]:not([data-preview-notice])')).toHaveCount(0);
     await noOverflow(page);
   }

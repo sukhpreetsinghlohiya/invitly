@@ -61,7 +61,7 @@ Guests do not need an account to view public invitations. Host pages authenticat
 
 ## Invitation openings and festivals
 
-Demos offer eight animated entrances: envelope, palace doors, flowers, sky, mandap, scooter, car and rings. Select a style beside the desktop preview or from the mobile Opening menu; Replay restores it after opening. The editor exposes the same choices in **Design → Opening & motion**, plus the original theme entrance and no opening. Skip, keyboard navigation and reduced motion are supported. Switching a demo design resets its opening, and “Make it yours” carries the selection into the editor.
+Demos offer eight animated entrances: envelope, palace doors, flowers, sky, mandap, scooter, car and rings. Select a style beside the desktop preview or from the mobile Opening menu; Replay restores it after opening. The editor exposes the same choices in **Design → Opening & motion**, plus the original theme entrance and no opening. The real invitation stays underneath the opening artwork: envelope folds, doors and other foreground pieces reveal the same card in place, without swapping pages or scrolling at completion. Skip, keyboard navigation and reduced motion are supported. Switching a demo design resets its opening, and “Make it yours” carries the selection into the editor.
 
 Festival invitations include Diwali, Holi, Eid, Christmas, Gurpurab, Navratri, Ganesh Chaturthi and a custom celebration. Presets supply editable wording and artwork; hosts enter their own date, names and venue. Try `/demo?occasion=festival&festival=diwali&theme=kesar&opening=envelope`.
 
