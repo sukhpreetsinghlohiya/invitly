@@ -1,0 +1,44 @@
+[
+  {
+    "name": "floral-portal",
+    "prompt": "Use case: stylized-concept. Create a finished high-end Indian wedding invitation ART BACKGROUND, portrait 1024x1536. Original art, no text, no lettering, no logos. An elegant ivory handmade cotton-paper central field occupying the middle 55 percent width, framed by intricately painted lifelike blush roses, small ivory jasmine blossoms, delicate sage eucalyptus, tiny antique gold botanical tracery. The floral arrangements grow from the two lower corners and sweep up the outside edges to a gentle arch at the very top. Rich tactile gouache, watercolor washes, luxury printed stationery quality with exceptionally sharp botanical detail; restrained warm ivory, dusty rose, muted sage, antique brass. Flowers should be sumptuous but carefully composed, not flat vector icons, not collage clipart. Left and right botanical borders each entirely within outer22percent of canvas, center clear for readable live names. No architectural structures, no rings, no human figures, no drop shadows outside the image. Entire portrait filled with artwork-paper, no mockup angle or desk around it. Symmetric balanced framing with subtly organic variation, calm tasteful sophisticated.",
+    "tool": "Built-in image generation",
+    "created": "2026-10-08",
+    "file": "/images/openings/floral-portal.webp"
+  },
+  {
+    "name": "palace-doors",
+    "prompt": "Use case: stylized-concept. High-end Indian wedding invitation opening artwork. Portrait 1024x1536. A straight-on close view of a pair of CLOSED ornate Indian palace double doors, perfectly symmetrical with center seam EXACTLY at50percent canvaswidth, within an elegant scalloped Mughal arch. Teal-green painted wood with fine antique brass floral engravings and carved rosettes, warm sandstone trim along outeredges. Two slim brass handles adjacent tocenterseam. Subtle sunlight giving tactile architectural depth, exquisitely detailed painted-realistic 3D illustration. Entire image is the architectural doorway, doors fill90percentheightand85percentwidth, NO empty sky, no large floor, no room outside, no people, no signage, no text, no letters, no logos or watermarks. Closed doors must meetfullyfromtopbottom atcenter: later eachhalf will rotate open inCSS. Restrained emerald, celadon, mutedgold, stonecream. Luxury editorial weddingstationery, sharp refineddetail, not cartoon, not flatvector.",
+    "tool": "Built-in image generation",
+    "created": "2026-10-08",
+    "file": "/images/openings/palace-doors.webp"
+  },
+  {
+    "name": "embossed-paper",
+    "prompt": "Use case: product-mockup texture asset. Create a flat front-facing macro photographic illustration of luxurious matte celadon-teal invitation paper, portrait1024x1536. Delicate raised embossed botanical vines with large garden roses and fineleaves grow allaroundedges; embossing exactlysame teal material with graceful highlights andsoftdimensional shadows, like sculpted thickcottonpaper. Blank calm middlethird. The whole image is continuous flatpapertexture with bas-relief florals: NO actual envelopefolds, NO seal, NO letters or words, NO borders aroundpaper, NO tabletop, no hands. This texture will be clipped into independently animated envelopepanels and a waxseal added bycode. Fullbleed portrait, luxurious dimensional embossing, wonderfully crisp finesculpturaldetail, sophisticated restrained tonal teals, no black lines, not flatvector.",
+    "tool": "Built-in image generation",
+    "created": "2026-10-08",
+    "file": "/images/openings/embossed-paper.webp"
+  },
+  {
+    "name": "mandap",
+    "prompt": "Use case: stylized-concept. Original exquisite Indian wedding mandap pavilion, portrait1024x1536, full frontview symmetricallycomposed. Cream carved sandstone pillars, grandcanopy of blushroses ivoryjasmine andsparse goldmarigold garlands, flowing palegold silk drapes tied back alongthe sides, warmlylit traditional weddingceremony platform atbottom, lush refined garden peeking atedges. Romantic luxurywatercolor-meets-photorealillustration withgorgeouscrispfinefloraldetail; softivory, pinkblush, sagegreen, antiquegold. No people, no religiousdeity, no idols, no ceremonyfire, no textletterswatermarkslogos. Pillarsouter20percent, floral canopytop20percent, centeropen emptycreamsoftlight (not largewhitehole), stagedteakchairs verysmallbottom. Pavilion fillscanvas almostedge-to-edge noexcessiveskyorforeground. Theartisfor ananimateddigitalinvitation withHTMLtextlayer; tastefulhighend, avoidflatvectorclippart.",
+    "tool": "Built-in image generation",
+    "created": "2026-10-08",
+    "file": "/images/openings/mandap.webp"
+  },
+  {
+    "name": "car",
+    "prompt": "Use case: stylized-concept. A beautifully rendered vintage ivory wedding convertible car, complete fullvehicle seenfromside withslightthreequarterfrontangle facingright. Mutedsage leatherseat, antiquechromedetails, small refinedbouquet ofblushroses ivoryjasmine andsagefoliage onhood, finecreamribbons. Wheelsfullyvisible straightaligned, allpartsinsideframe with10percentsafetymargin. Charming premium handpainted realisticwatercolor andgouache illustration withprecise lines, richmaterialdetail, softnaturallight, tastefulweddingstationeryart. Isolated REAL TRANSPARENT background, nofloorplane orsolidcolorbackdrop, nodropshadowbeyondobject. No people, no writing, no licenseplatetext, no brandlogos, nowatermark. Landscape1536x1024 composition. Notflatvectorcartoon, notbrightprimarycolors.",
+    "tool": "Built-in image generation",
+    "created": "2026-10-08",
+    "file": "/images/openings/car.webp"
+  },
+  {
+    "name": "bike",
+    "prompt": "Use case: stylized-concept. A beautifully rendered classic muted sage-green scooter motorbike, completefullvehicle sideview facingright withslightthreequarterangle. Tan leather doubleseat, polishedbrass/chromedetail, a smallbasket filledwithblushroses ivoryjasmine tiedtorear, soft creamribbon. Twowheels fullyvisible andaligned, handlebars cleananatomicallycorrect, allpartsinsideframe10percentsafetymargin. Premium handpainted realisticwatercolor/gouache illustration withprecise crispdetail andnaturaltextures, warmsoftlight, sophisticatedluxury weddingstationery. Isolated REALTRANSPARENTbackground, nofloorplane nobackdrop noexternalshadow, nopeople noriders, notext noletters noemblems nobrandlogo nowatermark. Landscape1536x1024. No flatvector iconlook, noexaggeratedcartoonproportions.",
+    "tool": "Built-in image generation",
+    "created": "2026-10-08",
+    "file": "/images/openings/bike.webp"
+  }
+]

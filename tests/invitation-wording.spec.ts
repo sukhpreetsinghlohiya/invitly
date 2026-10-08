@@ -40,6 +40,7 @@ test('wording choices preview before explicit apply and preserve personal detail
   await page.getByLabel(/^Event date and time/).fill(date);
   await page.getByLabel('City', { exact: true }).fill('Chandigarh');
   await page.getByRole('button', { name: 'Design', exact: true }).click();
+  await page.getByRole('tab', { name: 'Colours & type', exact: true }).click();
   await page.getByLabel(/^Cover text/).fill(custom.coverText);
   await page.getByRole('button', { name: 'Details', exact: true }).click();
   const panel = page.locator('details.editor-wording-panel');
@@ -108,6 +109,7 @@ test('wording choices preview before explicit apply and preserve personal detail
   await expect(page.getByLabel(/^Blessing or personal note/)).toHaveValue(blessing);
   await expectWording(frame, current);
   await page.getByRole('button', { name: 'Design', exact: true }).click();
+  await page.getByRole('tab', { name: 'Colours & type', exact: true }).click();
   await expect(page.getByLabel(/^Cover text/)).toHaveValue(current.coverText);
 });
 

@@ -25,8 +25,8 @@ export type InvitationRenderProps = InvitationViewProps & { renderTimestamp: num
 export function InvitationView(props: InvitationViewProps) {
   if (props.mode === "demo") {
     const occasion = props.invitation.occasion || "wedding";
-    return <DemoExperience theme={props.theme} occasion={occasion} tradition={props.invitation.tradition || "neutral"} designs={getOccasionThemes(occasion).map(({ id, name }) => ({ id, name }))} music={getDesign(props.invitation).music} musicEnabled={props.musicEnabled !== false}>
-      <InvitationContent {...props} musicEnabled={false} renderTimestamp={getRequestTimestamp()} />
+    return <DemoExperience theme={props.theme} occasion={occasion} tradition={props.invitation.tradition || "neutral"} opening={getDesign(props.invitation).opening?.style} festival={occasion === "festival" ? props.invitation.festival?.preset : undefined} designs={getOccasionThemes(occasion).map(({ id, name }) => ({ id, name }))} music={getDesign(props.invitation).music} musicEnabled={props.musicEnabled !== false}>
+      <InvitationContent key={`${props.theme}:${occasion}:${props.invitation.tradition || "neutral"}:${getDesign(props.invitation).opening?.style || "theme"}:${props.invitation.festival?.preset || ""}`} {...props} musicEnabled={false} renderTimestamp={getRequestTimestamp()} />
     </DemoExperience>;
   }
   return <InvitationContent {...props} renderTimestamp={getRequestTimestamp()} />;

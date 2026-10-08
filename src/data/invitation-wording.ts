@@ -16,6 +16,7 @@ export const wordingLanguages: { id: WordingLanguage; label: string; locale: str
 type OccasionLines = Record<OccasionId, readonly [cover: string, intro: string]>;
 const occasionLines: Record<WordingLanguage, OccasionLines> = {
   english: {
+    festival: ["Celebrations are lovelier together", "Come share a little festive joy with us."],
     wedding: ["With our favourite people, a new beginning", "We’re getting married, and we’d love you to be there."],
     engagement: ["A little promise, a lifetime ahead", "Join us as we celebrate our engagement."],
     birthday: ["Another year, a little more magic", "Come for the birthday cake. Stay for the happy memories."],
@@ -27,6 +28,7 @@ const occasionLines: Record<WordingLanguage, OccasionLines> = {
     other: ["Good company, lovely memories", "There’s a place for you at our gathering."],
   },
   hinglish: {
+    festival: ["Tyohar ki khushi, apno ke saath", "Saath milkar is tyohar ko aur bhi khaas banayein."],
     wedding: ["Shaadi apni, khushiyaan sabki", "Hamari new beginning mein aapka hona banta hai!"],
     engagement: ["Ek promise, aur bahut saara pyaar", "Hamari engagement ki khushiyon mein zaroor aana."],
     birthday: ["Cake bhi, masti bhi, aap bhi!", "Birthday hai—thodi masti toh banti hai!"],
@@ -38,6 +40,7 @@ const occasionLines: Record<WordingLanguage, OccasionLines> = {
     other: ["Mil baithenge, yaadein banayenge", "Good company aur dil se baatein—aap zaroor aana."],
   },
   hindi: {
+    festival: ["त्योहार की खुशियाँ, अपनों के साथ", "आइए, मिलकर त्योहार की खुशियाँ मनाएँ।"],
     wedding: ["अपनों के साथ, एक नई शुरुआत", "हमारी शादी की खुशियों में शामिल हों।"],
     engagement: ["एक वादा, ढेर सारा प्यार", "हमारी सगाई की खुशियाँ हमारे साथ बाँटें।"],
     birthday: ["एक और साल, ढेर सारी मुस्कानें", "जन्मदिन की खुशियाँ मिलकर मनाएँ।"],
@@ -49,6 +52,7 @@ const occasionLines: Record<WordingLanguage, OccasionLines> = {
     other: ["मिल बैठें, कुछ यादें बनाएँ", "आपके साथ यह मिलन और भी खास होगा।"],
   },
   punjabi: {
+    festival: ["ਤਿਉਹਾਰ ਦੀਆਂ ਖ਼ੁਸ਼ੀਆਂ, ਆਪਣਿਆਂ ਦੇ ਨਾਲ", "ਆਓ, ਮਿਲ ਕੇ ਤਿਉਹਾਰ ਦੀਆਂ ਖ਼ੁਸ਼ੀਆਂ ਮਨਾਈਏ।"],
     wedding: ["ਆਪਣਿਆਂ ਦੇ ਨਾਲ, ਇੱਕ ਨਵੀਂ ਸ਼ੁਰੂਆਤ", "ਸਾਡੇ ਵਿਆਹ ਦੀਆਂ ਖੁਸ਼ੀਆਂ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ।"],
     engagement: ["ਇੱਕ ਵਾਅਦਾ, ਬਹੁਤ ਸਾਰਾ ਪਿਆਰ", "ਸਾਡੀ ਮੰਗਣੀ ਦੀਆਂ ਖੁਸ਼ੀਆਂ ਸਾਡੇ ਨਾਲ ਸਾਂਝੀਆਂ ਕਰੋ।"],
     birthday: ["ਇੱਕ ਹੋਰ ਸਾਲ, ਢੇਰ ਸਾਰੀਆਂ ਮੁਸਕਾਨਾਂ", "ਆਓ, ਜਨਮਦਿਨ ਦੀਆਂ ਖੁਸ਼ੀਆਂ ਇਕੱਠੇ ਮਨਾਈਏ।"],
@@ -60,6 +64,7 @@ const occasionLines: Record<WordingLanguage, OccasionLines> = {
     other: ["ਮਿਲ ਬੈਠੀਏ, ਯਾਦਾਂ ਬਣਾਈਏ", "ਤੁਹਾਡੇ ਨਾਲ ਇਹ ਮਿਲਣੀ ਹੋਰ ਵੀ ਖ਼ਾਸ ਹੋਵੇਗੀ।"],
   },
   marathi: {
+    festival: ["सणाचा आनंद, आपल्या माणसांसोबत", "या, सणाचा आनंद एकत्र साजरा करूया."],
     wedding: ["आपल्या माणसांसोबत, एक नवी सुरुवात", "आमच्या लग्नाच्या आनंदात सहभागी व्हा."],
     engagement: ["एक वचन, आयुष्यभराची साथ", "आमच्या साखरपुड्याचा आनंद साजरा करायला या."],
     birthday: ["आणखी एक वर्ष, हसरे नवे क्षण", "वाढदिवसाचा आनंद एकत्र साजरा करूया."],
@@ -71,6 +76,7 @@ const occasionLines: Record<WordingLanguage, OccasionLines> = {
     other: ["भेटूया, गप्पा मारूया", "आपल्या भेटीने हा दिवस आणखी खास होईल."],
   },
   gujarati: {
+    festival: ["તહેવારની ખુશીઓ, પોતાના લોકો સાથે", "આવો, તહેવારની ખુશીઓ સાથે મળીને ઉજવીએ."],
     wedding: ["પોતાના લોકો સાથે, એક નવી શરૂઆત", "અમારા લગ્નની ખુશીમાં સહભાગી થાઓ."],
     engagement: ["એક વચન, જીવનભરનો સાથ", "અમારી સગાઈની ખુશી સાથે મળીને ઉજવીએ."],
     birthday: ["વધુ એક વર્ષ, ઘણી બધી ખુશીઓ", "જન્મદિવસની ખુશી સાથે મળીને ઉજવીએ."],

@@ -16,7 +16,7 @@ test("the collection shows ten themes, filters by style, and opens the selected 
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/templates");
   await expect(page.locator("article.collection-card")).toHaveCount(10);
-  await expect(page.getByRole("status")).toHaveText("10 invitations to make your own");
+  await expect(page.locator('.collection-count[role="status"]')).toHaveText("10 invitations to make your own");
   await expectNoHorizontalOverflow(page);
   await capture(page, testInfo, "templates");
   const filters = page.getByRole("group", { name: "Filter invitation styles" });

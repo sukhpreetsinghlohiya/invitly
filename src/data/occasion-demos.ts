@@ -1,11 +1,13 @@
 import { demoInvitation } from "./demo-invitation";
 import { createOccasionInvitation, getDesign, getOccasion } from "./occasions";
 import { weddingMusic } from "./music";
-import type { Invitation, OccasionId, ThemeId } from "@/types/invitation";
+import { applyFestivalPreset, getFestivalPreset } from "./festivals";
+import type { FestivalPresetId, Invitation, OccasionId, ThemeId } from "@/types/invitation";
 
 export const occasionCollections: Record<OccasionId, { title: string; description: string; theme: ThemeId; colour: string; names: [string, string]; venue: string; note: string }> = {
   wedding: { title: "The wedding courtyard", description: "Marigolds, music, and every moment of your wedding.", theme: "royal", colour: "#783b37", names: ["Aanya", "Kabir"], venue: "The Palace Gardens", note: "Join us for the wedding ceremony, followed by dinner." },
   engagement: { title: "A promise in bloom", description: "A delicate ring illustration and room for your story.", theme: "lotus", colour: "#864954", names: ["Meher", "Arjun"], venue: "The Garden Terrace", note: "An evening to exchange promises and share a meal with our families." },
+  festival: { title: "A celebration, together", description: "Diwali, Holi, Eid, Christmas, Gurpurab and celebrations of your own.", theme: "royal", colour: "#84482c", names: ["The Kapoor family", ""], venue: "Our family courtyard", note: "Join us for a festive meal and an evening of good company." },
   birthday: { title: "A little birthday magic", description: "A floral cake, warm colours, and one lovely day.", theme: "kesar", colour: "#955323", names: ["Ira", ""], venue: "The Courtyard Café", note: "Join us for games, birthday cake, and a relaxed afternoon together." },
   "baby-shower": { title: "A little love on the way", description: "A botanical cradle and a gentle welcome for a growing family.", theme: "floral", colour: "#526c57", names: ["Riya & Aman", ""], venue: "The Mogra Room", note: "An afternoon of good wishes, stories, and tea with our favourite people." },
   housewarming: { title: "Our door is open", description: "A welcoming doorway, warm paper, and your new address.", theme: "pichwai", colour: "#435947", names: ["The Anand family", ""], venue: "Our new home", note: "Come over for lunch and help us fill our new home with memories." },
@@ -28,8 +30,14 @@ const weddingCoverLines: Record<ThemeId, string> = {
   sindoor: "Dhol, dil, aur dher saara pyaar",
 };
 
-export function occasionDemo(id: OccasionId, theme: ThemeId = "royal"): Invitation {
+export function occasionDemo(id: OccasionId, theme: ThemeId = "royal", festivalPreset: FestivalPresetId = "custom"): Invitation {
   if (id === "wedding") return { ...demoInvitation, occasion: "wedding", coverText: weddingCoverLines[theme], design: { ...getDesign(demoInvitation), music: weddingMusic } };
+  if (id === "festival") {
+    const invitation = applyFestivalPreset(createOccasionInvitation("festival"), festivalPreset);
+    return { ...invitation, slug: `demo-festival-${festivalPreset}`, couple: ["The Kapoor family", ""], initials: "K", city: "Jaipur, Rajasthan", families: ["With our family and friends", ""],
+      functions: [{ id: "demo-festival", name: getFestivalPreset(festivalPreset).title, startsAt: "", venue: "Our family courtyard", address: "Civil Lines, Jaipur, Rajasthan", description: "A sample gathering. Add your own date, time and plans before sharing.", dressCode: "", icon: "sparkles", visibility: "public", mapUrl: "" }],
+    };
+  }
   const content = occasionCollections[id], occasion = getOccasion(id);
   const time = ({ birthday: "16:00", "baby-shower": "15:00", housewarming: "13:00", naming: "11:00", remembrance: "10:00" } as Partial<Record<OccasionId, string>>)[id] ?? "18:00";
   const startsAt = `${demoInvitation.weddingAt.slice(0, 10)}T${time}:00+05:30`;

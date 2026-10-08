@@ -1,11 +1,12 @@
 export type ThemeId = "royal" | "floral" | "modern" | "mehfil" | "kesar" | "lotus" | "pichwai" | "ocean" | "champagne" | "sindoor";
-export type OccasionId = "wedding" | "engagement" | "birthday" | "baby-shower" | "housewarming" | "naming" | "anniversary" | "remembrance" | "other";
+export type OccasionId = "wedding" | "engagement" | "festival" | "birthday" | "baby-shower" | "housewarming" | "naming" | "anniversary" | "remembrance" | "other";
+export type FestivalPresetId = "custom" | "diwali" | "holi" | "eid" | "christmas" | "gurpurab" | "navratri" | "ganesh-chaturthi";
 export type TraditionId = "neutral" | "hindu" | "sikh" | "muslim" | "christian" | "jain" | "buddhist" | "parsi" | "interfaith" | "other";
 export type SectionId = "story" | "schedule" | "photos" | "rsvp" | "updates";
 export type MusicMood = "santoor" | "bansuri" | "celebration";
 export type UploadedAudio = { id: string; eventId: string; name: string };
 export type PersonProfile = { photoId?: string; grandparents?: string; parentsPrefix?: string; grandparentsPrefix?: string };
-export type InvitationOpening = { style: "theme" | "none" | "envelope"; icon: "rings" | "flower" | "monogram"; line: string };
+export type InvitationOpening = { style: "theme" | "none" | "envelope" | "doors" | "flowers" | "sky" | "mandap" | "bike" | "car" | "rings"; icon: "rings" | "flower" | "monogram"; line: string };
 export type InvitationMusic = { source: "original" | "youtube" | "library" | "upload"; track: MusicMood; youtubeUrl: string; audioTrack?: string; uploadedAudio?: UploadedAudio };
 export type InvitationDesign = {
   palette: "original" | "rose" | "sage" | "indigo";
@@ -22,6 +23,7 @@ export type InvitationDesign = {
 
 export type Invitation = {
   occasion?: OccasionId;
+  festival?: { preset: FestivalPresetId; title: string };
   tradition?: TraditionId;
   traditionLabel?: string;
   blessing?: string;

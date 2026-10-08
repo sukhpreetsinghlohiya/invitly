@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { getDesign, getOccasion } from "@/data/occasions";
 import { formatEventDate } from "@/data/demo-invitation";
 import { hasIndicText } from "@/lib/invitation-text";
-import { ArchiveOrnament } from "@/components/archive-ornament";
+import { openingSceneAssets } from "@/data/opening-scenes";
 import type { Invitation, InvitationOpening } from "@/types/invitation";
 import styles from "./invitation-envelope.module.css";
+import { AnimatedOpening } from "./animated-opening";
 
 function SealIcon({ icon, initials }: { icon: InvitationOpening["icon"]; initials: string }) {
   if (icon === "monogram") return <span className={styles.monogram} data-long={initials.length > 4 || undefined} data-indic={hasIndicText(initials) || undefined}>{initials}</span>;
@@ -20,7 +21,8 @@ function SealIcon({ icon, initials }: { icon: InvitationOpening["icon"]; initial
 /** A separate, optional opening; it never hides or duplicates the invitation content. */
 export function InvitationEnvelope({ invitation }: { invitation: Invitation }) {
   const design = getDesign(invitation);
-  if (design.opening?.style !== "envelope") return null;
+  if (!design.opening || design.opening.style === "theme" || design.opening.style === "none") return null;
+  if (design.opening.style !== "envelope") return <AnimatedOpening key={`${design.opening.style}:${design.palette}`} invitation={invitation} style={design.opening.style} />;
   return <Envelope key={`${design.opening.icon}:${design.opening.line}:${design.palette}`} invitation={invitation} />;
 }
 
@@ -40,6 +42,11 @@ function Envelope({ invitation }: { invitation: Invitation }) {
   const dateLabel = formatEventDate(date, invitation.timezone, { day: "numeric", month: "long", year: "numeric" });
 
   useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
+  useEffect(() => {
+    const replay = () => { if (timer.current) clearTimeout(timer.current); setPhase("closed"); requestAnimationFrame(() => { section.current?.scrollIntoView({ behavior: "instant", block: "start" }); section.current?.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true }); }); };
+    document.addEventListener("invitly:replay-opening", replay);
+    return () => document.removeEventListener("invitly:replay-opening", replay);
+  }, []);
   useEffect(() => {
     if (phase !== "open" || !moveFocus.current) return;
     const frame = requestAnimationFrame(() => {
@@ -72,25 +79,28 @@ function Envelope({ invitation }: { invitation: Invitation }) {
       const active = section.current?.ownerDocument.activeElement;
       moveFocus.current = !active || active === document.body || Boolean(section.current?.contains(active));
       setPhase("open");
-    }, motion === "expressive" ? 1050 : 850);
+    }, motion === "expressive" ? 2200 : 1900);
   }
 
   if (opening?.style !== "envelope" || phase === "open") return null;
-  return <section ref={section} className={styles.opening} data-section="opening" data-envelope-phase={phase} data-motion={motion} data-palette={design.palette} data-artwork={design.decoration ? "on" : "off"} aria-label="Your sealed invitation">
-    <div className={styles.introduction}><span>{occasion.id === "remembrance" ? "A personal invitation" : "For a day to remember"}</span><h2 data-long={names.length > 45 || undefined} data-indic={hasIndicText(names) || undefined}>{names || "You’re invited"}</h2></div>
+  return <section ref={section} className={styles.opening} style={{ "--envelope-texture": `url("${openingSceneAssets.paper}")` } as CSSProperties} data-section="opening" data-opening-style="envelope" data-envelope-phase={phase} data-motion={motion} data-palette={design.palette} data-artwork={design.decoration ? "on" : "off"} aria-label="Your sealed invitation" onKeyDown={event => { if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); open(true); } }}>
+    <div className={styles.card}>
     <button className={styles.envelope} type="button" onClick={() => open()} disabled={phase === "opening"} aria-label="Break the seal and open invitation" aria-busy={phase === "opening"}>
       <span className={styles.back} aria-hidden="true" />
       <span className={styles.letter} aria-hidden="true"><span>{occasion.name}</span><strong data-indic={hasIndicText(names) || undefined}>{names || "You’re invited"}</strong><span>{dateLabel}</span></span>
-      <span className={styles.sideLeft} aria-hidden="true" /><span className={styles.sideRight} aria-hidden="true" />
-      <span className={styles.lowerFold} aria-hidden="true">{design.decoration && <ArchiveOrnament kind="branch" className={styles.embossedBranch} />}</span>
-      <span className={styles.flap} aria-hidden="true"><span className={styles.flapLining} /></span>
-      <span className={styles.seal} aria-hidden="true"><span className={styles.sealRim} />{design.decoration && <SealIcon icon={opening.icon || "rings"} initials={initials} />}</span>
-      <span className={styles.address} aria-hidden="true">With warm wishes<span>{initials || "Invitly"}</span></span>
+      <span className={styles.sideLeft} data-opening-part="left" aria-hidden="true" /><span className={styles.sideRight} data-opening-part="right" aria-hidden="true" />
+      <span className={styles.lowerFold} aria-hidden="true" />
+      <span className={styles.flap} data-opening-part="flap" aria-hidden="true"><span className={styles.flapLining} /></span>
+      <svg className={styles.foldLines} viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 0 150 240 300 0M0 400 113 235M300 400 187 235" /><path d="M0 2 150 242 300 2M1 400 114 235M299 400 186 235" /></svg>
+      <span className={styles.seal} data-opening-part="center" aria-hidden="true"><span className={styles.sealRim} />{design.decoration && <SealIcon icon={opening.icon || "rings"} initials={initials} />}</span>
     </button>
+    <div className={styles.introduction}><h2 data-long={names.length > 45 || undefined} data-indic={hasIndicText(names) || undefined}>{names || "You’re invited"}</h2>
     {opening.line && <p className={styles.message} data-indic={hasIndicText(opening.line) || undefined}>{opening.line}</p>}
+    {dateLabel && <p className={styles.date}>{dateLabel}</p>}</div>
+    <div className={styles.controls}>
     <button type="button" className={styles.openLink} onClick={() => open()} disabled={phase === "opening"}>Open invitation <ArrowUpRight size={15} aria-hidden="true" /></button>
-    {dateLabel && <p className={styles.date}>{dateLabel}</p>}
     <button type="button" className={styles.skip} onClick={() => open(true)}>Skip opening <ArrowDown size={13} aria-hidden="true" /></button>
+    </div></div>
     <noscript><style>{`.${styles.opening}{display:none!important}`}</style></noscript>
   </section>;
 }

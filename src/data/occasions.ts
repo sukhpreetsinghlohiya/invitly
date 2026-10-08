@@ -1,10 +1,12 @@
 import type { Invitation, InvitationDesign, OccasionId, TraditionId } from "@/types/invitation";
 import { venueDirectionsLink } from "@/lib/venue";
 import { defaultMusic, weddingMusic } from "@/data/music";
+import { getFestivalPreset } from "@/data/festivals";
 
 export const occasions: { id: OccasionId; name: string; people: 1 | 2; firstLabel: string; secondLabel?: string; cover: string; intro: string; message: string; schedule: string; signoff: string }[] = [
   { id: "wedding", name: "Wedding", people: 2, firstLabel: "First name", secondLabel: "Second name", cover: "Together with our families", intro: "Join us as we begin our life together.", message: "With the love of our families and friends, we invite you to share in our wedding. Your presence will make this day even more special.", schedule: "Wedding ceremony", signoff: "With love and gratitude" },
   { id: "engagement", name: "Engagement", people: 2, firstLabel: "First name", secondLabel: "Second name", cover: "A promise to grow together", intro: "A new chapter begins.", message: "Please join us as we exchange promises and celebrate our engagement with the people closest to our hearts.", schedule: "Engagement", signoff: "With love from our families" },
+  { ...getFestivalPreset("custom"), id: "festival", name: "Festival", people: 1, firstLabel: "Host or family name", schedule: "Festival gathering", signoff: "With warm wishes, until we meet" },
   { id: "birthday", name: "Birthday", people: 1, firstLabel: "Birthday person’s name", cover: "Another year, another reason to smile", intro: "You’re invited to a birthday celebration!", message: "Let’s make some happy memories together. Join us for a birthday filled with laughter, good company, and a little cake.", schedule: "Birthday celebration", signoff: "See you there!" },
   { id: "baby-shower", name: "Baby shower", people: 1, firstLabel: "Parent or parents’ names", cover: "A little love is on the way", intro: "Join us for a baby shower.", message: "We’re gathering our favourite people to welcome a new chapter for our growing family. We would love to share this special day with you.", schedule: "Baby shower", signoff: "With love from our growing family" },
   { id: "housewarming", name: "Housewarming", people: 1, firstLabel: "Host or family name", cover: "New home. Familiar faces.", intro: "Help us make our house a home.", message: "Our new home will feel complete with the people we love in it. Please join us for a warm welcome and time together.", schedule: "Housewarming gathering", signoff: "Our door is open to you" },
@@ -50,12 +52,16 @@ export function guestWording(invitation: Invitation) {
 
 export function applyOccasion(invitation: Invitation, occasion: OccasionId): Invitation {
   const current = getOccasion(invitation.occasion), next = getOccasion(occasion);
+  if (current.id === occasion) return invitation;
+  const currentWording = current.id === "festival" ? { ...current, ...getFestivalPreset(invitation.festival?.preset) } : current;
+  const nextWording = occasion === "festival" ? { ...next, ...getFestivalPreset(invitation.festival?.preset) } : next;
   const replaceSuggested = (value: string | undefined, before: string, after: string) => value === undefined || value === before ? after : value;
   return {
     ...invitation, occasion,
-    intro: replaceSuggested(invitation.intro, current.intro, next.intro),
-    message: replaceSuggested(invitation.message, current.message, next.message),
-    coverText: replaceSuggested(invitation.coverText, current.cover, next.cover),
+    ...(occasion === "festival" && !invitation.festival ? { festival: { preset: "custom" as const, title: getFestivalPreset().title } } : {}),
+    intro: replaceSuggested(invitation.intro, currentWording.intro, nextWording.intro),
+    message: replaceSuggested(invitation.message, currentWording.message, nextWording.message),
+    coverText: replaceSuggested(invitation.coverText, currentWording.cover, nextWording.cover),
     closingText: replaceSuggested(invitation.closingText, current.signoff, next.signoff),
     design: { ...getDesign(invitation), countdown: occasion === "remembrance" ? false : getDesign(invitation).countdown },
   };
@@ -65,6 +71,7 @@ export function createOccasionInvitation(occasion: OccasionId = "wedding"): Invi
   const config = getOccasion(occasion);
   return {
     occasion, tradition: "neutral", traditionLabel: "", blessing: "", coverText: config.cover, closingText: config.signoff,
+    ...(occasion === "festival" ? { festival: { preset: "custom" as const, title: getFestivalPreset().title } } : {}),
     design: { ...defaultDesign, music: occasion === "wedding" ? weddingMusic : defaultMusic, countdown: occasion !== "remembrance", sectionOrder: [...defaultDesign.sectionOrder] },
     slug: "my-invitation", couple: ["", ""], initials: "", families: ["", ""], intro: config.intro, message: config.message,
     city: "", weddingAt: "", timezone: "Asia/Kolkata", functions: [], updates: [],

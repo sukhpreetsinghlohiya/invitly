@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { InvitationContent } from "@/components/invitation-content";
+import { getDesign } from "@/data/occasions";
 import { validateInvitationDraft, type InvitationDraft } from "@/lib/invitation-draft";
 import type { EventPhoto } from "@/types/media";
 
@@ -10,7 +11,9 @@ export function DraftPreview() {
   const [error, setError] = useState("");
   useEffect(() => {
     function receive(event: MessageEvent) {
-      if (event.source !== window.parent || event.origin !== window.location.origin || event.data?.type !== "invitly-preview") return;
+      if (event.source !== window.parent || event.origin !== window.location.origin) return;
+      if (event.data?.type === "invitly-preview-replay") { document.dispatchEvent(new Event("invitly:replay-opening")); return; }
+      if (event.data?.type !== "invitly-preview") return;
       const checked = validateInvitationDraft(event.data.draft, "draft");
       if (!checked.data) { setError(checked.error); return; }
       const photos = (Array.isArray(event.data.photos) ? event.data.photos : []).filter((photo: EventPhoto) => photo && typeof photo.url === "string" && /^\/dashboard\/events\/[0-9a-f-]{36}\/media\/[0-9a-f-]{36}$/.test(photo.url) && typeof photo.alt === "string" && Number.isFinite(photo.width) && Number.isFinite(photo.height)).slice(0, 12);
@@ -35,5 +38,6 @@ export function DraftPreview() {
   }, []);
   if (!preview) return <main id="main" className="preview-waiting"><p>{error || "Your invitation preview appears here as you create it."}</p></main>;
   const { draft, photos, timestamp } = preview;
-  return <div className="embedded-preview">{error && <p role="alert" className="private-preview-notice">Preview paused: {error}</p>}<InvitationContent invitation={{ ...draft.invitation, functions: draft.invitation.functions.filter(item => item.visibility !== "hidden") }} theme={draft.themeId} musicEnabled={draft.musicEnabled} photos={photos} mode="preview" renderTimestamp={timestamp} previewBackHref="/customize" /></div>;
+  const previewIdentity = `${draft.themeId}:${draft.invitation.occasion || "wedding"}:${draft.invitation.tradition || "neutral"}:${getDesign(draft.invitation).opening?.style || "theme"}:${draft.invitation.festival?.preset || ""}`;
+  return <div className="embedded-preview">{error && <p role="alert" className="private-preview-notice">Preview paused: {error}</p>}<InvitationContent key={previewIdentity} invitation={{ ...draft.invitation, functions: draft.invitation.functions.filter(item => item.visibility !== "hidden") }} theme={draft.themeId} musicEnabled={draft.musicEnabled} photos={photos} mode="preview" renderTimestamp={timestamp} previewBackHref="/customize" /></div>;
 }

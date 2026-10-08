@@ -37,6 +37,7 @@ export function InvitationContent({ invitation, theme, mode, musicEnabled = mode
   if (theme === "royal") return <WeddingExperience invitation={invitation} theme={theme} mode={mode} musicEnabled={musicEnabled} photos={photos} calendarHref={calendarHref} rsvpContent={rsvpContent} liveUpdates={liveUpdates} previewBackHref={previewBackHref} renderTimestamp={renderTimestamp} />;
   const copy = guestWording(invitation);
   const design = getDesign(invitation);
+  const openingQuery = design.opening ? `&opening=${design.opening.style}` : "";
   const isDemo = mode === "demo";
   const isPreview = mode === "preview";
   const showUpdates = isDemo || Boolean(liveUpdates) || invitation.updates.length > 0;
@@ -102,7 +103,7 @@ export function InvitationContent({ invitation, theme, mode, musicEnabled = mode
       </section>}
       <section className="invite-signoff" data-section="signoff">{theme === "floral" ? <Botanical className="signoff-botanical" /> : <Flower />}<p data-indic={hasIndicText(copy.closing) || undefined}>{copy.closing}</p><h2 data-indic={hasIndicText(coupleName) || undefined}>{coupleName}</h2><div className="multilingual"><span lang="hi">सप्रेम आमंत्रण</span><span aria-hidden="true">·</span><span lang="pa">ਜੀ ਆਇਆਂ ਨੂੰ</span></div>{isDemo && <ShareButton />}</section>
     </main>
-    {isDemo && <><div className="theme-switcher"><span>Find your feeling</span><nav aria-label="Invitation themes">{themes.map(item => <Link key={item.id} href={`/demo?theme=${item.id}&occasion=${invitation.occasion || "wedding"}&tradition=${invitation.tradition || "neutral"}`} aria-current={theme === item.id ? "page" : undefined} scroll={false}>{item.name}</Link>)}</nav></div><div className="demo-customize-link"><Link className="text-link" href={`/customize?theme=${theme}&occasion=${invitation.occasion || "wedding"}&tradition=${invitation.tradition || "neutral"}`}>Customize this theme <ArrowUpRight size={15} /></Link></div></>}
+    {isDemo && <><div className="theme-switcher"><span>Find your feeling</span><nav aria-label="Invitation themes">{themes.map(item => <Link key={item.id} href={`/demo?theme=${item.id}&occasion=${invitation.occasion || "wedding"}&tradition=${invitation.tradition || "neutral"}${openingQuery}`} aria-current={theme === item.id ? "page" : undefined}>{item.name}</Link>)}</nav></div><div className="demo-customize-link"><Link className="text-link" href={`/customize?theme=${theme}&occasion=${invitation.occasion || "wedding"}&tradition=${invitation.tradition || "neutral"}${openingQuery}`}>Customize this theme <ArrowUpRight size={15} /></Link></div></>}
     <footer className="demo-footer"><Brand /><p>Your moments, thoughtfully together.</p><Link href="/templates">Find your own invitation <ArrowUpRight size={14} /></Link><span>Made by Sukhpreet</span></footer>
   </div>;
 }

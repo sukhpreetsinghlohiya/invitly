@@ -6,6 +6,11 @@ export type OccasionTheme = InvitationTheme & { layout: OccasionLayout };
 
 type CollectionEntry = [id: ThemeId, name: string, category: string, description: string, keywords?: readonly string[]];
 const collections: Record<Exclude<OccasionId, "wedding">, CollectionEntry[]> = {
+  festival: [
+    ["royal", "The Festival Letter", "A WARM INVITATION", "An ivory letter with fine terracotta borders and artwork chosen for your celebration.", ["festival", "diwali", "eid", "christmas", "cream", "classic"]],
+    ["kesar", "Colour & Company", "LET THE CELEBRATION BEGIN", "A saffron editorial invitation with generous festival lettering and a bold date column.", ["festival", "holi", "navratri", "yellow", "colourful"]],
+    ["mehfil", "Evening Lanterns", "GOOD COMPANY, WARM WISHES", "Midnight teal, brass details and a keepsake illustration for a festive gathering.", ["festival", "gurpurab", "ganesh chaturthi", "lantern", "evening"]],
+  ],
   engagement: [
     ["lotus", "The Promise Letter", "A PROMISE IN BLOOM", "A garden of antique roses, intertwined rings, and graceful names within a fine double arch on blush paper.", ["pink", "flowers", "gold", "romantic"]],
     ["royal", "The Engagement Edit", "A NEW CHAPTER", "An ivory announcement with generous serif names, a rose-filled illustration, and a burgundy date ribbon.", ["red", "cream", "flowers", "rings", "editorial"]],

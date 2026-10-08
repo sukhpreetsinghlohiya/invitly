@@ -1,0 +1,69 @@
+.scene { --scene-duration:var(--opening-duration,1900ms); container-type:inline-size; position:relative; width:100%; aspect-ratio:3/4; overflow:hidden; isolation:isolate; background:#f0e8dc; perspective:1200px; }
+.image { display:block; position:absolute; inset:0; }
+.image img { object-fit:cover; }
+.scene[data-scene-compact=true] { --scene-duration:0ms; }
+.revealPaper img { filter:brightness(1.08); }
+.revealLight { position:absolute; inset:0; background:radial-gradient(ellipse at 50% 46%,#fffef5e8,#fffef530 65%); }
+.leftPanel,.rightPanel { position:absolute; top:0; bottom:0; width:50%; overflow:hidden; backface-visibility:hidden; transform-style:preserve-3d; }
+.leftPanel { left:0; transform-origin:left; }.rightPanel { right:0; transform-origin:right; }
+.doubleImage { width:200%; max-width:none; }.rightPanel .doubleImage { left:-100%; }
+.doorSeam { position:absolute; width:1px; top:0; bottom:0; left:50%; background:#47342425; box-shadow:0 0 3px #28191422; pointer-events:none; }
+.scene[data-opening-scene=flowers] .leftPanel { width:54%; clip-path:polygon(0 0,93% 0,100% 22%,95% 48%,100% 72%,93% 100%,0 100%); }
+.scene[data-opening-scene=flowers] .rightPanel { width:54%; clip-path:polygon(7% 0,100% 0,100% 100%,7% 100%,0 72%,5% 48%,0 22%); }
+.scene[data-opening-scene=flowers] .doubleImage { width:300%; left:-200%; }.scene[data-opening-scene=flowers] .rightPanel .doubleImage { left:0; }
+.stageImage img { object-position:center; }
+.curtain { position:absolute; top:0; bottom:0; width:50.3%; background:repeating-linear-gradient(90deg,#602735 0%,#a65d68 9%,#67323d 18%,#b26d75 25%,#7b3543 34%,#562532 43%,#a85c66 50%); box-shadow:inset 0 0 20px #2b12284d; }
+.curtain::after { content:""; position:absolute; inset:0; background:linear-gradient(150deg,#ffdcb01f,transparent 30%,#25121d47),repeating-linear-gradient(0deg,#fff1 0 1px,transparent 1px 3px); opacity:.65; }
+.curtainLeft { left:0; transform-origin:left top; border-right:1px solid #421421; }.curtainRight { right:0; transform-origin:right top; border-left:1px solid #bd7b80; }
+.curtainValance { position:absolute; top:0; height:11%; width:100%; background:linear-gradient(#5e2633,#98505d 65%,#54202d); border-bottom:3px double #bc955f; box-shadow:0 5px 9px #34152555; clip-path:polygon(0 0,100% 0,100% 70%,87% 100%,74% 70%,61% 100%,50% 73%,39% 100%,26% 70%,13% 100%,0 70%); }
+.curtainTie { position:absolute; width:12%; height:2px; left:44%; top:57%; background:#cfb37c; box-shadow:0 2px 3px #281815; }
+.arrivalGarden img { object-fit:cover; filter:saturate(.78); }.arrivalHaze { position:absolute; inset:0; background:linear-gradient(transparent 15%,#fffbef80 48%,#f8ecd9 82%); }
+.terrace { position:absolute; left:-10%; width:120%; height:24%; bottom:-4%; transform:perspective(350px) rotateX(35deg); background:linear-gradient(#ccb59766 1px,transparent 1px),linear-gradient(90deg,#ccb59777 1px,transparent 1px),#eee3d2; background-size:100% 30px,60px 100%; box-shadow:inset 0 14px 25px #c9bfa521; }
+.movingVehicle { position:absolute; width:94%; height:54%; left:3%; bottom:6%; filter:drop-shadow(0 14px 9px #41382433); }.movingVehicle .image img { object-fit:contain; }
+.scene[data-opening-scene=bike] .movingVehicle { width:87%; left:6.5%; height:61%; bottom:6%; }
+.scene[data-opening-scene=sky] { background:linear-gradient(#1b2a40,#5a7891 43%,#c8bec4 75%,#f2d9c1); }
+.skyGlow { position:absolute; inset:0; background:radial-gradient(ellipse at 61% 32%,#f9edc629,transparent 44%); }
+.moon { position:absolute; top:20%; left:57%; width:18%; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 35% 30%,#fffcee,#eddcc1); box-shadow:0 0 26px 8px #f0dcb524,inset -5px -3px 8px #c8b79b66; }
+.stars { position:absolute; inset:0; background:radial-gradient(circle at 18% 15%,#fffbeac9 0 1px,transparent 2px),radial-gradient(circle at 76% 11%,#fffbeac9 0 1px,transparent 2px),radial-gradient(circle at 41% 24%,#fffbeaa8 0 1px,transparent 2px),radial-gradient(circle at 89% 38%,#fffbeaa8 0 1px,transparent 2px),radial-gradient(circle at 23% 37%,#fffbeabf 0 1px,transparent 2px); }
+.cloud { position:absolute; width:165%; height:53%; background:radial-gradient(ellipse at 30% 30%,#faf6f0 0 16%,transparent 17%),radial-gradient(ellipse at 54% 42%,#f2eff0 0 26%,transparent 27%),radial-gradient(ellipse at 12% 56%,#f9f4ed 0 28%,transparent 29%),radial-gradient(ellipse at 82% 67%,#f7f3ed 0 30%,transparent 31%),linear-gradient(transparent 40%,#f7f0e6 90%); filter:blur(8px); }
+.cloudFar { left:-50%; bottom:6%; opacity:.67; transform:rotate(-7deg); }.cloudNear { right:-51%; bottom:-13%; transform:rotate(9deg); }
+.skyHorizon { position:absolute; left:0; right:0; bottom:0; height:13%; background:linear-gradient(transparent,#f6e9da); }
+.ringsPaper img { filter:saturate(.3) brightness(1.08); }.ringShadow { position:absolute; width:67%; height:12%; left:17%; bottom:20%; border-radius:50%; background:#7762431c; filter:blur(13px); }
+.ring { position:absolute; top:30%; width:37%; height:39%; border:clamp(3px,3.5cqi,14px) solid #b99959; border-radius:50%; box-shadow:2px 7px 11px #5f452b40,inset 3px 0 2px #fff5cc,inset -3px -2px 2px #80552e,0 0 0 1px #816535; background:transparent; }
+.ring::after { content:""; position:absolute; inset:-2.3cqi; border-radius:50%; border:clamp(1px,.55cqi,2px) solid #f1dca3; box-shadow:0 1px 2px #fff8d3; }
+.ringLeft { left:20%; transform:rotate(-22deg); }.ringRight { left:45%; transform:rotate(24deg); z-index:1; }
+.diamond { position:absolute; width:47%; aspect-ratio:1; top:-23%; left:20%; transform:rotate(-10deg); clip-path:polygon(25% 0,76% 0,100% 36%,50% 100%,0 36%); background:conic-gradient(from 25deg at 50% 40%,#fdfef7,#9baeb1,#eef6f7,#a5bbbf,#fffef2,#96a7ae,#e4f3f2); filter:drop-shadow(0 2px 2px #816c43); }
+.ribbon { position:absolute; left:-17%; bottom:7%; width:130%; height:9%; transform:rotate(-14deg); background:linear-gradient(#fcf5e8,#e4d1b6 45%,#f9efde 85%,#c7b293); box-shadow:0 3px 7px #a995742d; }
+.scene[data-opening-scene=envelope] { background:#c4d7ce; }.envelopeSide { position:absolute; inset:0; background:linear-gradient(120deg,#b9d0c9b3,#7baba094); clip-path:polygon(0 0,52% 54%,0 100%); }.envelopeFlap { position:absolute; inset:0; background:linear-gradient(120deg,#e2ede322,#92b6ac8c); clip-path:polygon(0 0,100% 0,52% 60%,48% 60%); filter:drop-shadow(0 3px 2px #2e4a3e); }
+.envelopeSeal { position:absolute; width:24%; aspect-ratio:1; top:46%; left:38%; display:grid; place-items:center; border-radius:48% 50% 47% 51%; color:#dcdfbf; background:radial-gradient(circle at 32% 25%,#9fbfac,#376d61 55%,#2e554b); box-shadow:inset 2px 2px 4px #d5e5d9,inset -3px -3px 6px #21443b,0 7px 12px #1e3c3945; }.envelopeSeal span { font:clamp(16px,12cqi,48px)/1 var(--serif); text-shadow:0 1px 1px #f3e5b166,0 -1px 2px #25362d; }
+.plainCard { position:absolute; inset:14% 15%; padding:20% 10%; border:1px solid #bcab8d; background:#fffaf0ed; box-shadow:0 5px 15px #8c7c5a20; text-align:center; }.plainCard i { display:block; height:1px; margin:12px 0; background:#ad9771; }.plainCard b { display:block; margin:22px 0; color:#9d6f76; }
+@media(prefers-reduced-motion:no-preference) {
+  .scene[data-scene-phase=opening][data-opening-scene=doors] .leftPanel { animation:open-door-left var(--scene-duration) cubic-bezier(.3,.55,.2,1) both; }
+  .scene[data-scene-phase=opening][data-opening-scene=doors] .rightPanel { animation:open-door-right var(--scene-duration) cubic-bezier(.3,.55,.2,1) both; }
+  .scene[data-scene-phase=opening] .doorSeam { animation:fade-seam 220ms ease both; }
+  .scene[data-scene-phase=opening][data-opening-scene=flowers] .leftPanel { animation:flowers-left var(--scene-duration) cubic-bezier(.3,.55,.2,1) both; }
+  .scene[data-scene-phase=opening][data-opening-scene=flowers] .rightPanel { animation:flowers-right var(--scene-duration) cubic-bezier(.3,.55,.2,1) both; }
+  .scene[data-scene-phase=opening] .curtainLeft,.scene[data-scene-phase=opening] .curtainRight { animation:draw-curtain var(--scene-duration) cubic-bezier(.22,.61,.36,1) both; }
+  .scene[data-scene-phase=opening] .curtainTie { animation:fade-seam 180ms ease both; }
+  .scene[data-scene-phase=opening] .stageImage { animation:stage-approach var(--scene-duration) ease both; }
+  .scene[data-scene-phase=opening] .movingVehicle { animation:vehicle-arrival var(--scene-duration) cubic-bezier(.36,.02,.48,.97) both; }
+  .scene[data-scene-phase=opening] .cloudFar { animation:cloud-left var(--scene-duration) ease-in-out both; }
+  .scene[data-scene-phase=opening] .cloudNear { animation:cloud-right var(--scene-duration) ease-in-out both; }
+  .scene[data-scene-phase=opening] .moon { animation:moon-rise var(--scene-duration) ease-in-out both; }
+  .scene[data-scene-phase=opening] .ringLeft { animation:join-ring-left var(--scene-duration) ease-in-out both; }
+  .scene[data-scene-phase=opening] .ringRight { animation:join-ring-right var(--scene-duration) ease-in-out both; }
+}
+@keyframes open-door-left { 0%,5% { transform:rotateY(0); } 88%,100% { transform:rotateY(-105deg); } }
+@keyframes open-door-right { 0%,5% { transform:rotateY(0); } 88%,100% { transform:rotateY(105deg); } }
+@keyframes fade-seam { to { opacity:0; } }
+@keyframes flowers-left { to { transform:translateX(-85%) rotate(-7deg) scale(1.08); opacity:.15; } }
+@keyframes flowers-right { to { transform:translateX(85%) rotate(7deg) scale(1.08); opacity:.15; } }
+@keyframes draw-curtain { 0%,5% { transform:scaleX(1); } 80%,100% { transform:scaleX(.09); } }
+@keyframes stage-approach { from { transform:scale(1.04); } to { transform:scale(1); } }
+@keyframes vehicle-arrival { 0%,8% { transform:translateX(0); } 22% { transform:translateX(-3%) rotate(-1deg); } 100% { transform:translateX(112%); } }
+@keyframes cloud-left { to { transform:translateX(-30%) translateY(18%) rotate(-9deg); } }
+@keyframes cloud-right { to { transform:translateX(32%) translateY(25%) rotate(9deg); } }
+@keyframes moon-rise { to { transform:translateY(-22px) scale(1.07); } }
+@keyframes join-ring-left { 65%,100% { transform:translateX(16%) rotate(-5deg); } }
+@keyframes join-ring-right { 65%,100% { transform:translateX(-16%) rotate(9deg); } }
+@media(prefers-reduced-motion:reduce) { .scene * { animation:none!important; transition:none!important; } }

@@ -191,6 +191,31 @@
 .cover[data-occasion=engagement][data-cover-photo=true] .visualCaption>span { text-align:left; max-width:40cqi; }
 .cover[data-occasion=engagement] [data-photo-slideshow]>div:has(>button) { width:max-content; max-width:calc(100% - 8px); right:50%; transform:translateX(50%); bottom:12px; }
 
+/* Festival titles lead; hosts have a separate line and every preset keeps its own artwork. */
+.cover[data-occasion=festival] { --occasion-ink:#793f2b; --occasion-paper:#fff5e2; --occasion-accent:#a86d37; --cover-wash:#ecd4ab; }
+.cover[data-occasion=festival] .composition { min-height:134cqi; }
+.cover[data-occasion=festival] .names { font-size:13.5cqi; line-height:1.03; }
+.hostLine { margin:4cqi 0 0; font:400 3.2cqi/1.65 var(--sans); overflow-wrap:anywhere; text-wrap:balance; }
+.full .hostLine { font-size:max(12px,3.2cqi); }
+.cover[data-occasion=festival][data-layout=signature] .composition { padding:8cqi 11cqi 10cqi; border-block:1.5cqi solid var(--occasion-ink); }
+.cover[data-occasion=festival][data-layout=signature] .composition::before { inset:3cqi; outline:1px solid var(--cover-line); outline-offset:1.4cqi; }
+.cover[data-occasion=festival][data-layout=signature] .signatureVisual { width:92%; margin:0 auto 2cqi; }
+.cover[data-occasion=festival][data-layout=signature] .occasionName { margin-bottom:0; }
+.cover[data-occasion=festival] .paperTrim { display:none; }
+.cover[data-occasion=festival][data-layout=editorial] { --occasion-paper:#ffe7aa; --occasion-ink:#6e381e; --occasion-accent:#99672b; --cover-wash:#f2cb75; }
+.cover[data-occasion=festival][data-layout=editorial] .composition { justify-content:center; gap:0; }
+.cover[data-occasion=festival][data-layout=editorial] .editorialCopy { padding-block:6cqi; }
+.cover[data-occasion=festival][data-layout=editorial] .editorialVisual { margin-top:0; grid-template-columns:minmax(0,1fr) 24cqi; }
+.cover[data-occasion=festival][data-layout=editorial] .visualCaption { background:var(--occasion-ink); color:var(--occasion-paper); justify-content:center; }
+.cover[data-occasion=festival][data-layout=editorial] .dateStamp { color:inherit; }
+.cover[data-occasion=festival][data-layout=keepsake] { --occasion-paper:#243e42; --occasion-ink:#f4e2b6; --occasion-accent:#c9a665; --cover-wash:#3b5556; }
+.cover[data-occasion=festival][data-layout=keepsake] .keepsakeVisual { width:90%; margin-block:2cqi 5cqi; }
+.cover[data-occasion=festival][data-layout=keepsake] .keepsakeVisual .artwork { padding:1cqi 0; }
+.cover[data-occasion=festival][data-layout=keepsake] .names { font-style:normal; }
+.cover[data-occasion=festival][data-typography=sans] .names { font-size:11cqi; font-style:normal; line-height:1.2; }
+.cover[data-occasion=festival][data-typography=script] .names { font-style:normal; line-height:1.2; }
+.cover[data-occasion=festival] .names[data-indic=true] { letter-spacing:0; font-style:normal; line-height:1.45; }
+
 /* Editable names keep their proportions even in the oversized birthday and naming editions. */
 .cover[data-occasion][data-layout] .names[data-long=true] { font-size:10.8cqi; line-height:1.16; letter-spacing:-.025em; }
 .cover[data-occasion][data-layout] .names[data-indic=true][data-long=true] { line-height:1.5; letter-spacing:0; }

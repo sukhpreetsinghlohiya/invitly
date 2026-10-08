@@ -1,7 +1,7 @@
 import type { OccasionId } from "@/types/invitation";
 import { getOccasionArtwork } from "@/data/occasion-art";
 
-export type CeremonyArtId = "haldi" | "sangeet" | "mehndi" | "wedding" | "reception" | "baraat" | "engagement" | "birthday" | "baby-shower" | "housewarming" | "naming" | "anniversary" | "remembrance" | "other";
+export type CeremonyArtId = "haldi" | "sangeet" | "mehndi" | "wedding" | "reception" | "baraat" | "engagement" | "festival" | "birthday" | "baby-shower" | "housewarming" | "naming" | "anniversary" | "remembrance" | "other";
 export type CeremonyArtwork = {
   id: CeremonyArtId;
   label: string;
@@ -21,6 +21,7 @@ export const ceremonyArtwork: readonly CeremonyArtwork[] = [
   { id: "reception", label: "Reception", src: "/images/ceremonies/reception.webp", width: 600, height: 450, aliases: ["reception", "रिसेप्शन", "रिसेप्‍शन", "ਰਿਸੈਪਸ਼ਨ", "ਰਿਸੈਪਸ਼ਨ"] },
   { id: "baraat", label: "Baraat", src: "/images/ceremonies/baraat.webp", width: 600, height: 450, aliases: ["baraat", "barat", "बारात", "ਬਰਾਤ"] },
   { id: "engagement", label: "Engagement", ...getOccasionArtwork("engagement"), aliases: ["engagement", "ring ceremony", "roka", "sagai", "सगाई", "रोका", "ਮੰਗਣੀ", "ਰੋਕਾ"] },
+  { id: "festival", label: "Festival gathering", ...getOccasionArtwork("festival"), aliases: ["festival", "diwali", "holi", "eid", "christmas", "gurpurab", "navratri", "ganesh chaturthi"] },
   { id: "birthday", label: "Birthday", ...getOccasionArtwork("birthday"), aliases: ["birthday", "cake cutting", "जन्मदिन", "ਜਨਮਦਿਨ"] },
   { id: "baby-shower", label: "Baby shower", ...getOccasionArtwork("baby-shower"), aliases: ["baby shower", "god bharai", "गोद भराई"] },
   { id: "housewarming", label: "Housewarming", ...getOccasionArtwork("housewarming"), aliases: ["housewarming", "griha pravesh", "grih pravesh", "गृह प्रवेश"] },

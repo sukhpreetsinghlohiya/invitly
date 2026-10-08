@@ -16,21 +16,23 @@ import { PersonProfileFields } from "./person-profile-fields";
 import { InvitationDetailOptions } from "./invitation-options";
 import { PreviewFrame } from "./preview-frame";
 import { VenueFields } from "./venue-fields";
-import { applyOccasion, getDesign, getOccasion } from "@/data/occasions";
+import { getDesign, getOccasion } from "@/data/occasions";
 import { getOccasionTheme } from "@/data/occasion-themes";
+import { getFestival } from "@/data/festivals";
 import { ceremonyArtwork } from "@/data/ceremony-art";
 import { defaultMusic, youtubeVideoId } from "@/data/music";
 import { isValidInvitationDate, validateInvitationDraft, validateMapUrl, type InvitationDraft } from "@/lib/invitation-draft";
 import { accountDraftBackup, INVITATION_DRAFT_STORAGE_KEY as STORAGE_KEY, readAccountDraftBackup } from "@/lib/invitation-draft-storage";
+import { applyDraftPreferences, savedDraftUrl } from "@/lib/invitation-draft-preferences";
 import { saveInvitation, setPublication } from "@/app/dashboard/actions";
 import { fromZonedInput, toZonedInput } from "@/lib/timezone";
 import { uploadEventPhoto, deleteEventPhoto } from "@/app/dashboard/media-actions";
 import type { EventPhoto } from "@/types/media";
-import type { Invitation, ThemeId, OccasionId, TraditionId } from "@/types/invitation";
+import type { FestivalPresetId, Invitation, InvitationOpening, ThemeId, OccasionId, TraditionId } from "@/types/invitation";
 
 const subscribeHydration = () => () => {};
 export type EditorPhoto = EventPhoto;
-type Props = { initialPhotos?: EditorPhoto[]; photoError?: string; publishedAt?: string | null; initialDraft: InvitationDraft; eventId?: string; published: boolean; configured: boolean; signedIn: boolean; siteUrl: string; preferredTheme?: ThemeId; preferredOccasion?: OccasionId; preferredTradition?: TraditionId };
+type Props = { initialPhotos?: EditorPhoto[]; photoError?: string; publishedAt?: string | null; initialDraft: InvitationDraft; eventId?: string; published: boolean; configured: boolean; signedIn: boolean; siteUrl: string; preferredTheme?: ThemeId; preferredOccasion?: OccasionId; preferredTradition?: TraditionId; preferredFestival?: FestivalPresetId; preferredOpening?: InvitationOpening["style"] };
 type Tab = "Occasion" | "Design" | "Details" | "Functions" | "Photos" | "Share";
 const steps = [{ name: "Occasion", icon: CalendarDays }, { name: "Details", icon: Heart }, { name: "Functions", icon: Settings2 }, { name: "Photos", icon: ImagePlus }, { name: "Design", icon: LayoutTemplate }, { name: "Share", icon: Link2 }] as const;
 const stepName = (tab: Tab) => tab === "Functions" ? "Schedule" : tab;
@@ -60,9 +62,7 @@ export function InvitationEditor(props: Props) {
       const parsed = stored ? validateInvitationDraft(JSON.parse(stored), "draft") : null;
       if (parsed?.data) { initial = parsed.data; restoredLocalDraft = true; savedLocalSnapshot = JSON.stringify(parsed.data); }
     } catch { /* Local storage is optional; the editor still works in memory. */ }
-    if (props.preferredTheme) initial = { ...initial, themeId: props.preferredTheme };
-    if (props.preferredOccasion) initial = { ...initial, invitation: applyOccasion(initial.invitation, props.preferredOccasion) };
-    if (props.preferredTradition) initial = { ...initial, invitation: { ...initial.invitation, tradition: props.preferredTradition } };
+    initial = applyDraftPreferences(initial, { theme: props.preferredTheme, occasion: props.preferredOccasion, tradition: props.preferredTradition, festival: props.preferredFestival, opening: props.preferredOpening });
   }
   if (!props.eventId && !isOccasionAvailable(initial.invitation.occasion)) return <OccasionComingSoon occasion={initial.invitation.occasion!} />;
   const restoredWithChanges = savedLocalSnapshot !== null && savedLocalSnapshot !== JSON.stringify(initial);
@@ -116,6 +116,7 @@ function publishingChecklist(draft: InvitationDraft): ReadinessItem[] {
   const invitation = draft.invitation;
   const occasion = getOccasion(invitation.occasion);
   const namesReady = Boolean(invitation.couple[0].trim()) && (occasion.people === 1 || Boolean(invitation.couple[1].trim()));
+  const festivalTitle = getFestival(invitation).title.trim();
   const dateReady = isValidInvitationDate(invitation.weddingAt);
   const visible = invitation.functions.filter(item => item.visibility !== "hidden");
   const incomplete = invitation.functions.filter(item => {
@@ -130,6 +131,7 @@ function publishingChecklist(draft: InvitationDraft): ReadinessItem[] {
   const slugReady = slug.length >= 3 && slug.length <= 100 && /^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug);
   return [
     { id: "names", title: occasion.people === 2 ? "Names" : "Host or celebrant name", detail: namesReady ? invitation.couple.filter(Boolean).join(" & ") : occasion.people === 2 ? "Add both names for this occasion." : "Add the name your guests will recognise.", step: "Details", status: namesReady ? "ready" : "missing", action: "Review names" },
+    ...(occasion.id === "festival" ? [{ id: "festival-title", title: "Celebration title", detail: festivalTitle || "Add the title your guests will see on the cover.", step: "Occasion" as const, status: festivalTitle ? "ready" as const : "missing" as const, action: "Review celebration title" }] : []),
     { id: "date", title: "Event date & timezone", detail: dateReady ? `Date entered · ${invitation.timezone}` : "Choose the event date and time.", step: "Details", status: dateReady ? "ready" : "missing", action: "Review event date" },
     { id: "schedule", title: "Guest schedule", detail: incomplete.length ? `${incomplete.length} ${incomplete.length === 1 ? "item needs" : "items need"} a title, valid date, venue, address or map link.` : visible.length ? `${visible.length} ${visible.length === 1 ? "function is" : "functions are"} ready for permitted guests.${invitation.functions.length > visible.length ? ` ${invitation.functions.length - visible.length} hidden.` : ""}` : "No guest-visible functions yet. You can add them later.", step: "Functions", status: incomplete.length ? "missing" : visible.length ? "ready" : "optional", action: "Review schedule" },
     { id: "music", title: "Optional soundtrack", detail: !musicReady ? "Choose a valid YouTube video or switch to an instrumental." : draft.musicEnabled ? music.source === "youtube" ? "YouTube song selected · guests tap to play." : music.source === "upload" ? "Your uploaded audio selected · guests tap to play." : music.source === "library" ? "Wedding recording selected · guests tap to play." : "Original instrumental selected · guests tap to play." : "Music is off. Guests can enjoy a quiet invitation.", step: "Design", status: !musicReady ? "missing" : draft.musicEnabled ? "ready" : "optional", action: "Review soundtrack" },
@@ -286,6 +288,7 @@ function EditorWorkspace({ initialDraft, eventId: initialId, published: initiall
     catch { if (!signedIn) { setError("This browser could not save your draft. Allow local storage or sign in to save to your account."); return; } }
     if (!signedIn) {
       setDirty(false); setHasSaved(true);
+      window.history.replaceState(window.history.state, "", savedDraftUrl(window.location.href));
       toast({ title: "Draft saved.", description: "Stored in this browser." });
       setMessage(publish ? "Your draft is saved on this device. Sign in to publish a permanent link for your family." : "Draft saved on this device. Sign in when you’re ready to publish.");
       if (publish) setTab("Share");

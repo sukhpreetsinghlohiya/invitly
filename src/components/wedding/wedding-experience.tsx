@@ -36,6 +36,7 @@ import { LocalEventTime } from "@/components/local-event-time";
 export function WeddingExperience({ invitation, mode, musicEnabled, photos = [], calendarHref, rsvpContent, liveUpdates, previewBackHref, renderTimestamp }: InvitationRenderProps) {
   const copy = guestWording(invitation);
   const design = getDesign(invitation);
+  const customizeHref = `/customize?theme=royal&occasion=${invitation.occasion || "wedding"}&tradition=${invitation.tradition || "neutral"}${design.opening ? `&opening=${design.opening.style}` : ""}`;
   const occasion = getOccasion(invitation.occasion);
   const isDemo = mode === "demo";
   const isPreview = mode === "preview";
@@ -60,7 +61,7 @@ export function WeddingExperience({ invitation, mode, musicEnabled, photos = [],
       <section id="portrait" className={`${styles.hero} ${!cover ? styles.heroWithoutPhoto : ""}`} aria-labelledby="couple-heading" data-section="portrait">
         {cover ? <HeroPhotoSlideshow photos={images} coverPhotoId={cover.id} motion={design.motion} preload /> : <span data-decoration><Botanical className={styles.heroBotanical} /></span>}
         <div className={styles.heroShade} />
-        <div className={styles.heroTop}><Link href="/" className={styles.smallBrand} aria-label="Invitly home"><BrandMark /> invitly<span>.</span></Link><span>{mode === "guest" ? "YOUR PERSONAL INVITATION" : isDemo ? "THE ROYAL EDIT · DEMO" : "TOGETHER WITH OUR FAMILIES"}</span>{isDemo ? <Link href={`/customize?theme=royal&occasion=${occasion.id}`}>Make it yours <ArrowUpRight size={14} /></Link> : <span>{date}</span>}</div>
+        <div className={styles.heroTop}><Link href="/" className={styles.smallBrand} aria-label="Invitly home"><BrandMark /> invitly<span>.</span></Link><span>{mode === "guest" ? "YOUR PERSONAL INVITATION" : isDemo ? "THE ROYAL EDIT · DEMO" : "TOGETHER WITH OUR FAMILIES"}</span>{isDemo ? <Link href={customizeHref}>Make it yours <ArrowUpRight size={14} /></Link> : <span>{date}</span>}</div>
         <div className={styles.heroCopy}>{!cover && design.decoration && <OccasionIllustration occasion={occasion.id} className={styles.heroOccasionArt} />}<p className={styles.eyebrow} data-indic={hasIndicText(copy.cover) || undefined}>{copy.cover}</p><h1 id="couple-heading" data-long-names={names.length > 32} data-indic={hasIndicText(names) || undefined}><span>{invitation.couple[0] || "Your name"}</span>{invitation.couple[1] && <><em>&</em><span>{invitation.couple[1]}</span></>}</h1><p className={styles.heroDate} data-indic={hasIndicText(invitation.city) || undefined}>{date}<span />{invitation.city}</p><div className={styles.heroQuickLinks}><a href="#celebrations">Schedule & directions <ArrowUpRight size={14} /></a>{showRsvp && <a href="#rsvp">RSVP <Heart size={14} /></a>}</div><a href="#blessings" className={styles.heroScroll}>EXPLORE THE INVITATION <ArrowDown size={17} /></a></div>
         <span className={styles.heroSideNote}>{occasion.name.toUpperCase()}</span>
       </section>
@@ -94,7 +95,7 @@ export function WeddingExperience({ invitation, mode, musicEnabled, photos = [],
 
       <section className={styles.signoff} data-section="signoff">{design.decoration && <Flower />}<span className={styles.eyebrow}>{copy.remembrance ? "HELD IN OUR HEARTS" : "UNTIL WE MEET"}</span><h2 data-indic={hasIndicText(names) || undefined}>{names}</h2><p data-indic={hasIndicText(copy.closing) || undefined}>{copy.closing}</p><span data-indic={hasIndicText(invitation.families.join(" ")) || undefined}>{invitation.families.filter(Boolean).join(" & ")}</span>{mode !== "guest" && !isPreview && <ShareButton text={isDemo ? undefined : `An invitation for ${names}.`} />}</section>
     </main>
-    <footer className={styles.footer}><Link href="/" className={styles.smallBrand} aria-label="Invitly home"><BrandMark /> invitly<span>.</span></Link><p>A little link. A lot of love.</p><Link href={isDemo ? `/customize?theme=royal&occasion=${occasion.id}` : "/templates"}>{isDemo ? "Make this invitation yours" : "Create your own invitation"} <ArrowUpRight size={14} /></Link><span>Made by Sukhpreet</span>{isDemo && <Link href="/templates">Explore all 10 designs</Link>}</footer>
+    <footer className={styles.footer}><Link href="/" className={styles.smallBrand} aria-label="Invitly home"><BrandMark /> invitly<span>.</span></Link><p>A little link. A lot of love.</p><Link href={isDemo ? customizeHref : "/templates"}>{isDemo ? "Make this invitation yours" : "Create your own invitation"} <ArrowUpRight size={14} /></Link><span>Made by Sukhpreet</span>{isDemo && <Link href="/templates">Explore all 10 designs</Link>}</footer>
     {musicEnabled && <div className={styles.floatingMusic}><MusicControl key={`${design.music?.source}:${design.music?.track}:${design.music?.audioTrack}:${design.music?.uploadedAudio?.id}:${design.music?.youtubeUrl}`} music={design.music} /></div>}
   </div>;
 }

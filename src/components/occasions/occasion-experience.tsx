@@ -24,12 +24,14 @@ import { PhotoGallery } from "@/components/wedding/photo-gallery";
 import { formatEventDate } from "@/data/demo-invitation";
 import { getDesign, getOccasion, guestWording } from "@/data/occasions";
 import { getOccasionTheme, getOccasionThemes } from "@/data/occasion-themes";
+import { getFestival } from "@/data/festivals";
 import { OccasionCover } from "./occasion-cover";
 import "../invitation-personalization.css";
 import "./experience.css";
 
 type OccasionCopy = { storyLabel: string; storyTitle: string; scheduleLabel: string; scheduleTitle: string; rsvpTitle: string; photoTitle: string };
 const occasionCopy: Record<Exclude<OccasionId, "wedding">, OccasionCopy> = {
+  festival: { storyLabel: "A FESTIVE INVITATION", storyTitle: "The joy is in being together.", scheduleLabel: "OUR CELEBRATION PLANS", scheduleTitle: "A place for you, a moment to share.", rsvpTitle: "Come celebrate with us.", photoTitle: "The joy we’ve shared." },
   engagement: { storyLabel: "A NOTE FROM US", storyTitle: "The beginning of our always.", scheduleLabel: "SAVE THIS LITTLE MOMENT", scheduleTitle: "A moment for our promise.", rsvpTitle: "Will you be there?", photoTitle: "Our story so far." },
   birthday: { storyLabel: "YOUR INVITATION TO THE FUN", storyTitle: "A little cake. A lot of company.", scheduleLabel: "THE BIRTHDAY PLAN", scheduleTitle: "Here’s when the fun begins.", rsvpTitle: "A place with your name on it.", photoTitle: "The moments that made this year." },
   "baby-shower": { storyLabel: "A NOTE FROM OUR FAMILY", storyTitle: "There is so much love already.", scheduleLabel: "A GENTLE MOMENT TOGETHER", scheduleTitle: "A gathering for our little beginning.", rsvpTitle: "Join our circle of love.", photoTitle: "A new chapter, in pictures." },
@@ -63,14 +65,14 @@ export function OccasionExperience({ invitation, theme, mode, musicEnabled = mod
   const localDay = (value: string) => formatEventDate(value, invitation.timezone, { year: "numeric", month: "2-digit", day: "2-digit" });
   const today = localDay(new Date(renderTimestamp).toISOString());
   const todayEvents = !isDemo ? events.filter(event => localDay(event.startsAt) === today) : [];
-  const personalizeHref = `/customize?occasion=${occasion}&theme=${theme}&tradition=${invitation.tradition || "neutral"}`;
+  const selectedOptions = `${occasion === "festival" ? `&festival=${getFestival(invitation).preset}` : ""}${design.opening ? `&opening=${design.opening.style}` : ""}`;
+  const personalizeHref = `/customize?occasion=${occasion}&theme=${theme}&tradition=${invitation.tradition || "neutral"}${selectedOptions}`;
 
   return <div className={`occasion-experience occasion-experience--${occasion} occasion-layout--${selectedTheme.layout} invitation-body`} data-body-theme={theme} {...invitationPresentation(invitation)} data-motion={isQuiet ? "none" : design.motion || "gentle"}>
     <InvitationMotion theme={theme} motion={isQuiet ? "none" : design.motion} />
-    {(isDemo || isPreview) && <header className="occasion-preview-bar" data-preview-notice>
-      <Link href={isPreview ? previewBackHref || "/dashboard" : `/templates?occasion=${occasion}`}><ArrowLeft size={15} /><span>{isPreview ? "Back to editing" : `${isQuiet ? "Remembrance" : config.name} designs`}</span></Link>
-      <span>{isPreview ? "Private host preview" : "A fictional invitation · Live demo"}</span>
-      {isDemo && <Link href={personalizeHref} className="occasion-personalize">Make it yours <ArrowUpRight size={15} /></Link>}
+    {isPreview && <header className="occasion-preview-bar" data-preview-notice>
+      <Link href={previewBackHref || "/dashboard"}><ArrowLeft size={15} /><span>Back to editing</span></Link>
+      <span>Private host preview</span>
     </header>}
     <main id="main" className="invitation-ordered">
       <InvitationEnvelope invitation={invitation} />
@@ -109,8 +111,8 @@ export function OccasionExperience({ invitation, theme, mode, musicEnabled = mod
         {calendarHref && !!events.length && <div className="occasion-calendar"><a href={calendarHref}><CalendarPlus size={17} /> Add schedule to calendar</a><span>Times adjust to your calendar’s timezone. End times are estimates.</span></div>}
         {!events.length && <p className="occasion-empty">Your hosts will share the time and place here.</p>}
         <div className="occasion-event-list">{events.map((event, index) => <article data-reveal key={event.id} className="occasion-event">
-          <div className="occasion-event-date"><span className="occasion-event-index">{String(index + 1).padStart(2, "0")}</span><span>{formatEventDate(event.startsAt, invitation.timezone, { weekday: "long" })}</span><strong>{formatEventDate(event.startsAt, invitation.timezone, { day: "2-digit" })}</strong><span>{formatEventDate(event.startsAt, invitation.timezone, { month: "long", year: "numeric" })}</span>{design.decoration && <div className="occasion-event-art"><CeremonyArt title={event.name} fallbackIcon={event.icon} occasion={occasion} /></div>}</div>
-          <div className="occasion-event-content" data-reveal-content><h3 data-indic={hasIndicText(event.name) || undefined}>{event.name}</h3><time dateTime={event.startsAt}>{formatEventDate(event.startsAt, invitation.timezone, { hour: "numeric", minute: "2-digit" })} · {timezone}</time><LocalEventTime startsAt={event.startsAt} hostTimezone={invitation.timezone} /><CalendarActions event={event} names={invitation.couple} timezone={invitation.timezone} calendarHref={calendarHref} /><span className="sr-only">{calendarDate(event.startsAt)}</span>{(event.description || event.dressCode) && <details className="invitation-event-notes"><summary>Details{event.dressCode ? " & dress code" : ""}<ChevronDown size={15} /></summary><div>{event.description && <p data-indic={hasIndicText(event.description) || undefined}>{event.description}</p>}{event.dressCode && <p data-indic={hasIndicText(event.dressCode) || undefined}><strong>Dress note</strong> {event.dressCode}</p>}</div></details>}<VenueCard venue={event.venue} address={event.address} mapUrl={event.mapUrl} eventName={event.name} /></div>
+          <div className="occasion-event-date"><span className="occasion-event-index">{String(index + 1).padStart(2, "0")}</span>{event.startsAt ? <><span>{formatEventDate(event.startsAt, invitation.timezone, { weekday: "long" })}</span><strong>{formatEventDate(event.startsAt, invitation.timezone, { day: "2-digit" })}</strong><span>{formatEventDate(event.startsAt, invitation.timezone, { month: "long", year: "numeric" })}</span></> : <span>Date to be announced</span>}{design.decoration && <div className="occasion-event-art"><CeremonyArt title={event.name} fallbackIcon={event.icon} occasion={occasion} /></div>}</div>
+          <div className="occasion-event-content" data-reveal-content><h3 data-indic={hasIndicText(event.name) || undefined}>{event.name}</h3><time dateTime={event.startsAt || undefined}>{event.startsAt ? `${formatEventDate(event.startsAt, invitation.timezone, { hour: "numeric", minute: "2-digit" })} · ${timezone}` : "Time to be announced"}</time><LocalEventTime startsAt={event.startsAt} hostTimezone={invitation.timezone} /><CalendarActions event={event} names={invitation.couple} timezone={invitation.timezone} calendarHref={calendarHref} /><span className="sr-only">{calendarDate(event.startsAt)}</span>{(event.description || event.dressCode) && <details className="invitation-event-notes"><summary>Details{event.dressCode ? " & dress code" : ""}<ChevronDown size={15} /></summary><div>{event.description && <p data-indic={hasIndicText(event.description) || undefined}>{event.description}</p>}{event.dressCode && <p data-indic={hasIndicText(event.dressCode) || undefined}><strong>Dress note</strong> {event.dressCode}</p>}</div></details>}<VenueCard venue={event.venue} address={event.address} mapUrl={event.mapUrl} eventName={event.name} /></div>
         </article>)}</div>
         {isDemo && <p className="occasion-demo-note">Fictional names, dates and venue details for this demo. Add and check your own details before sharing.</p>}
       </section>
@@ -125,6 +127,6 @@ export function OccasionExperience({ invitation, theme, mode, musicEnabled = mod
       <section className="occasion-signoff" data-section="signoff"><span className="occasion-overline">{isQuiet ? "WITH LOVE & REMEMBRANCE" : occasion === "housewarming" ? "OUR DOOR IS OPEN" : "UNTIL WE MEET"}</span><h2 data-indic={hasIndicText(copy.closing) || undefined}>{copy.closing}</h2><p data-indic={hasIndicText(isQuiet ? families.join(" ") : names) || undefined}>{isQuiet ? families.join(" & ") : names}</p>{mode !== "guest" && !isPreview && <ShareButton text={isDemo ? undefined : `An invitation for ${names}.`} />}</section>
     </main>
     <footer className="occasion-footer"><Brand /><p>A thoughtful invitation. A meaningful gathering.</p><Link href={isDemo ? personalizeHref : `/templates?occasion=${occasion}`}>{isDemo ? "Make this invitation yours" : "Create your own invitation"} <ArrowUpRight size={15} /></Link></footer>
-    {isDemo && <aside className="occasion-try-designs" aria-label={`${config.name} invitation designs`}><span>Explore this occasion</span><div>{getOccasionThemes(occasion).map(item => <Link href={`/demo?occasion=${occasion}&theme=${item.id}&tradition=${invitation.tradition || "neutral"}`} key={item.id} aria-current={item.id === theme ? "page" : undefined}>{item.name} <ArrowUpRight size={13} /></Link>)}</div></aside>}
+    {isDemo && <aside className="occasion-try-designs" aria-label={`${config.name} invitation designs`}><span>Explore this occasion</span><div>{getOccasionThemes(occasion).map(item => <Link href={`/demo?occasion=${occasion}&theme=${item.id}&tradition=${invitation.tradition || "neutral"}${selectedOptions}`} key={item.id} aria-current={item.id === theme ? "page" : undefined}>{item.name} <ArrowUpRight size={13} /></Link>)}</div></aside>}
   </div>;
 }

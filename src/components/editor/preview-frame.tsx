@@ -24,8 +24,10 @@ export function PreviewFrame({ draft, photos }: { draft: InvitationDraft; photos
   useEffect(() => {
     const timer = setTimeout(send, 200);
     const ready = (event: MessageEvent) => { if (event.origin === window.location.origin && event.source === frame.current?.contentWindow && event.data?.type === "invitly-preview-ready") send(); };
+    const replay = () => frame.current?.contentWindow?.postMessage({ type: "invitly-preview-replay" }, window.location.origin);
     window.addEventListener("message", ready);
-    return () => { clearTimeout(timer); window.removeEventListener("message", ready); };
+    window.addEventListener("invitly:preview-replay", replay);
+    return () => { clearTimeout(timer); window.removeEventListener("message", ready); window.removeEventListener("invitly:preview-replay", replay); };
   }, [send]);
   return <><div className="preview-device-controls" role="group" aria-label="Preview screen size"><button type="button" aria-pressed={device === "phone"} onClick={() => setDevice("phone")}><Smartphone size={15} /> Phone · 360px</button><button type="button" aria-pressed={device === "desktop"} onClick={() => setDevice("desktop")}><Monitor size={15} /> Desktop · 1280px</button></div><div ref={viewport} className={`preview-frame-viewport preview-frame-${device}`} style={{ height: Math.round(780 * scale) }}><iframe ref={frame} title="Actual guest invitation preview" src="/preview" onLoad={send} className="guest-preview-frame" style={{ width, height: 780, transform: `scale(${scale})` }} /></div><p className="editor-preview-hint">Your actual guest page, with your current unsaved changes.</p></>;
 }

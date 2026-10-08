@@ -18,6 +18,7 @@ export const watercolorArtwork = Object.fromEntries(
 const occasionArtwork: Record<OccasionId, OccasionArtwork> = {
   wedding: watercolorArtwork.wedding,
   engagement: watercolorArtwork.engagement,
+  festival: { src: "/images/occasions/festival.svg", width: 480, height: 360 },
   birthday: watercolorArtwork.birthday,
   "baby-shower": watercolorArtwork["baby-shower"],
   housewarming: watercolorArtwork.housewarming,

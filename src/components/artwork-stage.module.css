@@ -1,0 +1,4 @@
+.stage { position:relative; width:100%; aspect-ratio:3/4; overflow:hidden; }
+.paper { position:absolute; top:50%; left:50%; width:calc(100% - 32px); transform:translate(-50%,-50%) scale(var(--artwork-scale,.8)); transform-origin:center; container-type:inline-size; filter:drop-shadow(0 5px 7px #36221c1c); }
+.paper>div { width:100%; }
+.paper>:global(.invitation-art) { height:auto; min-height:0; }

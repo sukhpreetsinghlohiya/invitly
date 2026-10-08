@@ -3,6 +3,8 @@ import { defaultDesign, getOccasion, occasions, traditions } from "@/data/occasi
 import { defaultMusic, musicMoods, recordedTrack, youtubeVideoId } from "@/data/music";
 import { parseUploadedAudio } from "@/lib/audio";
 import { parseInvitationVideo } from "@/lib/invitation-video";
+import { isOpeningStyle } from "@/data/invitation-openings";
+import { festivalPresets } from "@/data/festivals";
 import type { Invitation, InvitationDesign, OccasionId, SectionId, ThemeId, TraditionId } from "@/types/invitation";
 
 export type InvitationDraft = { themeId: ThemeId; invitation: Invitation; musicEnabled: boolean };
@@ -81,8 +83,8 @@ function design(value: unknown, allowIncompleteMusic: boolean): InvitationDesign
   let opening: InvitationDesign["opening"];
   if (source.opening !== undefined) {
     const entry = record(source.opening, "Invitation opening");
-    if (!["theme", "none", "envelope"].includes(String(entry.style)) || !["rings", "flower", "monogram"].includes(String(entry.icon))) throw new Error("Choose an available opening style and cover icon.");
-    opening = { style: entry.style as NonNullable<InvitationDesign["opening"]>["style"], icon: entry.icon as NonNullable<InvitationDesign["opening"]>["icon"], line: text(entry.line ?? "", "Envelope opening line", 160) };
+    if (!isOpeningStyle(entry.style) || !["rings", "flower", "monogram"].includes(String(entry.icon))) throw new Error("Choose an available opening style and cover icon.");
+    opening = { style: entry.style, icon: entry.icon as NonNullable<InvitationDesign["opening"]>["icon"], line: text(entry.line ?? "", "Opening line", 160) };
   }
   const order = source.sectionOrder;
   if (!Array.isArray(order) || order.length !== 5 || new Set(order).size !== 5 || !order.every(item => defaultDesign.sectionOrder.includes(item))) throw new Error("Each invitation section must appear once in the section order.");
@@ -160,8 +162,16 @@ export function validateInvitationDraft(input: unknown, mode: "draft" | "publish
       if (entry.enabled && !parsed && mode === "publish") throw new Error("Add a video link or turn the video off before publishing.");
       video = { enabled: entry.enabled, url: parsed?.externalUrl || "", ...(entry.title === undefined ? {} : { title: text(entry.title, "Video title", 120) }) };
     }
+    let festival: Invitation["festival"];
+    if (source.festival !== undefined) {
+      const entry = record(source.festival, "Festival details");
+      const preset = festivalPresets.find(item => item.id === entry.preset);
+      if (!preset) throw new Error("Choose an available festival.");
+      festival = { preset: preset.id, title: text(entry.title ?? "", "Festival title", 100, occasion === "festival" ? required : 0) };
+    }
     const invitation: Invitation = {
       occasion: occasion as OccasionId, tradition: tradition as TraditionId,
+      ...(festival ? { festival } : {}),
       traditionLabel: text(source.traditionLabel ?? "", "Custom tradition", 100),
       blessing: text(source.blessing ?? "", "Optional blessing", 1000),
       coverText: text(source.coverText ?? getOccasion(String(occasion)).cover, "Cover text", 160),

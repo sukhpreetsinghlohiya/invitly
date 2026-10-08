@@ -3,7 +3,7 @@ import { createOccasionInvitation, getOccasion } from '../src/data/occasions';
 import { getOccasionThemes } from '../src/data/occasion-themes';
 
 // Keep this launch expectation independent of the implementation's allow-list.
-const available = ['wedding', 'engagement'] as const;
+const available = ['wedding', 'engagement', 'festival'] as const;
 const upcoming = ['birthday', 'baby-shower', 'housewarming', 'naming', 'anniversary', 'remembrance', 'other'] as const;
 
 for (const route of ['/templates', '/demo', '/customize']) {
@@ -23,17 +23,14 @@ for (const route of ['/templates', '/demo', '/customize']) {
   });
 }
 
-test('the catalog exposes two live collections and seven clearly labelled non-links', async ({ page }) => {
+test('the catalog exposes three live collections and disables all seven coming-soon choices', async ({ page }) => {
   await page.goto('/templates');
-  await expect(page.locator('.occasion-collection')).toHaveCount(9);
-  await expect(page.locator('a.occasion-collection')).toHaveCount(2);
+  await expect(page.locator('.occasion-collection')).toHaveCount(3);
+  await expect(page.locator('a.occasion-collection')).toHaveCount(3);
   const choice = page.getByRole('combobox', { name: 'Occasion', exact: true });
-  await expect(choice.locator('option')).toHaveCount(9);
+  await expect(choice.locator('option')).toHaveCount(10);
   for (const occasion of upcoming) {
-    const card = page.locator(`.occasion-collection-${occasion}`);
-    await expect(card).toContainText('Coming soon');
-    await expect(card).not.toHaveAttribute('href');
-    await expect(card.locator('a,button')).toHaveCount(0);
+    await expect(page.locator(`.occasion-collection-${occasion}`)).toHaveCount(0);
     await expect(choice.locator(`option[value="${occasion}"]`)).toHaveJSProperty('disabled', true);
     await expect(choice.locator(`option[value="${occasion}"]`)).toContainText('Coming soon');
   }
@@ -46,18 +43,18 @@ test('the catalog exposes two live collections and seven clearly labelled non-li
   }
 });
 
-test('the editor permits both live occasions and disables every upcoming choice', async ({ page }) => {
+test('the editor permits all three live occasions and disables every upcoming choice', async ({ page }) => {
   await page.goto('/customize?occasion=wedding');
   const group = page.getByRole('group', { name: 'Choose an occasion', exact: true });
-  await expect(group.getByRole('button')).toHaveCount(9);
-  await expect(group.locator('button:enabled')).toHaveCount(2);
+  await expect(group.getByRole('button')).toHaveCount(10);
+  await expect(group.locator('button:enabled')).toHaveCount(3);
   for (const occasion of upcoming) {
     const button = group.getByRole('button', { name: new RegExp(getOccasion(occasion).name) });
     await expect(button).toBeDisabled();
     await expect(button).toContainText('Coming soon');
     await expect(button).toHaveAttribute('aria-pressed', 'false');
   }
-  for (const occasion of ['engagement', 'wedding'] as const) {
+  for (const occasion of ['engagement', 'festival', 'wedding'] as const) {
     const button = group.getByRole('button', { name: new RegExp(getOccasion(occasion).name) });
     await expect(button).toBeEnabled();
     await button.click();

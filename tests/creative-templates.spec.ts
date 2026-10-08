@@ -49,7 +49,15 @@ test('all ten wedding covers are real, match their gallery artwork and fit every
   await expect(page.locator('article.collection-card')).toHaveCount(10);
   await expect(page.locator('article.collection-card [data-illustrated-cover]')).toHaveCount(10);
   if (width <= 600) {
-    expect((await page.locator('article.collection-card').first().boundingBox())!.width, 'Phone galleries show one readable stationery card per row').toBeGreaterThan(width * .75);
+    const cards = page.locator('article.collection-card');
+    const first = (await cards.nth(0).boundingBox())!;
+    const second = (await cards.nth(1).boundingBox())!;
+    expect(Math.abs(first.y - second.y), 'Phone galleries show two designs to compare in the first row').toBeLessThanOrEqual(1);
+    expect(first.x + first.width).toBeLessThan(second.x);
+    expect(first.width, 'Thumbnails keep a readable minimum width on a narrow phone').toBeGreaterThanOrEqual(120);
+    for (const action of await cards.first().locator('.collection-card-actions a').all()) {
+      expect((await action.boundingBox())!.height, 'Card actions retain a touch-sized target').toBeGreaterThanOrEqual(44);
+    }
   }
   for (const theme of themes) {
     const card = page.locator(`article.collection-card [data-illustrated-cover="${theme.id}"]`);
@@ -84,7 +92,7 @@ test('all ten wedding covers are real, match their gallery artwork and fit every
   await expect(page.locator('article.collection-card')).toHaveCount(10);
 
   for (const theme of themes) {
-    await page.goto(`/demo?theme=${theme.id}`);
+    await page.goto(`/demo?theme=${theme.id}&opening=theme`);
     const stage = page.locator(`#invitation[data-signature-cover="${theme.id}"]`);
     await expect(stage).toBeVisible();
     const art = stage.locator(`[data-illustrated-cover="${theme.id}"]`);
@@ -113,7 +121,7 @@ test.describe('interactive illustrated openings', () => {
   test.use({ reducedMotion: 'no-preference' });
   test('Royal and Mehfil open by keyboard, hand off focus and respect reduced motion', async ({ page }) => {
     for (const theme of ['royal', 'mehfil']) {
-      await page.goto(`/demo?theme=${theme}`);
+      await page.goto(`/demo?theme=${theme}&opening=theme`);
       const stage = page.locator('#invitation');
       const reveal = stage.locator('[data-reveal-phase]');
       const open = stage.getByRole('button', { name: 'Open invitation', exact: true });
@@ -162,9 +170,11 @@ test('long multilingual names survive all theme switches, quiet artwork, save an
   await page.getByLabel(/^Event date and time/).fill('2027-04-03T12:00');
   await page.getByLabel('City', { exact: true }).fill('Chandigarh');
   await page.getByRole('button', { name: 'Design', exact: true }).click();
+  await page.getByRole('tab', { name: 'Colours & type', exact: true }).click();
   await page.getByRole('combobox', { name: 'Typography', exact: true }).selectOption('sans');
   const frame = page.frameLocator('iframe[title="Actual guest invitation preview"]');
   for (const theme of themes) {
+    await page.getByRole('tab', { name: 'Templates', exact: true }).click();
     await page.getByRole('button', { name: theme.name, exact: true }).click();
     const art = frame.locator(`#invitation [data-illustrated-cover="${theme.id}"]`);
     await expect(art).toContainText(first);
@@ -189,8 +199,10 @@ test('long multilingual names survive all theme switches, quiet artwork, save an
     }));
     expect(overflow.width, `${theme.id}: ${JSON.stringify(overflow.elements)}`).toBeLessThanOrEqual(0);
   }
+  await page.getByRole('tab', { name: 'Templates', exact: true }).click();
   await page.getByRole('button', { name: 'Royal Indian', exact: true }).click();
   await expect(frame.getByRole('button', { name: 'Open invitation', exact: true })).toBeVisible();
+  await page.getByRole('tab', { name: 'Colours & type', exact: true }).click();
   await page.getByRole('checkbox', { name: /^Decorative artwork/ }).uncheck();
   await expect(frame.locator('#invitation [data-illustrated-cover]')).toHaveAttribute('data-artwork', 'off');
   await expect(frame.locator('#invitation [data-decoration]')).toHaveCount(0);
@@ -201,8 +213,10 @@ test('long multilingual names survive all theme switches, quiet artwork, save an
   await expect(page.locator('.editor-workspace-status')).toHaveAttribute('data-save-state', 'saved');
   await page.reload();
   await page.getByRole('button', { name: 'Design', exact: true }).click();
+  await page.getByRole('tab', { name: 'Colours & type', exact: true }).click();
   await expect(page.getByRole('checkbox', { name: /^Decorative artwork/ })).not.toBeChecked();
   await expect(frame.locator('#invitation')).toContainText(first);
+  await page.getByRole('tab', { name: 'Colours & type', exact: true }).click();
   await page.getByRole('checkbox', { name: /^Decorative artwork/ }).check();
   await expect(frame.locator('#invitation [data-illustrated-cover]')).toHaveAttribute('data-artwork', 'on');
   await page.getByRole('button', { name: 'Preview invitation', exact: true }).click();
@@ -238,11 +252,14 @@ test('maximum-length blessing, cover text and city stay readable in every real e
   await expect(page.getByLabel('City', { exact: true })).toHaveValue(city);
   await expect(page.getByLabel(/^Blessing or personal note/)).toHaveValue(blessing);
   await page.getByRole('button', { name: 'Design', exact: true }).click();
+  await page.getByRole('tab', { name: 'Colours & type', exact: true }).click();
   await page.getByLabel(/^Cover text/).fill(cover);
+  await page.getByRole('tab', { name: 'Colours & type', exact: true }).click();
   await expect(page.getByLabel(/^Cover text/)).toHaveValue(cover);
   const frame = page.frameLocator('iframe[title="Actual guest invitation preview"]');
   const dialog = page.getByRole('dialog', { name: 'Live invitation preview', exact: true });
   for (const theme of themes) {
+    await page.getByRole('tab', { name: 'Templates', exact: true }).click();
     await page.getByRole('button', { name: theme.name, exact: true }).click();
     await page.getByRole('button', { name: 'Preview invitation', exact: true }).click();
     await expect(dialog).toBeVisible();
@@ -307,6 +324,7 @@ test('maximum-length blessing, cover text and city stay readable in every real e
   await expect(page.getByLabel(/^Blessing or personal note/)).toHaveValue(blessing);
   await expect(page.getByLabel('City', { exact: true })).toHaveValue(city);
   await page.getByRole('button', { name: 'Design', exact: true }).click();
+  await page.getByRole('tab', { name: 'Colours & type', exact: true }).click();
   await expect(page.getByLabel(/^Cover text/)).toHaveValue(cover);
   await expect(frame.locator('#invitation [data-illustrated-cover="sindoor"]')).toContainText(blessing);
   await noOverflow(page);

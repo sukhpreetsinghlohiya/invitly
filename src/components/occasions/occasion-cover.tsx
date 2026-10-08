@@ -3,6 +3,8 @@ import { CalendarDays, MapPin, ArrowDown, ArrowUpRight } from "lucide-react";
 import { getDesign, getOccasion, invitationDirections } from "@/data/occasions";
 import { getOccasionTheme } from "@/data/occasion-themes";
 import { getOccasionArtwork } from "@/data/occasion-art";
+import { getFestival } from "@/data/festivals";
+import { FestivalArtwork } from "./festival-art";
 import { formatEventDate } from "@/data/demo-invitation";
 import { hasIndicText } from "@/lib/invitation-text";
 import { InvitationImage } from "@/components/invitation-image";
@@ -60,21 +62,24 @@ export function OccasionCover({ invitation, theme, compact = false, cover, photo
   const dayLabel = date ? formatEventDate(date, invitation.timezone, { day: "2-digit" }) : "—";
   const monthLabel = date ? formatEventDate(date, invitation.timezone, { month: "short" }) : "Date";
   const names = invitation.couple.filter(Boolean);
-  const namesLength = names.join(" & ").length;
-  const longNames = namesLength > 32 || names.some(name => name.length > 24);
+  const festival = occasion.id === "festival" ? getFestival(invitation) : null;
+  const titleNames = festival ? [festival.title || "Your festival invitation"] : names;
+  const namesLength = titleNames.join(" & ").length;
+  const longNames = namesLength > 32 || titleNames.some(name => name.length > 24);
   const stationeryLabel = occasion.id === "remembrance" ? "A life remembered" : occasion.id === "other" ? "An invitation" : occasion.name;
   const editorialCaption = invitation.intro ?? occasion.intro;
   const Heading = compact ? "h2" : "h1";
   const artwork = <div className={`${styles.artwork} ${cover ? styles.photograph : ""}`} data-occasion-art={occasion.id}>
     {cover ? (compact ? <InvitationImage src={cover.url} alt={cover.alt} width={cover.width} height={cover.height} sizes="230px" /> : <HeroPhotoSlideshow photos={photos.length ? photos : [cover]} coverPhotoId={cover.id} motion={occasion.id === "remembrance" ? "none" : design.motion || "gentle"} />)
-      : design.decoration && (occasion.id === "engagement" ? <EngagementGarden compact={compact} /> : <><Image src={illustration.src} alt="" width={illustration.width} height={illustration.height} sizes={compact ? "230px" : "(max-width: 700px) 88vw, 480px"} preload={!compact} /><ArtAccents occasion={occasion.id} /></>)}
+      : design.decoration && (festival ? <FestivalArtwork preset={festival.preset} /> : occasion.id === "engagement" ? <EngagementGarden compact={compact} /> : <><Image src={illustration.src} alt="" width={illustration.width} height={illustration.height} sizes={compact ? "230px" : "(max-width: 700px) 88vw, 480px"} preload={!compact} /><ArtAccents occasion={occasion.id} /></>)}
   </div>;
   const title = <div className={styles.identity}>
     <TraditionSymbol invitation={invitation} />
     <p className={styles.coverText} data-indic={hasIndicText(invitation.coverText ?? occasion.cover) || undefined}>{invitation.coverText ?? occasion.cover}</p>
-    <Heading id={compact ? undefined : "occasion-cover-title"} className={styles.names} data-long={longNames ? "true" : undefined} data-indic={hasIndicText(names.join(" ")) || undefined}>
-      {names.length ? names.map((name, index) => <span key={index}>{index > 0 && <i> & </i>}<span>{name}</span></span>) : "Your invitation"}
+    <Heading id={compact ? undefined : "occasion-cover-title"} className={styles.names} data-long={longNames ? "true" : undefined} data-indic={hasIndicText(titleNames.join(" ")) || undefined}>
+      {titleNames.length ? titleNames.map((name, index) => <span key={index}>{index > 0 && <i> & </i>}<span>{name}</span></span>) : "Your invitation"}
     </Heading>
+    {festival && !!names.length && <p className={styles.hostLine} data-indic={hasIndicText(names.join(" ")) || undefined}>Hosted by {names.join(" & ")}</p>}
   </div>;
   const details = <div className={styles.details}>
     <div className={styles.date}><span>{dateLabel || "Date to be announced"}</span></div>

@@ -71,7 +71,14 @@ for (const occasion of occasions.filter(item => item.id === 'engagement')) {
     await page.goto(`/templates?occasion=${occasion.id}`);
     await expect(page.locator('article.collection-card')).toHaveCount(3);
     if (page.viewportSize()!.width <= 600) {
-      expect((await page.locator('article.collection-card').first().boundingBox())!.width, 'Phone galleries show one readable stationery card per row').toBeGreaterThan(page.viewportSize()!.width * .75);
+      const cards = page.locator('article.collection-card');
+      const first = (await cards.nth(0).boundingBox())!;
+      const second = (await cards.nth(1).boundingBox())!;
+      expect(Math.abs(first.y - second.y), 'Phone galleries keep the first two designs side by side for comparison').toBeLessThanOrEqual(1);
+      expect(first.x + first.width).toBeLessThan(second.x);
+      for (const action of await cards.first().locator('.collection-card-actions a').all()) {
+        expect((await action.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+      }
     }
     for (const design of designs) {
       const card = page.locator(`article.collection-card [data-occasion-layout="${design.layout}"]`);
@@ -121,15 +128,20 @@ test('venue and soundtrack preferences survive reload and preview', async ({ pag
   const engagementDesign = getOccasionThemes('engagement')[1];
   await page.getByRole('button',{name:engagementDesign.name,exact:true}).click();
   expect(new URL(page.url()).searchParams.get('occasion')).toBe('engagement');
+  await page.getByRole('tab', { name: 'Music & layout', exact: true }).click();
   await page.getByLabel('A soundtrack for your story').check();
+  await page.getByRole('tab', { name: 'Music & layout', exact: true }).click();
   await page.getByRole('button',{name:/Evening breeze/}).click();
+  await page.getByRole('tab', { name: 'Opening & motion', exact: true }).click();
   await page.getByLabel('Movement & transitions').selectOption('expressive');
   await page.getByRole('button',{name:'Save draft',exact:true}).click();
   await expect(page.locator('.editor-feedback')).toContainText('saved');
   await page.reload();
   await page.getByRole('button',{name:'Design',exact:true}).click();
   await expect(page.getByRole('button',{name:engagementDesign.name,exact:true})).toHaveAttribute('aria-pressed','true');
+  await page.getByRole('tab', { name: 'Music & layout', exact: true }).click();
   await expect(page.getByRole('button',{name:/Evening breeze/})).toHaveAttribute('aria-pressed','true');
+  await page.getByRole('tab', { name: 'Opening & motion', exact: true }).click();
   await expect(page.getByLabel('Movement & transitions')).toHaveValue('expressive');
   const actualPreview = page.frameLocator('iframe[title="Actual guest invitation preview"]');
   await expect(actualPreview.getByRole('link', { name: /Get directions/ }).first()).toHaveAttribute('href', 'https://maps.app.goo.gl/example');
@@ -139,6 +151,7 @@ test('venue and soundtrack preferences survive reload and preview', async ({ pag
   const mapPage = await mapPopup;
   await expect(mapPage).toHaveURL('https://maps.app.goo.gl/example');
   await mapPage.close();
+  await page.getByRole('tab', { name: 'Music & layout', exact: true }).click();
   await page.getByRole('button',{name:'Play music',exact:true}).click();
   await expect(page.getByRole('button',{name:'Pause music',exact:true})).toBeVisible();
   await page.getByRole('button',{name:/Mehfil rhythm/}).click();
@@ -199,8 +212,10 @@ test.describe('motion preferences',()=>{
     await expect(page.locator('[data-section="opening"]')).toHaveCount(0);
     const hero=page.locator('#invitation');
     await expect.poll(()=>hero.evaluate(el=>el.getAnimations().length)).toBe(0);
-    const fit=await hero.evaluate(el=>{const r=el.getBoundingClientRect();return {width:r.width,screenWidth:innerWidth};});
-    expect(fit.width).toBe(fit.screenWidth);
+    const fit=await hero.evaluate(el=>{const r=el.getBoundingClientRect();return {width:r.width,left:r.left,right:r.right,screenWidth:innerWidth};});
+    expect(fit.width, 'The invitation stays a readable canvas inside the demo').toBeGreaterThanOrEqual(Math.min(300, fit.screenWidth));
+    expect(fit.left).toBeGreaterThanOrEqual(0);
+    expect(fit.right).toBeLessThanOrEqual(fit.screenWidth);
     await expect(hero).toBeFocused();
     expect(await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth)).toBeLessThanOrEqual(0);
     await expect(hero.getByRole('link',{name:/Schedule & directions/})).toBeVisible();

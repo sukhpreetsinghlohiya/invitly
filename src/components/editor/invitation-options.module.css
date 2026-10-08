@@ -1,1 +1,12 @@
 .options { margin-top:28px; }.section { margin-block:24px; padding-top:22px; border-top:1px solid #e1d8ce; }.section h3 { margin:0 0 18px; color:var(--wine); font:400 27px/1.2 var(--serif); }.section :global(.form-field) { margin-bottom:18px; }.section :global(.editor-toggle) { margin-block:12px 20px; }
+.openingIntro { margin:11px 0 18px; color:#746b63; font:12px/1.7 var(--sans); max-width:580px; }
+.openingChoices { margin:0; padding:0; border:0; min-width:0; }.openingChoices legend { margin-bottom:12px; font:500 12px/1.5 var(--sans); color:#4a4240; }
+.openingGrid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.openingChoice { position:relative; display:flex; flex-direction:column; padding:8px 8px 12px; border:1px solid #dfd7cb; border-radius:9px; background:#fffdf8; cursor:pointer; min-width:0; transition:border-color .15s,box-shadow .15s; }
+.openingChoice:hover { border-color:#a28f83; }.openingChoice[data-selected=true] { border-color:#783f4c; box-shadow:0 0 0 1px #783f4c; background:#fcf7f2; }.openingChoice:has(input:focus-visible) { outline:2px solid #783f4c; outline-offset:4px; }
+.openingChoice input { position:absolute; top:15px; right:14px; z-index:1; margin:0; accent-color:#783f4c; }
+.openingThumbnail { display:block; background:linear-gradient(145deg,#f9f2e6,#ede7db); border-radius:5px; overflow:hidden; margin-bottom:10px; }.openingThumbnail svg { display:block; width:100%; height:auto; }
+.openingName { font:600 11px/1.4 var(--sans); color:#533b3f; margin-bottom:5px; }.openingChoice small { color:#796e65; font:10px/1.5 var(--sans); }
+.replayRow { display:flex; flex-wrap:wrap; align-items:center; gap:7px 15px; margin:17px 0 20px; }.replayRow button { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:10px 13px; border:1px solid #d8c8bb; border-radius:5px; background:#fffdf8; color:#743e49; font:500 11px/1.5 var(--sans); cursor:pointer; }.replayRow button:focus-visible { outline:2px solid #743e49; outline-offset:3px; }.replayRow>span { color:#807368; font:10px/1.6 var(--sans); }
+@media(max-width:480px) { .openingGrid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }.openingName { font-size:12px; }.openingChoice small { font-size:10px; }.openingThumbnail { margin-bottom:10px; } }
+@media(prefers-reduced-motion:reduce) { .openingChoice { transition:none; } }

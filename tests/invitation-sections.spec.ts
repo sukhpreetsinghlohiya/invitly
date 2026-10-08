@@ -37,7 +37,8 @@ test('hosts can edit individual family cards and optional sections, then recover
   await expect(profiles.locator('[data-person-profile="1"]')).toContainText('ਗੁਰਮੀਤ ਕੌਰ ਅਤੇ ਜਸਵੰਤ ਸਿੰਘ');
   await expect(frame.locator('iframe[src*="youtube"],iframe[src*="vimeo"]')).toHaveCount(0);
   await page.getByRole('button', { name: 'Design', exact: true }).click();
-  await page.getByRole('combobox', { name: 'Invitation opening', exact: true }).selectOption('envelope');
+  await page.getByRole('tab', { name: 'Opening & motion', exact: true }).click();
+  await page.getByRole('radio', { name: 'Envelope', exact: true }).check();
   await page.getByRole('combobox', { name: 'Envelope cover icon', exact: true }).selectOption('flower');
   await page.getByRole('textbox', { name: 'Envelope opening line', exact: true }).fill('A letter for our favourite people');
   await page.getByRole('checkbox', { name: /^Show RSVP/ }).uncheck();
@@ -55,7 +56,8 @@ test('hosts can edit individual family cards and optional sections, then recover
   await expect(page.getByLabel(/^Countdown end date and time/)).toHaveValue('2027-04-02T18:00');
   await expect(page.getByRole('textbox', { name: 'Video section title', exact: true })).toHaveValue('Our little film');
   await page.getByRole('button', { name: 'Design', exact: true }).click();
-  await expect(page.getByRole('combobox', { name: 'Invitation opening', exact: true })).toHaveValue('envelope');
+  await page.getByRole('tab', { name: 'Opening & motion', exact: true }).click();
+  await expect(page.getByRole('radio', { name: 'Envelope', exact: true })).toBeChecked();
   await expect(page.getByRole('combobox', { name: 'Envelope cover icon', exact: true })).toHaveValue('flower');
   await expect(page.getByRole('textbox', { name: 'Envelope opening line', exact: true })).toHaveValue('A letter for our favourite people');
   await expect(page.getByRole('checkbox', { name: /^Show RSVP/ })).not.toBeChecked();

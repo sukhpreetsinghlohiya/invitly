@@ -2,6 +2,9 @@
 
 import { fromZonedInput, toZonedInput } from "@/lib/timezone";
 import type { Invitation, InvitationDesign, InvitationOpening } from "@/types/invitation";
+import { RotateCcw } from "lucide-react";
+import { openingStyles } from "@/data/invitation-openings";
+import { OpeningScene } from "@/components/opening-scene";
 import styles from "./invitation-options.module.css";
 
 export function InvitationDetailOptions({ invitation, onChange, onError }: { invitation: Invitation; onChange: (patch: Partial<Invitation>) => void; onError: (error: string) => void }) {
@@ -22,9 +25,12 @@ export function InvitationDetailOptions({ invitation, onChange, onError }: { inv
 export function InvitationDesignOptions({ design, onChange }: { design: InvitationDesign; onChange: (patch: Partial<InvitationDesign>) => void }) {
   const opening: InvitationOpening = design.opening || { style: "theme", icon: "monogram", line: "An invitation, just for you" };
   return <section className={styles.section} aria-labelledby="opening-options-title">
-    <h3 id="opening-options-title">An opening, just for them.</h3>
-    <label className="form-field">Invitation opening<select value={opening.style} onChange={event => onChange({ opening: { ...opening, style: event.target.value as InvitationOpening["style"] } })}><option value="theme">Theme original</option><option value="envelope">An envelope to open</option><option value="none">Show the invitation straight away</option></select></label>
-    {opening.style === "envelope" && <><label className="form-field">Envelope cover icon<select value={opening.icon} onChange={event => onChange({ opening: { ...opening, icon: event.target.value as InvitationOpening["icon"] } })}><option value="rings">Two rings</option><option value="flower">A flower</option><option value="monogram">Your initials</option></select></label><label className="form-field">Envelope opening line<input value={opening.line} maxLength={160} onChange={event => onChange({ opening: { ...opening, line: event.target.value } })} /></label></>}
+    <h3 id="opening-options-title">Choose an entrance.</h3>
+    <fieldset className={styles.openingChoices}><legend>Invitation opening</legend><div className={styles.openingGrid}>{openingStyles.map(item => <label key={item.id} className={styles.openingChoice} data-selected={opening.style === item.id}><input type="radio" name="invitation-opening" value={item.id} checked={opening.style === item.id} aria-label={item.label} onChange={() => onChange({ opening: { ...opening, style: item.id } })} /><div className={styles.openingThumbnail}><OpeningScene style={item.id} compact /></div><span className={styles.openingName}>{item.label}</span></label>)}</div></fieldset>
+    <p className={styles.openingIntro}>{openingStyles.find(item => item.id === opening.style)?.description}</p>
+    {opening.style !== "theme" && opening.style !== "none" && <div className={styles.replayRow}><button type="button" onClick={() => window.dispatchEvent(new Event("invitly:preview-replay"))}><RotateCcw size={15} aria-hidden="true" /> Replay opening</button><span>Try it in your live invitation preview.</span></div>}
+    {opening.style === "envelope" && <label className="form-field">Envelope cover icon<select value={opening.icon} onChange={event => onChange({ opening: { ...opening, icon: event.target.value as InvitationOpening["icon"] } })}><option value="rings">Two rings</option><option value="flower">A flower</option><option value="monogram">Your initials</option></select></label>}
+    {opening.style !== "theme" && opening.style !== "none" && <label className="form-field">{opening.style === "envelope" ? "Envelope opening line" : "Opening line"}<input value={opening.line} maxLength={160} onChange={event => onChange({ opening: { ...opening, line: event.target.value } })} /></label>}
     <label className="editor-toggle"><input type="checkbox" checked={design.rsvp ?? true} onChange={event => onChange({ rsvp: event.target.checked })} /><span><strong>Show RSVP</strong><small>Offer a response section and RSVP links on the invitation.</small></span></label>
   </section>;
 }

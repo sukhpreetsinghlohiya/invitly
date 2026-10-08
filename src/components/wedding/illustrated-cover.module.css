@@ -248,3 +248,13 @@
 .cover:is(.full,.compact)[data-cover-accent=gold-rings] .copy { padding-bottom:30cqi; }
 .cover[data-cover-accent=varmala] .providedAccent { width:42cqi; left:29cqi; bottom:4cqi; }
 .cover:is(.full,.compact)[data-cover-accent=varmala] .copy { padding-bottom:54cqi; }
+
+/* One coherent painted garden replaces the mixed garland and vector border. */
+.floralPaper { pointer-events:none; object-fit:fill; }
+.cover[data-illustrated-cover=floral][data-artwork=on] .sheet { background:#faf4e8; }
+.cover[data-illustrated-cover=floral][data-artwork=on]:is(.full,.compact) .copy { padding:27cqi 24cqi 25cqi; }
+.cover[data-illustrated-cover=floral][data-artwork=on] .readingArea { background:transparent; }
+.cover[data-illustrated-cover=floral][data-artwork=on][data-extended-copy=true] .readingArea { background:#fbf5e9; box-shadow:0 0 4cqi 2cqi #fbf5e9d9; }
+.cover[data-illustrated-cover=floral][data-artwork=on][data-extended-copy=true] .copy { padding-inline:22cqi; }
+.cover[data-illustrated-cover=floral][data-artwork=on]:not([data-palette=original]) .readingArea { background:var(--art-paper); box-shadow:0 0 5cqi 2cqi var(--art-paper); }
+.cover[data-illustrated-cover=floral][data-cover-tradition-art=sikh][data-artwork=on]:is(.full,.compact) .copy { padding-bottom:42cqi; }

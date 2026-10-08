@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getDesign, guestWording } from "@/data/occasions";
 import { watercolorArtwork } from "@/data/occasion-art";
 import { providedArtwork, type ProvidedArtwork } from "@/data/provided-art";
+import { openingSceneAssets } from "@/data/opening-scenes";
 import { formatEventDate } from "@/data/demo-invitation";
 import { hasIndicText } from "@/lib/invitation-text";
 import { ArchiveOrnament } from "@/components/archive-ornament";
@@ -200,6 +201,7 @@ function BotanicalEdges({ theme, compact }: { theme: ThemeId; compact: boolean }
 function CoverIllustration({ id, theme, sikh, accent, compact }: { id: string; theme: ThemeId; sikh: boolean; accent: ProvidedArtwork | null; compact: boolean }) {
   if (sikh) return <div className={styles.gurdwara} data-cover-ornament="bottom" data-decoration aria-hidden="true"><Image src="/images/stationery/gurdwara.webp" alt="" width={800} height={540} sizes="300px" /></div>;
   if (accent) return <div className={styles.providedAccent} data-cover-ornament="bottom" data-decoration aria-hidden="true"><Image src={accent.src} alt="" width={accent.width} height={accent.height} sizes={compact ? "170px" : "220px"} loading={compact ? "lazy" : "eager"} /></div>;
+  if (theme === "floral") return null;
   if (theme === "pichwai") return <div className={styles.peacockGarden} data-cover-ornament="bottom" data-decoration aria-hidden="true"><span className={styles.peacockLeft} /><span className={styles.peacockRight} /><ArchiveOrnament kind="branch" className={styles.gardenVine} /></div>;
   if (theme === "lotus") return <div className={styles.lotusGarden} data-cover-ornament="bottom" data-decoration aria-hidden="true"><span className={styles.pondRipples} data-cover-motion="water" /><Image src="/images/art/patterned-lotus.svg" alt="" width={480} height={346} sizes="150px" /></div>;
   return <div className={styles.footerOrnament} data-cover-ornament="bottom" data-decoration aria-hidden="true"><ArchiveOrnament kind="flourish" />{theme === "kesar" && <svg viewBox="0 0 100 32" focusable="false"><use href={`#${id}-flower`} transform="translate(50 16) scale(.6)" /></svg>}</div>;
@@ -229,7 +231,7 @@ export function IllustratedCover({ invitation, theme, compact = false }: Props) 
   const extendedCopy = Boolean(accent) || hasTraditionSymbol(invitation) || Boolean(invitation.blessing) || coverText.length > 64 || (location?.length || 0) > 40 || nameLength > 20;
   return <div className={`${styles.cover} ${compact ? styles.compact : styles.full}`} data-illustrated-cover={theme} data-cover-illustration={botanicalArt[theme] ? "botanical" : "engraved"} data-cover-tradition-art={sikhArtwork ? "sikh" : coupleArtwork ? "hindu" : undefined} data-cover-accent={accent?.id} data-motion={design.motion || "gentle"} data-compact={compact} data-extended-copy={extendedCopy} data-palette={design.palette} data-typography={design.typography} data-artwork={design.decoration ? "on" : "off"} data-long-names={nameLength > 20 ? "very" : nameLength > 11 ? "true" : undefined} aria-hidden={compact || undefined}>
     <div className={styles.sheet}>
-      {design.decoration && (mandapArtwork ? <Image className={styles.mandapFrame} src="/images/stationery/peach-mandap-frame.webp" alt="" fill sizes={compact ? "300px" : "600px"} loading={compact ? "lazy" : "eager"} data-decoration aria-hidden="true" /> : <>
+      {design.decoration && (theme === "floral" ? <Image className={styles.floralPaper} src={openingSceneAssets.flowers} alt="" fill sizes={compact ? "300px" : "(max-width: 480px) 90vw, 460px"} loading={compact ? "lazy" : "eager"} data-cover-botanical="floral" data-decoration aria-hidden="true" /> : mandapArtwork ? <Image className={styles.mandapFrame} src="/images/stationery/peach-mandap-frame.webp" alt="" fill sizes={compact ? "300px" : "600px"} loading={compact ? "lazy" : "eager"} data-decoration aria-hidden="true" /> : <>
         {extendedCopy ? <>
           <svg className={styles.frameTop} viewBox="0 0 460 322" data-cover-frame-slice="top" data-decoration aria-hidden="true" focusable="false"><Motifs id={id} theme={theme} /><defs><g id={`${id}-frame`}><Border id={id} theme={theme} /></g></defs><use href={`#${id}-frame`} /></svg>
           <svg className={styles.frameMiddle} viewBox="0 0 460 1" preserveAspectRatio="none" data-cover-frame-slice="middle" data-decoration aria-hidden="true" focusable="false"><FrameMiddle theme={theme} /></svg>

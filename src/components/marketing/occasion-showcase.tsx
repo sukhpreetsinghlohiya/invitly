@@ -3,16 +3,19 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { StationeryCard } from "@/components/marketing/stationery-art";
 import { ComingSoonBadge } from "@/components/occasion-coming-soon";
 import { isOccasionAvailable } from "@/data/occasion-availability";
+import { OccasionCover } from "@/components/occasions/occasion-cover";
+import { occasionDemo } from "@/data/occasion-demos";
 import "./occasion-showcase.css";
 
 const featuredOccasions = [
   { id: "wedding", label: "Wedding", note: "A beautiful beginning" },
   { id: "engagement", label: "Engagement", note: "A promise worth sharing" },
+  { id: "festival", label: "Festival", note: "A celebration, together" },
   { id: "birthday", label: "Birthday", note: "Another year of you" },
-  { id: "baby-shower", label: "Baby shower", note: "A little love on the way" },
 ] as const;
 
 const moreOccasions = [
+  { id: "baby-shower", label: "Baby shower" },
   { id: "housewarming", label: "Housewarming" },
   { id: "naming", label: "Naming ceremony" },
   { id: "anniversary", label: "Anniversary" },
@@ -26,14 +29,14 @@ export function OccasionShowcase() {
     <div className="occasion-showcase-intro">
       <span className="eyebrow">EVERY MOMENT, BEAUTIFULLY YOURS</span>
       <h2 id="occasion-showcase-heading">A design for <br />every kind of <br /><em>together.</em></h2>
-      <p>Wedding and engagement invitations are ready to make your own. More moments are coming soon.</p>
+      <p>Wedding, engagement and festival invitations, ready to make your own.</p>
       <Link className="occasion-showcase-browse" href="/templates#occasion-collections-title">Explore the collections <ArrowRight size={16} aria-hidden="true" /></Link>
     </div>
     <div className="occasion-showcase-cards">
       {featuredOccasions.map(occasion => {
         const available = isOccasionAvailable(occasion.id);
         const content = <>
-          <div className="showcase-paper" aria-hidden="true"><StationeryCard variant={occasion.id} /></div>
+          <div className="showcase-paper" aria-hidden="true">{occasion.id === "festival" ? <OccasionCover invitation={occasionDemo("festival")} theme="royal" compact /> : <StationeryCard variant={occasion.id} />}</div>
           <div className="showcase-card-label"><h3>{occasion.label}</h3>{available && <span><ArrowUpRight size={14} aria-hidden="true" /></span>}</div>
           <p className="showcase-card-note">{occasion.note}</p>
           {!available && <div className="showcase-card-status"><ComingSoonBadge /></div>}

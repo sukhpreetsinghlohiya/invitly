@@ -1,6 +1,6 @@
 # Invitly
 
-A mobile-first Indian digital invitation platform for **invitly.co.in**. The current launch includes ten wedding designs and three engagement designs, a mobile editor, and Supabase-backed host workflows. Seven other occasion collections are marked **Coming soon**; their designs and existing saved invitations are retained for future polishing. Made by Sukhpreet.
+A mobile-first Indian digital invitation platform for **invitly.co.in**. The current launch includes ten wedding designs, three engagement designs and three festival designs, a mobile editor, and Supabase-backed host workflows. Seven other occasion collections are marked **Coming soon**; their designs and existing saved invitations are retained for future polishing. Made by Sukhpreet.
 
 ## Run locally
 
@@ -31,7 +31,7 @@ The scripts use Next.js's supported Webpack builder; Turbopack's CSS worker coul
 | --- | --- |
 | `/` | Marketing homepage and interactive theme previews |
 | `/demo` | Complete Royal Indian sample invitation |
-| `/templates` | Wedding and engagement collections with searchable designs; seven future occasions marked Coming soon |
+| `/templates` | Wedding, engagement and festival collections with search, favourites and a closer-look dialog; seven future occasions marked Coming soon |
 | `/demo?occasion=engagement&theme=lotus` | Engagement invitation preview |
 | `/demo?occasion=birthday` (and other future occasions) | Coming soon page with links to available collections |
 | `/demo?theme=royal` | Royal Indian theme |
@@ -59,6 +59,16 @@ The scripts use Next.js's supported Webpack builder; Turbopack's CSS worker coul
 
 Guests do not need an account to view public invitations. Host pages authenticate on the server using `getUser()` and never trust an unverified session object. The dashboard explicitly filters events by the authenticated owner; database row-level security also enforces ownership on writes.
 
+## Invitation openings and festivals
+
+Demos offer eight animated entrances: envelope, palace doors, flowers, sky, mandap, scooter, car and rings. Select a style beside the desktop preview or from the mobile Opening menu; Replay restores it after opening. The editor exposes the same choices in **Design → Opening & motion**, plus the original theme entrance and no opening. Skip, keyboard navigation and reduced motion are supported. Switching a demo design resets its opening, and “Make it yours” carries the selection into the editor.
+
+Festival invitations include Diwali, Holi, Eid, Christmas, Gurpurab, Navratri, Ganesh Chaturthi and a custom celebration. Presets supply editable wording and artwork; hosts enter their own date, names and venue. Try `/demo?occasion=festival&festival=diwali&theme=kesar&opening=envelope`.
+
+Before using festival invitations on a hosted project, apply `supabase/migrations/20261008103435_publish_festival_details.sql` after the existing migrations. It adds only the festival title and preset to the guest payload; private fields and event access rules remain unchanged. The migration and guest-permission fixtures were tested in a rollback-only local transaction; this does not apply the migration to hosted Supabase.
+
+Six original opening illustrations were generated using the built-in image-generation tool, then optimized to local WebP files in `public/images/openings/`. Reproducible prompts are recorded in `assets/source/opening-artwork-prompts.json`. The floral cover uses the same high-resolution flower frame with live, editable text. Instagram links supplied as references are not embedded.
+
 ## Host workflow
 
 Choose a theme at `/templates`, then personalize it at `/customize`. The editor has six steps: Occasion, Details, Schedule, Photos, Design, and Share. Occasion-aware names, family messages, schedule, Google Maps links, dates, optional music, and theme choices use one validated invitation document. The gallery, editor preview and guest page share their actual cover renderer. Unsaved edits trigger a warning when leaving or reloading. Anonymous drafts can be saved on the current device; account saving and publication require Supabase and sign-in.
@@ -77,7 +87,7 @@ Under Guests, add guests individually or import a validated CSV, assign groups a
 
 ## Invitation audio
 
-In **Design → A soundtrack for your story**, choose a wedding song, an original instrumental, a YouTube link, or **Upload your audio**. New wedding starters and demos feature the supplied “Dulhe Ki Behen Brigade” recording. Four Bollywood presets use official T-Series/Zee Music Company YouTube uploads; they remain in the visible YouTube player. Existing saved music choices are preserved.
+In **Design → Music & layout**, choose a song, an original instrumental, a YouTube link, or **Upload your audio**. New wedding starters and demos feature the supplied “Dulhe Ki Behen Brigade” recording. The song collection includes eleven Punjabi, Hindi/Bollywood and English tracks, with artist search, language/mood filters and a preview action. Songs remain in the visible YouTube player; remote availability and embedding permissions can change. Existing saved music choices are preserved.
 
 Custom MP3 uploads require a signed-in host and a saved invitation. Files are limited to 10 MB and 15 minutes, uploaded directly to private storage with a signed upload token, then checked as actual MPEG Layer 3 audio. Save the invitation after uploading, replacing or removing a recording. Published invitations start playback after a guest presses Play, with pause/resume and volume controls. Demos try to play automatically and retry when the invitation opening is clicked; browsers that block sound still expose a Play control. A manual pause is respected. Removing a previously saved track detaches it; its private storage object is retained. Unused failed uploads are cleaned up.
 
@@ -343,7 +353,7 @@ The watercolor refresh adds six original transparent illustrations: mandap, bota
 
 Selecting a tradition now displays a matching emblem on gallery, demo, editor, and guest covers: Om, Khanda, crescent/star, cross, ahimsa hand, Dharma wheel, or sacred-fire altar. Interfaith uses an abstract unity mark. Neutral/custom choices do not infer a religious emblem. Hosts can disable the emblem independently with **Show tradition symbol**; the optional `design.traditionSymbol` flag survives validation and draft storage. No religious wording is generated. Icons use open-source Material Design paths and two original SVG drawings; source and licence details are in `public/licenses/tradition-symbols.txt`.
 
-Wedding demos share seven project-owner supplied photographs in the cover slideshow and interactive album, with captions, full-size viewing, and focal positions for portrait crops. Local WebP assets total about 783 KiB and load as needed. Demo copy identifies the photos as samples and the event details as fictional. Source records are in `assets/source/demo-photo-sources.json`; host photos remain separate. Five supplied decorative assets are optimized under `public/images/stationery/`: gurdwara artwork on Sikh wedding covers, a peach mandap frame and red couple on Hindu Sindoor, a lavender couple on Hindu Lotus, and a pink garland on Floral. Tradition-specific artwork requires both the tradition symbol and decoration settings; the neutral versions keep their original compositions. The couple illustrations follow the copy in normal document flow, so longer names or blessings cannot overlap them. Source records and provenance are in `assets/source/provided-art-sources.json` and `public/licenses/provided-canva-imagery.txt`.
+Wedding demos share seven project-owner supplied photographs in the cover slideshow and interactive album, with captions, full-size viewing, and focal positions for portrait crops. Local WebP assets total about 783 KiB and load as needed. Demo copy identifies the photos as samples and the event details as fictional. Source records are in `assets/source/demo-photo-sources.json`; host photos remain separate. Five supplied decorative assets are optimized under `public/images/stationery/`: gurdwara artwork on Sikh wedding covers, a peach mandap frame and red couple on Hindu Sindoor, a lavender couple on Hindu Lotus, and a pink garland retained as a source asset. Tradition-specific artwork requires both the tradition symbol and decoration settings; the neutral versions keep their original compositions. The couple illustrations follow the copy in normal document flow, so longer names or blessings cannot overlap them. Source records and provenance are in `assets/source/provided-art-sources.json` and `public/licenses/provided-canva-imagery.txt`.
 
 Six additional supplied graphics are mapped in `src/data/provided-art.ts`: joined hands and a ring divider for Modern, gold rings for Champagne, white doves for Ocean, a varmala couple for Hindu Royal, and a floral infinity ribbon for anniversaries. These add about 256 KiB of optimized assets, retain their original pixel dimensions, and use the same local files in gallery and invitation renders. Footer space grows with the copy; disabling decoration removes the artwork. The existing Sikh gurdwara composition takes priority over general wedding accents. No Canva interface graphics, duplicates or tracking URLs are included.
 

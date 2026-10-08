@@ -14,6 +14,12 @@ export function CoverReveal({ children, doors, motion = "gentle", names, date, c
   const frame = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
+  useEffect(() => {
+    if (!doors) return;
+    const replay = () => { if (timer.current) clearTimeout(timer.current); setPhase("closed"); requestAnimationFrame(() => { frame.current?.scrollIntoView({ behavior: "instant", block: "start" }); trigger.current?.focus({ preventScroll: true }); }); };
+    document.addEventListener("invitly:replay-opening", replay);
+    return () => document.removeEventListener("invitly:replay-opening", replay);
+  }, [doors]);
 
   function open() {
     if (phase !== "closed") return;

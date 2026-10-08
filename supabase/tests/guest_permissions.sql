@@ -48,7 +48,7 @@ do $$ declare payload jsonb; result jsonb; begin
  if jsonb_array_length(payload#>'{invitation_content,functions}') is distinct from 1 then raise exception 'Public function filter failed'; end if;
  if payload#>>'{invitation_content,functions,0,id}' is distinct from 'public' then raise exception 'Wrong public function exposed'; end if;
  if payload::text like '%PRIVATE%' or payload::text like '%SECRET VENUE%' then raise exception 'Public JSON private data leaked'; end if;
- if (payload->'invitation_content') ?| array['personProfiles','profileSection','countdownAt','video'] then raise exception 'Legacy invitation gained optional story settings'; end if;
+ if (payload->'invitation_content') ?| array['personProfiles','profileSection','countdownAt','video','festival'] then raise exception 'Legacy invitation gained optional story settings'; end if;
  if payload#>'{photos,0}' ?| array['storage_path','event_id','owner_id'] then raise exception 'Photo storage or ownership details leaked'; end if;
  if payload->>'venue' is distinct from 'Public city' then raise exception 'Public venue is not sanitized'; end if;
  if jsonb_array_length(payload->'updates') is distinct from 1 then raise exception 'Private announcement leaked'; end if;
@@ -114,6 +114,22 @@ do $$ declare payload jsonb; public_content jsonb; guest_content jsonb; begin
  if public_content#>'{design,rsvp}' is distinct from 'false'::jsonb then raise exception 'RSVP visibility choice lost in public projection'; end if;
  if public_content#>'{design,opening}' is distinct from '{"style":"envelope","icon":"monogram","line":"A special day awaits"}'::jsonb then raise exception 'Envelope settings lost in public projection'; end if;
  if (guest_content - 'functions') is distinct from (public_content - 'functions') then raise exception 'Guest and public story settings differ'; end if;
+end; $$;
+reset role;
+-- A festival's selected artwork and custom title must reach both public links
+-- and restricted guest links, while arbitrary nested metadata stays private.
+update public.events set invitation_content=invitation_content || jsonb_build_object(
+ 'occasion','festival','festival',jsonb_build_object('preset','diwali','title','ਸਾਡੇ ਘਰ ਦੀ ਦੀਵਾਲੀ','internalNote','PRIVATE'))
+where id='f4000000-0000-4000-a000-000000000001';
+set local role anon;
+do $$ declare public_content jsonb; guest_content jsonb; begin
+ public_content:=public.get_public_invitation('guest-policy-a')->'invitation_content';
+ guest_content:=public.get_guest_invitation(repeat('a',64))#>'{invitation,invitation_content}';
+ if public_content->'festival' is distinct from '{"preset":"diwali","title":"ਸਾਡੇ ਘਰ ਦੀ ਦੀਵਾਲੀ"}'::jsonb then raise exception 'Festival title/preset lost or extra festival metadata exposed'; end if;
+ if guest_content->'festival' is distinct from public_content->'festival' then raise exception 'Restricted guest festival differs from public projection'; end if;
+ if jsonb_array_length(public_content->'functions') is distinct from 1 or public_content#>>'{functions,0,id}' is distinct from 'public' then raise exception 'Festival projection widened public function visibility'; end if;
+ if jsonb_array_length(guest_content->'functions') is distinct from 0 then raise exception 'Festival projection exposed hidden group functions'; end if;
+ if public_content::text like '%PRIVATE%' or guest_content::text like '%PRIVATE%' then raise exception 'Festival projection leaked private data'; end if;
 end; $$;
 reset role;
 update public.events set is_published=false where id='f4000000-0000-4000-a000-000000000001';

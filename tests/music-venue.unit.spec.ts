@@ -60,10 +60,12 @@ test("venue search and directions preserve Unicode and exact shared pins", () =>
   expect(venueDirectionsLink({ ...venue, mapUrl: "javascript:alert(1)" })).toMatch(/^https:\/\/www.google.com\/maps\/dir/);
 });
 
-test("all nine occasion starters validate with every theme and have appropriate schedule copy", () => {
+test("all occasion starters validate with every theme and have appropriate schedule copy", () => {
   for (const occasion of occasions) for (const theme of themes) {
     const invitation = occasionDemo(occasion.id);
-    expect(validateInvitationDraft({ invitation, themeId: theme.id, musicEnabled: false }).error, `${occasion.id}/${theme.id}`).toBeUndefined();
+    const draft = { invitation, themeId: theme.id, musicEnabled: false };
+    expect(validateInvitationDraft(draft, occasion.id === "festival" ? "draft" : "publish").error, `${occasion.id}/${theme.id}`).toBeUndefined();
+    if (occasion.id === "festival") expect(validateInvitationDraft(draft, "publish").error).toContain("date");
     if (occasion.id !== "wedding") {
       expect(JSON.stringify(invitation.functions)).not.toMatch(/Haldi|Sunshine yellows|dance moves/);
       expect(invitation.functions[0].startsAt).toBe(invitation.weddingAt);

@@ -41,13 +41,17 @@ for (const occasion of occasions.filter(item => item.id === 'engagement')) {
     await page.getByLabel('Venue name', { exact: true }).fill('Our family garden');
     await page.getByRole('textbox', { name: 'Venue address', exact: true }).fill('Sector 17, Chandigarh');
     await page.getByRole('button', { name: 'Design', exact: true }).click();
+    await page.getByRole('tab', { name: 'Colours & type', exact: true }).click();
     await page.getByLabel(/^Cover text/).fill(coverText);
+    await page.getByRole('tab', { name: 'Colours & type', exact: true }).click();
     await page.getByRole('combobox', { name: 'Colour palette', exact: true }).selectOption('sage');
+    await page.getByRole('tab', { name: 'Colours & type', exact: true }).click();
     await page.getByRole('combobox', { name: 'Typography', exact: true }).selectOption('sans');
     const frame = page.frameLocator('iframe[title="Actual guest invitation preview"]');
     const cover = frame.locator('#invitation');
     const dialog = page.getByRole('dialog', { name: 'Live invitation preview', exact: true });
     for (const design of designs) {
+      await page.getByRole('tab', { name: 'Templates', exact: true }).click();
       await page.getByRole('button', { name: design.name, exact: true }).click();
       await page.getByRole('button', { name: 'Preview invitation', exact: true }).click();
       await expect(dialog).toBeVisible();
@@ -69,15 +73,20 @@ for (const occasion of occasions.filter(item => item.id === 'engagement')) {
       await cover.screenshot({ path: `artifacts/occasion-design-regressions/${occasion.id}-${design.layout}-long-copy.png` });
       await dialog.getByRole('button', { name: 'Back to editing', exact: true }).click();
     }
+    await page.getByRole('tab', { name: 'Colours & type', exact: true }).click();
     await page.getByRole('checkbox', { name: /^Decorative artwork/ }).uncheck();
     await page.getByRole('button', { name: 'Save draft', exact: true }).click();
     await expect(page.locator('.editor-workspace-status')).toHaveAttribute('data-save-state', 'saved');
     await page.reload();
     await page.getByRole('button', { name: 'Design', exact: true }).click();
+    await page.getByRole('tab', { name: 'Colours & type', exact: true }).click();
     await expect(page.getByRole('combobox', { name: 'Colour palette', exact: true })).toHaveValue('sage');
+    await page.getByRole('tab', { name: 'Colours & type', exact: true }).click();
     await expect(page.getByRole('combobox', { name: 'Typography', exact: true })).toHaveValue('sans');
+    await page.getByRole('tab', { name: 'Colours & type', exact: true }).click();
     await expect(page.getByRole('checkbox', { name: /^Decorative artwork/ })).not.toBeChecked();
     for (const design of designs) {
+      await page.getByRole('tab', { name: 'Templates', exact: true }).click();
       await page.getByRole('button', { name: design.name, exact: true }).click();
       await page.getByRole('button', { name: 'Preview invitation', exact: true }).click();
       await expect(cover).toHaveAttribute('data-occasion-layout', design.layout);
@@ -98,7 +107,7 @@ test('existing upcoming invitations preserve long multilingual copy and artwork 
   test.skip(info.project.name !== 'mobile-360', 'Existing future designs stay covered at phone width without exposing new creation');
   test.setTimeout(120000);
   await page.goto('/preview');
-  for (const occasion of occasions.filter(item => item.id !== 'wedding' && item.id !== 'engagement')) {
+  for (const occasion of occasions.filter(item => !['wedding', 'engagement', 'festival'].includes(item.id))) {
     const invitation = occasionDemo(occasion.id);
     invitation.couple = ['Ananya Harpreet Kaur · अनन्या कौर · ਅਨਨਿਆ ਕੌਰ', occasion.secondLabel ? 'Arjun Sukhpreet Singh · अर्जुन सिंह · ਅਰਜੁਨ ਸਿੰਘ' : ''];
     invitation.city = 'Chandigarh, Punjab · चंडीगढ़ · ਚੰਡੀਗੜ੍ਹ';
@@ -134,7 +143,7 @@ test('existing upcoming invitations preserve long multilingual copy and artwork 
   }
 });
 
-test('personal cover photos remain visible in all 24 occasion layouts when decorative artwork is off', async ({ page }, info) => {
+test('personal cover photos remain visible in every occasion layout when decorative artwork is off', async ({ page }, info) => {
   test.skip(info.project.name !== 'mobile-320', 'Photo rendering at the narrowest guest width');
   test.setTimeout(60000);
   const photoUrl = '/dashboard/events/11111111-1111-4111-a111-111111111111/media/22222222-2222-4222-a222-222222222222';

@@ -12,13 +12,14 @@ test("wedding collection plays the supplied recording on demand and saves a Boll
   page.on("request", request => { if (request.url().includes("/audio/") && request.url().endsWith(".mp3")) audioRequests.push(request.url()); });
   await page.goto("/customize?occasion=wedding&theme=modern");
   await page.getByRole("button", { name: "Design", exact: true }).click();
+  await page.getByRole("tab", { name: "Music & layout", exact: true }).click();
   await page.getByLabel("A soundtrack for your story").check();
   await expect(page.getByRole("button", { name: /Dulhe Ki Behen Brigade/ })).toHaveAttribute("aria-pressed", "true");
   expect(audioRequests).toHaveLength(0);
   await page.getByRole("button", { name: "Play music", exact: true }).click();
   await expect(page.getByRole("button", { name: "Pause music", exact: true })).toBeVisible();
   await expect.poll(() => page.locator(".editor-music audio").evaluate((audio: HTMLAudioElement) => audio.currentTime)).toBeGreaterThan(0);
-  await page.getByRole("button", { name: /London Thumakda/ }).click();
+  await page.getByRole("button", { name: "Choose London Thumakda", exact: true }).click();
   await expect(page.locator(".editor-music audio")).toHaveCount(0);
   await page.route("https://www.youtube-nocookie.com/**", route => route.fulfill({ contentType: "text/html", body: "<p>External player fixture</p>" }));
   await page.getByRole("button", { name: "Our song", exact: true }).click();
@@ -27,7 +28,8 @@ test("wedding collection plays the supplied recording on demand and saves a Boll
   await page.getByRole("button", { name: "Save draft", exact: true }).click();
   await page.reload();
   await page.getByRole("button", { name: "Design", exact: true }).click();
-  await expect(page.getByRole("button", { name: /London Thumakda/ })).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("tab", { name: "Music & layout", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Choose London Thumakda", exact: true })).toHaveAttribute("aria-pressed", "true");
   for (const width of [320, 360, 768, 1440]) { await page.setViewportSize({ width, height: 900 }); expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true); }
   await page.setViewportSize({ width: 360, height: 800 });
   await page.getByRole("button", { name: "Upload your audio", exact: true }).click();
@@ -58,6 +60,7 @@ test("custom MP3 uploads, persists, stays private, replaces and removes from the
     await expect(page).toHaveURL(/\/dashboard$/);
     await page.goto(`/customize?event=${eventId}`);
     await page.getByRole("button", { name: "Design", exact: true }).click();
+    await page.getByRole("tab", { name: "Music & layout", exact: true }).click();
     await page.getByRole("button", { name: "Upload your audio", exact: true }).click();
     await page.getByLabel("Your MP3 file").setInputFiles({ name: "fake.mp3", mimeType: "audio/mpeg", buffer: Buffer.from("This is not an MP3 file") });
     await page.getByRole("button", { name: "Upload audio", exact: true }).click();
@@ -87,6 +90,7 @@ test("custom MP3 uploads, persists, stays private, replaces and removes from the
     await expect(page.locator(".editor-feedback .form-success")).toBeVisible({ timeout: 20000 });
     await page.reload();
     await page.getByRole("button", { name: "Design", exact: true }).click();
+    await page.getByRole("tab", { name: "Music & layout", exact: true }).click();
     await expect(page.locator(".editor-uploaded-audio")).toContainText("dulhe-ki-behen-brigade.mp3");
     await page.getByRole("button", { name: "Share", exact: true }).click();
     await page.getByRole("button", { name: "Publish invitation", exact: true }).click();
@@ -101,6 +105,7 @@ test("custom MP3 uploads, persists, stays private, replaces and removes from the
     expect((await guest.request.get(firstUrl!)).status()).toBe(404);
     await admin.from("events").update({ is_published: true }).eq("id", eventId);
     await page.getByRole("button", { name: "Design", exact: true }).click();
+    await page.getByRole("tab", { name: "Music & layout", exact: true }).click();
     await page.getByLabel("Your MP3 file").setInputFiles({ name: "Our welcome.mp3", mimeType: "audio/mpeg", buffer: await readFile("public/audio/dulhe-ki-behen-brigade.mp3") });
     await page.getByRole("button", { name: "Replace audio", exact: true }).click();
     await expect(page.locator(".editor-uploaded-audio")).toContainText("Our welcome.mp3", { timeout: 30000 });
@@ -128,6 +133,7 @@ test("custom MP3 uploads, persists, stays private, replaces and removes from the
     expect((await guest.request.get(secondUrl!)).status()).toBe(404);
     await page.reload();
     await page.getByRole("button", { name: "Design", exact: true }).click();
+    await page.getByRole("tab", { name: "Music & layout", exact: true }).click();
     await page.getByRole("button", { name: "Upload your audio", exact: true }).click();
     await expect(page.locator(".editor-uploaded-audio")).toHaveCount(0);
   } finally {

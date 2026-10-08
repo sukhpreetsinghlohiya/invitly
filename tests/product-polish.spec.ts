@@ -46,7 +46,7 @@ test("debounced design search has a useful empty state and recovery", async ({ p
   const search = page.getByRole("searchbox");
   await search.fill("no-such-invitation-style");
   await expect(page.getByRole("heading", { name: "No matching designs yet." })).toBeVisible();
-  await page.getByRole("button", { name: "Clear search and style" }).click();
+  await page.locator('.collection-empty').getByRole("button", { name: "Clear search and style" }).click();
   await expect(search).toHaveValue("");
   await expect(page.locator(".collection-card")).toHaveCount(10);
 });
