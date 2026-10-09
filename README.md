@@ -325,6 +325,14 @@ The smoke suite is enabled only by `INVITLY_INTEGRATION=1` and runs on the `mobi
 Auth implementation follows [Supabase's Next.js SSR guide](https://supabase.com/docs/guides/auth/server-side/creating-a-client), [password authentication guide](https://supabase.com/docs/guides/auth/passwords), and [email template documentation](https://supabase.com/docs/guides/auth/auth-email-templates).
 
 
+## AdSense site verification
+
+The root layout publishes the `google-adsense-account` meta tag for publisher `ca-pub-4727001093466194`. `public/ads.txt` serves the matching authorized seller entry at `/ads.txt`.
+
+After deployment, check the live homepage's `<head>` and `https://invitly.co.in/ads.txt`. In AdSense's site ownership screen, choose **Meta tag**, confirm it is placed, click **Verify**, then **Request review**. The **Ads.txt snippet** method is also supported. This change enables ownership verification only; ad scripts and placements are not enabled. Before serving ads, configure placements and consent handling and update the privacy notice to describe the actual behavior.
+
+Reference: [Connect your site to AdSense](https://support.google.com/adsense/answer/7584263).
+
 ## Google sign-in and branded account emails
 
 The app uses Supabase Auth's Google OAuth flow with PKCE cookies. Both account forms offer Google and email. The callback only navigates to the dashboard or password setup; provider errors are not reflected into the UI. Sign-in accepts existing passwords while new passwords require 8–128 characters. Unconfirmed users can request a new email at `/resend-confirmation`.

@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: { default: "Invitly — A little link. A lot of togetherness.", template: "%s | Invitly" },
   description: "Thoughtful digital invitations for Indian celebrations. Share your story, collect RSVPs, and keep your people close, from the first invite to the last dance.",
   openGraph: { type: "website", locale: "en_IN", siteName: "Invitly" },
+  other: { "google-adsense-account": "ca-pub-4727001093466194" },
 };
 export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#f9f6ef" };
 
