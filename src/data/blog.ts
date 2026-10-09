@@ -12,7 +12,7 @@ export const blogTopics: BlogTopic[] = [
 ];
 export function getBlogTopic(slug: string) { return blogTopics.find(topic => topic.slug === slug); }
 
-export type BlogSection = { heading: string; paragraphs: string[]; list?: string[]; quote?: string; quoteLang?: string };
+export type BlogSection = { heading: string; paragraphs: string[]; list?: string[]; quote?: string; quoteLang?: string; links?: { label: string; href: string }[] };
 export type BlogPost = {
   title: string;
   slug: string;

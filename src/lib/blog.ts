@@ -10,7 +10,8 @@ const isRecord = (value: unknown): value is Record<string, unknown> => Boolean(v
 function isSection(value: unknown): value is BlogSection {
   return isRecord(value) && isText(value.heading) && Array.isArray(value.paragraphs) && value.paragraphs.length > 0 && value.paragraphs.every(isText)
     && (value.list === undefined || Array.isArray(value.list) && value.list.every(isText))
-    && (value.quote === undefined || isText(value.quote)) && (value.quoteLang === undefined || typeof value.quoteLang === "string" && /^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/.test(value.quoteLang));
+    && (value.quote === undefined || isText(value.quote)) && (value.quoteLang === undefined || typeof value.quoteLang === "string" && /^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/.test(value.quoteLang))
+    && (value.links === undefined || Array.isArray(value.links) && value.links.every(link => isRecord(link) && isText(link.label) && isText(link.href) && /^\/(?:blog\/[a-z0-9/-]+|templates(?:\?[a-z0-9=&-]+)?|demo\?[a-z0-9=&-]+)$/.test(link.href)));
 }
 function parsePost(value: unknown, filename: string): BlogPost {
   const fail = () => { throw new Error(`Invalid blog content: ${filename}. Check required text, slug, topic, date, sections, image and status.`); };

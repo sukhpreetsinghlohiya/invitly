@@ -1,0 +1,39 @@
+{
+  "title": "How to choose a digital wedding invitation that feels like you",
+  "slug": "choose-indian-digital-wedding-invitation-design",
+  "topic": "wedding",
+  "excerpt": "Floral, minimal or full of marigold colour? Choose your invitation around your celebration, then test the names, opening and details on a phone.",
+  "date": "2026-10-09",
+  "status": "published",
+  "coverImage": { "src": "/images/wedding/courtyard.webp", "alt": "A couple in pink and ivory wedding clothes in a sunlit courtyard", "width": 1536, "height": 1024 },
+  "sections": [
+    {
+      "heading": "Start with three words for your celebration",
+      "paragraphs": ["Before choosing a border or a font, write three words you would use to describe the day. A small garden ceremony might be warm, relaxed and colourful. An evening reception might be intimate, polished and festive. Those words give you a useful way to compare designs when several look beautiful.", "Then name one thing that must stand out: your names, a photograph, a family blessing or the venue. Give that detail the strongest position. An invitation with several competing focal points can make a guest work too hard to find the date. Your design should welcome someone into the celebration and help them make a plan."]
+    },
+    {
+      "heading": "Choose a starting point from the Invitly collection",
+      "paragraphs": ["Use the collection as a shortlist, then open the actual invitation. A thumbnail cannot tell you how a long surname wraps or whether the opening feels right on your phone. These pairings are starting points rather than rules about a particular ceremony or community."],
+      "list": ["Royal Indian: maroon, arches and warm gold for a formal family welcome.", "Floral Celebration: pink petals and sage leaves for a soft botanical direction.", "Modern Minimal: restrained decoration when names and wording should lead.", "Kesar & Sunshine: saffron and marigold colour for a bright, joyful invitation.", "Midnight Mehfil: deep green and golden detail for an evening mood.", "By the Blue: a lighter coastal palette when you want something airy."],
+      "links": [{ "label": "Compare all wedding designs", "href": "/templates?occasion=wedding" }, { "label": "Open the floral invitation demo", "href": "/demo?theme=floral&opening=envelope" }]
+    },
+    {
+      "heading": "Use one main colour and one supporting detail",
+      "paragraphs": ["Try taking your main colour from an outfit, the venue or the flowers you have already chosen. Add a quiet background and check that the body text stays easy to read. You do not need to reproduce every colour in the wedding decor on one screen.", "If your photograph is busy, let the surrounding decoration be quieter. If the illustration is the main feature, give it space around the names. A useful test is to look at the invitation briefly, look away, and ask what you remember. Ideally, the answer includes the couple and the occasion, rather than only the border."]
+    },
+    {
+      "heading": "Let the opening introduce the same invitation",
+      "paragraphs": ["An envelope opening suits a letter-like welcome. Palace doors can introduce an architectural design, while flowers can echo a botanical frame. In Invitly, preview the opening with the chosen theme so the reveal and the card feel like one continuous experience.", "Watch the full sequence once, then replay it on a smaller screen. The opening should make the invitation feel special without making the details difficult to reach. Also check the skip control. A guest returning to find the venue should be able to move directly to useful information. Music is a separate choice: test the invitation muted as well as with sound."]
+    },
+    {
+      "heading": "Make cultural details specific to your family",
+      "paragraphs": ["Choose symbols, blessings and ceremony names because your hosts want them included. A colour palette or a surname is not enough to decide which religious imagery belongs on a card. Ask the people named on the invitation to review ceremonial wording and the order of family names.", "For a celebration bringing different traditions together, a shared welcome and separate ceremony descriptions may communicate more clearly than a dense collection of symbols. Keep any translated text readable, and ask a fluent reader to check the final wording in the selected font."]
+    },
+    {
+      "heading": "Approve the design with real details",
+      "paragraphs": ["Replace the sample names before you make your final choice. Add the longest venue address, the real schedule and the photographs you intend to share. A layout that looks balanced with short sample text may need a different size or spacing with your own content.", "Send a preview to someone who has not helped build it. Ask them to find the ceremony date, their venue and the response option without guidance. If they can do that comfortably on a phone, you have a strong foundation. Save your final wording separately so small design experiments do not become another round of family approvals."],
+      "list": ["Read every name aloud and check its spelling.", "Check contrast, small text and line breaks on a phone.", "Try the opening, skip control and music control.", "Open each map link and confirm the venue entrance.", "Review the actual published invitation before distributing it."],
+      "links": [{ "label": "Prepare the wedding invitation details checklist", "href": "/blog/indian-wedding-invitation-details-checklist" }]
+    }
+  ]
+}

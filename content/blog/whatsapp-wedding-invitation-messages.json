@@ -1,0 +1,46 @@
+{
+  "title": "WhatsApp wedding invitation messages: five ways to share your link",
+  "slug": "whatsapp-wedding-invitation-messages",
+  "topic": "wedding",
+  "excerpt": "Original formal, friendly and Hinglish message templates, plus a reminder and a changed-venue note. Replace the brackets and add your Invitly link.",
+  "date": "2026-10-09",
+  "status": "published",
+  "coverImage": { "src": "/images/openings/floral-portal.webp", "alt": "Floral artwork surrounding an ivory invitation panel", "width": 1024, "height": 1536 },
+  "sections": [
+    {
+      "heading": "Let the message do the introduction",
+      "paragraphs": ["The short message around a wedding link matters. It tells a guest who is inviting them, why you are sending the link and what you would like them to do next. Someone should still understand the invitation if a link preview does not appear in their chat.", "Keep the message readable in a single glance: a personal greeting, the couple or host names, the occasion and date, then the invitation link. The full schedule and directions can live on the invitation. The examples below are original templates; replace every bracketed field before sending and remove any request that does not fit your event."]
+    },
+    {
+      "heading": "1. A warm family invitation",
+      "paragraphs": ["Use this when the message comes from the hosts or families. Add the recipient's name at the beginning if you are sending it individually. Include family names only in the form the hosts have approved; the same sentence can work without a formal family introduction."],
+      "quote": "Dear [guest name], together with our families, we warmly invite you to celebrate the wedding of [name] and [name] on [date] in [city]. Your presence would mean a great deal to us. Please find the invitation, schedule and directions here: [invitation link]. Kindly respond by [RSVP date]. With love, [hosts]."
+    },
+    {
+      "heading": "2. A message from the couple to friends",
+      "paragraphs": ["A direct, conversational note works well when your friends will immediately recognise both names. If a guest is invited to a particular function, name that function instead of saying ‘the wedding celebrations’ broadly. Do not let a cheerful message accidentally imply that every event is open to every recipient."],
+      "quote": "[Guest name], we're getting married! We'd love you to join us for [function] on [date] at [venue or city]. All the details are in our invitation: [invitation link]. Please let us know by [RSVP date] if you can make it. Can't wait to celebrate with you! — [name] & [name]"
+    },
+    {
+      "heading": "3. A relaxed Hinglish welcome",
+      "paragraphs": ["Choose Hinglish when it sounds natural in your usual conversations with the guest. Keep the date, location and response request unambiguous. You can replace ‘shaadi’ with the specific function name and choose ‘aap’ or ‘tum’ according to your relationship with the recipient."],
+      "quote": "[Guest name], hamari shaadi ki khushiyon mein aapka saath chahiye! [Date] ko [city] mein hamare saath celebrate kijiye. Invitation aur saari details yahan hain: [invitation link]. [RSVP date] tak bata dijiyega ki aap aa paayenge. Pyaar ke saath, [name] aur [name].",
+      "quoteLang": "hi-Latn-IN"
+    },
+    {
+      "heading": "4. A gentle RSVP reminder",
+      "paragraphs": ["Send a reminder only to guests whose response you still need. Keep the wording neutral: people can miss a message, need to arrange travel or be unsure about their availability. A useful reminder repeats the deadline and offers an easy way to ask a question rather than treating a late answer as a lack of interest."],
+      "quote": "Hi [guest name], a little reminder about [names]' [function] on [date]. We're confirming arrangements and would appreciate your response by [RSVP date]. Your invitation is here: [invitation link]. If you're still working out your plans, just message [host name]. Thank you!"
+    },
+    {
+      "heading": "5. A clear update when a detail changes",
+      "paragraphs": ["Put the change in the message itself. Asking guests to ‘check the updated invitation’ can leave them unsure about which detail changed. State the new information, say whether the date and time stay the same, and send the update only after checking that the published invitation shows the correction."],
+      "quote": "Hi [guest name], an update for [names]' [function]: the venue is now [new venue and address]. [The date and time are unchanged / The new date and time are: details]. We've updated the invitation and directions here: [invitation link]. Please use these details when planning your journey. For any questions, contact [host]."
+    },
+    {
+      "heading": "Check the link as carefully as the words",
+      "paragraphs": ["In Invitly, finish your invitation and preview it before copying its published link. A demo URL is a sample, and an editor URL is not the invitation you want guests to receive. Open the copied link in a fresh window and check the names, date, venue and response options.", "Send personal guest links individually, because a forwarded link may let someone else view or use that guest's invitation. If you are sharing a general announcement in a group, use a link and wording intended for that audience. Always remove placeholders and test the full message with one trusted person before sending it more widely."],
+      "links": [{ "label": "Review the complete invitation details checklist", "href": "/blog/indian-wedding-invitation-details-checklist" }, { "label": "Choose a wedding invitation design", "href": "/templates?occasion=wedding" }]
+    }
+  ]
+}

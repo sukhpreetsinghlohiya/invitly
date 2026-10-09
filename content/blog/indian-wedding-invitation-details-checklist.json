@@ -1,0 +1,39 @@
+{
+  "title": "The Indian wedding invitation checklist: what your guests need to know",
+  "slug": "indian-wedding-invitation-details-checklist",
+  "topic": "wedding",
+  "excerpt": "Plan the names, function timings, venue directions and RSVP details before you share. A practical checklist for celebrations with more than one event.",
+  "date": "2026-10-09",
+  "status": "published",
+  "coverImage": { "src": "/images/demo/bridal-details.webp", "alt": "Close-up of bridal clothing and jewellery used as wedding inspiration", "width": 1600, "height": 1067 },
+  "sections": [
+    {
+      "heading": "Keep one approved set of details",
+      "paragraphs": ["When several relatives are helping with invitations, small differences can travel quickly: an old venue name, a ceremony time without AM or PM, or a surname copied from an earlier draft. Start with one shared list that the hosts have approved. Build the invitation from that list rather than from several chat messages.", "Include the couple's preferred names, any host or family names, and the exact name of each function. Decide which details belong on the main invitation and which should go only to particular guests. You can make the card warm and personal after these essentials are settled."]
+    },
+    {
+      "heading": "Give every function a complete entry",
+      "paragraphs": ["Do not make guests infer that two functions share the same location or start time. Repeat the relevant details for the ceremony, reception and other gatherings, especially when the celebration spans several days. Distinguish the time guests should arrive from the time a ceremony is expected to begin.", "Write dates with the month in words when possible. ‘14 February 2027’ is easier to interpret across countries than a short numeric date. If people are planning from another timezone, name the timezone of the venue. Check the day of the week against the final date rather than relying on memory."],
+      "list": ["Function name and the guests it is intended for.", "Date, arrival time and ceremony or programme start time.", "Venue name, complete address and city.", "Map link checked against the actual entrance.", "An optional dress or footwear note, only if it helps guests prepare."]
+    },
+    {
+      "heading": "Write directions for someone arriving for the first time",
+      "paragraphs": ["A venue name alone can be ambiguous when a hotel has several properties or a large venue has multiple gates. Open the map link yourself and look at where it ends. Add a gate, hall or nearby landmark if it helps someone reach the correct place.", "Think about the journey from the drop-off point to the celebration. If a guest needs to ask about steps, seating, parking or transport, give them a contact who knows the answer. Confirm practical arrangements with the venue before describing them. A clear question route is better than an unverified promise of easy access or available parking."]
+    },
+    {
+      "heading": "Make the RSVP request answerable",
+      "paragraphs": ["Ask for the information you will actually use to plan the event. Decide whether a response represents one person, a couple or a household, and make the invitation clear about who is included. An RSVP deadline is most useful when it reflects the date you need to confirm arrangements with your venue or caterer.", "If you need dietary, access or travel information beyond the response form, explain how guests can send it privately. Avoid asking someone to post personal requirements in a large group chat. For example, a separate message to a named host can be easier to manage than a long public comment thread."],
+      "quote": "Please let us know by [RSVP date] whether [invited names] can join us. For dietary or access arrangements, message [host name] privately at [contact].",
+      "links": [{ "label": "Find a WhatsApp message to send with the invitation", "href": "/blog/whatsapp-wedding-invitation-messages" }]
+    },
+    {
+      "heading": "Separate shared information from personal guest links",
+      "paragraphs": ["A link sent to a group can be forwarded. Treat a general invitation as information that may reach people outside the original conversation. Use individual delivery when a link contains guest-specific event access or a personal RSVP route.", "In Invitly, preview the invitation intended for that guest before you share it. Check that their schedule is correct and that restricted functions are not included in the general message. Keep an approved copy of the guest list and use one consistent method to record who has received a link; that makes corrections and follow-ups easier."]
+    },
+    {
+      "heading": "Do one guest's journey before sending to everyone",
+      "paragraphs": ["Open the final link in a fresh browser window on a phone. Read it as someone who has never seen the editor: can you identify the hosts, understand which event you are attending and find the directions? Try any response flow only with a designated test guest so your check is not mistaken for a real guest's answer.", "If a detail changes after sharing, update the published invitation and tell affected guests what changed. Do not assume that someone will reopen the link or receive an automatic notification. Keep the existing link where possible; changing a share address can leave older messages pointing to the wrong place."],
+      "list": ["Names and host-approved wording checked.", "All dates, times, venues and map links checked.", "Guest-specific schedules checked before sending.", "RSVP deadline and contact route included.", "Opening and readable text checked on a small phone.", "A plan agreed for communicating later changes."]
+    }
+  ]
+}
