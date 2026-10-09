@@ -208,7 +208,7 @@ References: [Vercel Next.js deployment](https://vercel.com/docs/frameworks/full-
 
 ### Visitor welcome and webhook
 
-The English welcome form asks for **name** and **reason for visiting** before continuing on the homepage, collection and blog. It has no skip/close button. It does not appear on signup/login, the demo, private invitations or host pages. After a successful submission, a completion timestamp in browser local storage suppresses it for 30 days; no name or answer is stored there. This collects introductions, not anonymous visitor analytics or verified identities.
+The optional English welcome form asks for **name** and **reason for visiting** on the homepage, collection and blog. Visitors can dismiss it using **Cancel**, the top-right **Close** button or **Escape** without submitting any details. Dismissal is remembered in session storage for the current tab session, including page reloads; no name or answer is stored. It does not appear on signup/login, the demo, private invitations or host pages. After a successful submission, a completion timestamp in browser local storage suppresses it for 30 days; no name or answer is stored there. This collects introductions, not anonymous visitor analytics or verified identities.
 
 In the **`invitly-xzml` Vercel project**, set `INVITLY_VISITOR_WEBHOOK_URL` to your receiver's HTTPS endpoint in Production. Optionally set `INVITLY_VISITOR_WEBHOOK_TOKEN` if the receiver needs a Bearer token. Keep both server-only and out of Git. Redeploy after changing environment variables. The form stays hidden when its URL is missing/invalid; set `INVITLY_VISITOR_WELCOME_ENABLED=false` to switch it off. No extra database migration or analytics package is needed.
 

@@ -1,6 +1,37 @@
 import { expect, test } from "@playwright/test";
 
-test("English welcome requires name and reason, cannot be skipped, and sends once", async ({ page }, testInfo) => {
+test.beforeEach(async ({ page }) => {
+  await page.route("https://pagead2.googlesyndication.com/**", route => route.abort());
+});
+
+for (const method of ["Cancel", "Close welcome form", "Escape"]) {
+  test(`${method} dismisses the welcome without submitting and stays dismissed after reload`, async ({ page }) => {
+    let submissions = 0;
+    await page.route("**/api/visitor-welcome", route => {
+      if (route.request().method() === "POST") submissions++;
+      return route.fulfill({ json: { enabled: true, ok: true } });
+    });
+    await page.goto("/");
+    const dialog = page.getByRole("dialog", { name: "Welcome to Invitly." });
+    await expect(dialog).toBeVisible();
+    await expect(dialog).toContainText("This is optional");
+    await page.getByLabel("Your name", { exact: true }).fill("Unsubmitted visitor");
+    // The reason is intentionally blank: dismissing must bypass validation.
+    if (method === "Escape") await page.keyboard.press("Escape");
+    else await dialog.getByRole("button", { name: method, exact: true }).click();
+    await expect(dialog).toHaveCount(0);
+    expect(await page.evaluate(() => localStorage.getItem("invitly:welcome-completed:v1"))).toBeNull();
+    await page.reload();
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(dialog).toHaveCount(0);
+    await page.goto("/blog");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(dialog).toHaveCount(0);
+    expect(submissions).toBe(0);
+  });
+}
+
+test("optional welcome validates voluntary submissions and sends once", async ({ page }, testInfo) => {
   let submitted: Record<string, unknown> | undefined;
   let requests = 0;
   let release: (() => void) | undefined;
@@ -17,17 +48,15 @@ test("English welcome requires name and reason, cannot be skipped, and sends onc
   await expect(dialog).toBeVisible();
   await expect(dialog.locator("img.brand-mark")).toBeVisible();
   await expect(dialog).not.toContainText("By continuing");
-  await expect(dialog.getByRole("button")).toHaveCount(1);
+  await expect(dialog.getByRole("button")).toHaveCount(3);
   await expect(page.locator("#visitor-name")).toBeFocused();
-  await page.keyboard.press("Escape");
-  await expect(dialog).toBeVisible();
-  await dialog.getByRole("button", { name: "Continue to Invitly" }).click();
+  await dialog.getByRole("button", { name: "Send introduction" }).click();
   expect(requests).toBe(0);
   await page.getByLabel("Your name", { exact: true }).fill("Aman");
   await page.getByRole("textbox", { name: "What brings you to Invitly?", exact: true }).fill("I want a wedding invitation.");
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: `artifacts/screenshots/visitor-welcome-${testInfo.project.name}.png` });
-  await dialog.getByRole("button", { name: "Continue to Invitly" }).click();
+  await dialog.getByRole("button", { name: "Send introduction" }).click();
   await expect(dialog.getByRole("button", { name: "Sending your hello…" })).toBeDisabled();
   await dialog.locator("form").evaluate(form => (form as HTMLFormElement).requestSubmit());
   await expect.poll(() => requests).toBe(1);
@@ -53,11 +82,11 @@ test("webhook errors preserve both answers and allow a retry with the same id", 
   await page.goto("/templates");
   await page.getByLabel("Your name", { exact: true }).fill("Simran");
   await page.getByRole("textbox", { name: "What brings you to Invitly?", exact: true }).fill("An engagement invitation");
-  await page.getByRole("button", { name: "Continue to Invitly" }).click();
+  await page.getByRole("button", { name: "Send introduction" }).click();
   await expect(page.getByRole("dialog").getByRole("alert")).toContainText("Could not deliver");
   await expect(page.getByLabel("Your name", { exact: true })).toHaveValue("Simran");
   await expect(page.getByRole("textbox", { name: "What brings you to Invitly?", exact: true })).toHaveValue("An engagement invitation");
-  await page.getByRole("button", { name: "Continue to Invitly" }).click();
+  await page.getByRole("button", { name: "Send introduction" }).click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
   expect(ids).toHaveLength(2);
   expect(ids[0]).toBe(ids[1]);
