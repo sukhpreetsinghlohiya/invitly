@@ -329,7 +329,11 @@ Auth implementation follows [Supabase's Next.js SSR guide](https://supabase.com/
 
 The root layout publishes the `google-adsense-account` meta tag for publisher `ca-pub-4727001093466194`. `public/ads.txt` serves the matching authorized seller entry at `/ads.txt`.
 
-After deployment, check the live homepage's `<head>` and `https://invitly.co.in/ads.txt`. In AdSense's site ownership screen, choose **Meta tag**, confirm it is placed, click **Verify**, then **Request review**. The **Ads.txt snippet** method is also supported. This change enables ownership verification only; ad scripts and placements are not enabled. Before serving ads, configure placements and consent handling and update the privacy notice to describe the actual behavior.
+The homepage also renders the supplied asynchronous `adsbygoogle.js` script with `crossOrigin="anonymous"`. React hoists it into the document head and deduplicates it. The script is not included in the shared root layout; other routes do not load it on a fresh visit. A loaded third-party script can persist during client-side navigation, so configure AdSense page exclusions for private invitation, account, editor and demo routes before enabling Auto ads. The privacy notice describes the Google integration.
+
+The responsive display unit `3809079536` appears before the homepage footer, labelled Advertisement. It requests an ad once when approaching the viewport and after its width is measurable. Reserved space limits layout movement; an unfilled slot collapses when Google reports `data-ad-status="unfilled"`. Test with a stubbed AdSense script so local checks do not generate live ad impressions or clicks. Consent messages and Auto ads settings are managed in AdSense.
+
+After deployment, check the live homepage's `<head>` and `https://invitly.co.in/ads.txt`. In AdSense's site ownership screen, choose **AdSense code snippet**, confirm it is placed, click **Verify**, then **Request review**. The **Meta tag** and **Ads.txt snippet** methods are also supported. Site approval, Auto ads settings and applicable consent messages in **Privacy & messaging** still need to be completed and verified in the AdSense dashboard.
 
 Reference: [Connect your site to AdSense](https://support.google.com/adsense/answer/7584263).
 

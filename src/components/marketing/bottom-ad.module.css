@@ -1,0 +1,26 @@
+.placement {
+  width: calc(100% - 32px);
+  max-width: 1100px;
+  margin: 40px auto;
+  padding-top: 20px;
+  border-top: 1px solid #ded8cf;
+}
+
+.label {
+  display: block;
+  margin-bottom: 12px;
+  color: #71675f;
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-align: center;
+}
+
+.slot {
+  width: 100%;
+  min-height: 280px;
+}
+
+.placement[hidden],
+.placement:has(.slot[data-ad-status="unfilled"]) {
+  display: none;
+}
