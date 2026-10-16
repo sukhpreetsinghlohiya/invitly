@@ -22,10 +22,15 @@ const occasionArtwork: Record<OccasionId, OccasionArtwork> = {
   birthday: watercolorArtwork.birthday,
   "baby-shower": watercolorArtwork["baby-shower"],
   housewarming: watercolorArtwork.housewarming,
-  naming: watercolorArtwork["baby-shower"],
+  naming: { src: "/images/occasions/naming.webp", width: 480, height: 360, motion: "ambient" },
   anniversary: { src: providedArtwork.floralInfinity.src, width: providedArtwork.floralInfinity.width, height: providedArtwork.floralInfinity.height, motion: "ambient" },
-  other: watercolorArtwork.marigold,
+  other: { src: "/images/occasions/other.webp", width: 480, height: 360, motion: "ambient" },
   remembrance: { src: "/images/occasions/remembrance.webp", width: 480, height: 360 },
+  conference: watercolorArtwork.marigold,
+  webinar: watercolorArtwork.marigold,
+  "ladies-night": watercolorArtwork.engagement,
+  "virtual-event": watercolorArtwork.marigold,
+  "kids-birthday": watercolorArtwork.birthday,
 };
 
 export function getOccasionArtwork(occasion: OccasionId): OccasionArtwork {

@@ -112,7 +112,7 @@
 @media(max-width:760px) {
  .collection-page>.container,.collection-page>main>.container,.collection-process>.container { width:calc(100% - 36px); }
  .collection-header { min-height:70px; gap:10px; }.collection-header .brand { font-size:28px; gap:6px; }.collection-header nav { gap:0; }.collection-home-link { display:none; }.collection-header .button { min-height:44px; font-size:12px; padding-inline:12px; gap:8px; }
- .collection-breadcrumb { margin:11px 0 15px; font-size:11px; }.collection-intro .eyebrow { font-size:8px; letter-spacing:.11em; }.collection-intro h1 { font-size:38px; line-height:1.06; margin:11px 0 13px; }.collection-mobile-break { display:block; }.collection-intro p { font-size:13px; line-height:1.65; }.collection-occasion-tabs { gap:21px; margin-top:19px; }.collection-occasion-tabs a { font-size:13px; min-height:50px; gap:6px; }
+ .collection-breadcrumb { margin:11px 0 15px; font-size:11px; }.collection-intro .eyebrow { font-size:8px; letter-spacing:.11em; }.collection-intro h1 { font-size:38px; line-height:1.06; margin:11px 0 13px; }.collection-mobile-break { display:block; }.collection-intro p { font-size:13px; line-height:1.65; }.collection-occasion-tabs { gap:21px; margin-top:19px; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; }.collection-occasion-tabs::-webkit-scrollbar { display:none; }.collection-occasion-tabs a { flex-shrink:0; font-size:13px; min-height:50px; gap:6px; }
  .collection-catalog { padding-block:22px 28px; }.collection-section-heading { margin-bottom:17px; }.collection-section-heading h2 { font-size:16px; }.collection-section-heading>span { display:none; }
  .collection-search-controls { grid-template-columns:1fr 1fr; gap:13px 10px; }.collection-search-field { grid-column:1/-1; }.collection-search-label { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }.collection-search-controls input,.collection-search-controls select { font-size:16px; min-height:48px; padding-inline:9px; }.collection-search-controls .form-field { font-size:11px; }
  .collection-filter-bar { flex-wrap:wrap; margin-top:13px; gap:5px; }.collection-filters { flex-wrap:nowrap; overflow-x:auto; width:100%; padding:4px 3px 7px; margin-inline:-3px; scrollbar-width:thin; }.collection-filters button { flex-shrink:0; padding-inline:12px; }.collection-favourites-filter { margin-top:4px; min-height:44px; }
@@ -127,7 +127,7 @@
 }
 @media(max-width:360px) {
  .collection-page>.container,.collection-page>main>.container,.collection-process>.container { width:calc(100% - 28px); }
- .collection-intro h1 { font-size:35px; }.collection-occasion-tabs { gap:15px; }.collection-occasion-tabs a { font-size:12px; }
+ .collection-intro h1 { font-size:35px; }.collection-occasion-tabs { gap:15px; }.collection-occasion-tabs a { font-size:12px; flex-shrink:0; }
  .collection-grid { gap:21px 12px; }.collection-card-heading h3 { font-size:12px; }.collection-card-heading .collection-swatch { display:none; }.collection-card-actions a { font-size:10px; }.collection-detail-copy { padding-inline:18px; }
 }
 @media(prefers-reduced-motion:reduce) { .collection-page *, .collection-page *::before, .collection-page *::after { scroll-behavior:auto!important; transition:none!important; } }

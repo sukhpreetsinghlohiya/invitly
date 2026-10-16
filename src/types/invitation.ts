@@ -1,5 +1,6 @@
-export type ThemeId = "royal" | "floral" | "modern" | "mehfil" | "kesar" | "lotus" | "pichwai" | "ocean" | "champagne" | "sindoor";
-export type OccasionId = "wedding" | "engagement" | "festival" | "birthday" | "baby-shower" | "housewarming" | "naming" | "anniversary" | "remembrance" | "other";
+export type CinematicThemeId = "aranya" | "riviera" | "dastaan" | "meenaya" | "kesari" | "haveli";
+export type ThemeId = "royal" | "floral" | "modern" | "mehfil" | "kesar" | "lotus" | "pichwai" | "ocean" | "champagne" | "sindoor" | CinematicThemeId;
+export type OccasionId = "wedding" | "engagement" | "festival" | "birthday" | "baby-shower" | "housewarming" | "naming" | "anniversary" | "remembrance" | "other" | "conference" | "webinar" | "ladies-night" | "virtual-event" | "kids-birthday";
 export type FestivalPresetId = "custom" | "diwali" | "holi" | "eid" | "christmas" | "gurpurab" | "navratri" | "ganesh-chaturthi";
 export type TraditionId = "neutral" | "hindu" | "sikh" | "muslim" | "christian" | "jain" | "buddhist" | "parsi" | "interfaith" | "other";
 export type SectionId = "story" | "schedule" | "photos" | "rsvp" | "updates";

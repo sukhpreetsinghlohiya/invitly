@@ -2,6 +2,8 @@ import { mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { themes } from '../src/data/themes';
+import { isCinematicTheme } from '../src/data/cinematic-themes';
+const classicThemes = themes.filter(theme => !isCinematicTheme(theme.id));
 
 // The welcome form has a separate suite; keep real lead delivery out of card tests.
 test.beforeEach(async ({ page }) => {
@@ -46,8 +48,8 @@ test('all ten wedding covers are real, match their gallery artwork and fit every
   page.on('pageerror', error => errors.push(error.message));
   await mkdir('artifacts/creative-templates-after', { recursive: true });
   await page.goto('/templates');
-  await expect(page.locator('article.collection-card')).toHaveCount(10);
-  await expect(page.locator('article.collection-card [data-illustrated-cover]')).toHaveCount(10);
+  await expect(page.locator('article.collection-card')).toHaveCount(16);
+  await expect(page.locator('article.collection-card [data-illustrated-cover]')).toHaveCount(16);
   if (width <= 600) {
     const cards = page.locator('article.collection-card');
     const first = (await cards.nth(0).boundingBox())!;
@@ -59,7 +61,7 @@ test('all ten wedding covers are real, match their gallery artwork and fit every
       expect((await action.boundingBox())!.height, 'Card actions retain a touch-sized target').toBeGreaterThanOrEqual(44);
     }
   }
-  for (const theme of themes) {
+  for (const theme of classicThemes) {
     const card = page.locator(`article.collection-card [data-illustrated-cover="${theme.id}"]`);
     await expect(card).toHaveAttribute('data-compact', 'true');
     galleryAssets.set(theme.id, await loadedArtwork(card));
@@ -89,9 +91,9 @@ test('all ten wedding covers are real, match their gallery artwork and fit every
   await filters.getByRole('button', { name: 'Minimal', exact: true }).click();
   await expect(page.locator('article.collection-card')).toHaveCount(2);
   await filters.getByRole('button', { name: 'All', exact: true }).click();
-  await expect(page.locator('article.collection-card')).toHaveCount(10);
+  await expect(page.locator('article.collection-card')).toHaveCount(16);
 
-  for (const theme of themes) {
+  for (const theme of classicThemes) {
     await page.goto(`/demo?theme=${theme.id}&opening=theme`);
     const stage = page.locator(`#invitation[data-signature-cover="${theme.id}"]`);
     await expect(stage).toBeVisible();
@@ -173,7 +175,7 @@ test('long multilingual names survive all theme switches, quiet artwork, save an
   await page.getByRole('tab', { name: 'Colours & type', exact: true }).click();
   await page.getByRole('combobox', { name: 'Typography', exact: true }).selectOption('sans');
   const frame = page.frameLocator('iframe[title="Actual guest invitation preview"]');
-  for (const theme of themes) {
+  for (const theme of classicThemes) {
     await page.getByRole('tab', { name: 'Templates', exact: true }).click();
     await page.getByRole('button', { name: theme.name, exact: true }).click();
     const art = frame.locator(`#invitation [data-illustrated-cover="${theme.id}"]`);
@@ -258,7 +260,7 @@ test('maximum-length blessing, cover text and city stay readable in every real e
   await expect(page.getByLabel(/^Cover text/)).toHaveValue(cover);
   const frame = page.frameLocator('iframe[title="Actual guest invitation preview"]');
   const dialog = page.getByRole('dialog', { name: 'Live invitation preview', exact: true });
-  for (const theme of themes) {
+  for (const theme of classicThemes) {
     await page.getByRole('tab', { name: 'Templates', exact: true }).click();
     await page.getByRole('button', { name: theme.name, exact: true }).click();
     await page.getByRole('button', { name: 'Preview invitation', exact: true }).click();

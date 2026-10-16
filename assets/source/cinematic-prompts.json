@@ -1,0 +1,22 @@
+{
+  "generator": "Built-in image_gen",
+  "date": "2026-10-14",
+  "assets": [
+    {
+      "path": "public/images/cinematic/temple.webp",
+      "prompt": "Use case: illustration-story. Create an original premium cinematic South Indian wedding invitation background, portrait 2:3. A magnificent intricately carved Dravidian temple gopuram, ancient courtyard, coconut palms, jasmine and tiny warm lamps, lotus pond in foreground. Rich realistic painterly editorial artwork, golden dawn mist, muted emerald green and antique gold, peaceful luxurious atmosphere. Architecture mostly lower two thirds; upper sky has breathing room for live names. No people, no lettering, no logos, no phone, no borders. Full bleed usable artwork."
+    },
+    {
+      "path": "public/images/cinematic/coast.webp",
+      "prompt": "Use case: illustration-story. Original premium cinematic destination wedding invitation background, portrait 2:3. View through an elegant ivory Mediterranean villa arch to a turquoise sea, distant Amalfi coast, bougainvillea, lemon trees and a small flower-draped wedding canopy at sunset. Refined painterly realism, dusty blue, coral pink, cream, golden sunlight. Architectural depth and gentle sea reflections. Center upper third uncluttered for live wedding names. No people, no text, no phone, no logos. Full bleed artwork."
+    },
+    {
+      "path": "public/images/cinematic/palace.webp",
+      "prompt": "Use case: illustration-story. Original premium cinematic Indian wedding invitation background, portrait 2:3. Symmetrical rose sandstone haveli palace courtyard at blue hour, scalloped arches, exquisite carved balconies, marigold garlands, softly glowing brass lanterns, a wedding mandap with restrained saffron and pink flowers, reflective water foreground. Luxurious hand-painted editorial realism with warm terracotta and antique gold, deep indigo sky. Spacious upper sky for live names. No text, no people, no phone, no logos. Full bleed artwork."
+    },
+    {
+      "path": "public/images/cinematic/reactions.webp",
+      "prompt": "Use case: photorealistic-natural. Original candid editorial lifestyle photograph for a digital Indian wedding invitation website's illustrative Reactions section. An Indian mother aged about 55 in a lovely cream and muted rose sari and her adult daughter in a simple sage kurta seated close on a comfortable sofa, smiling warmly and laughing while looking at a smartphone together. Natural Indian family home, afternoon window light, flowers and soft linen, authentic skin texture, elegant unposed moment. Portrait 4:5 crop, chest-up view with hands and phone visible, phone screen faces subjects. No text, no logos, no watermarks. This is illustrative marketing imagery, not a real testimonial."
+    }
+  ]
+}

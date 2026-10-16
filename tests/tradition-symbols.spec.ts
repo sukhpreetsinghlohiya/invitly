@@ -61,7 +61,7 @@ test("a host can hide the symbol, save, reload and restore it without changing t
 
 test("gallery cards show the chosen symbol and preserve it in demo and editor links", async ({ page }) => {
   await page.goto('/templates?tradition=sikh');
-  await expect(page.locator('.collection-card [data-tradition-symbol="sikh"]')).toHaveCount(10);
+  await expect(page.locator('.collection-card [data-tradition-symbol="sikh"]')).toHaveCount(16);
   await expect(page.getByRole('link', { name: 'Preview Royal Indian', exact: true })).toHaveAttribute('href', /tradition=sikh/);
   await expect(page.getByRole('link', { name: 'Customize Royal Indian', exact: true })).toHaveAttribute('href', /tradition=sikh/);
   await page.getByRole('combobox', { name: 'Tradition (optional)', exact: true }).selectOption('neutral');

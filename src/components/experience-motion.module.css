@@ -1,0 +1,5 @@
+.cursor { position:fixed; top:0; left:0; z-index:90; pointer-events:none; opacity:0; transition:opacity .2s; }
+.cursor::before { content:""; position:absolute; width:30px; height:30px; left:-15px; top:-15px; border:1px solid #8b796580; border-radius:50%; background:#d4bc8d0b; transition:scale .2s,background .2s; }
+.cursor[data-visible=true] { opacity:1; }
+.cursor[data-interactive=true]::before { scale:1.4; background:#d4bc8d25; }
+@media (prefers-reduced-motion:reduce),(hover:none),(pointer:coarse) { .cursor { display:none; } }

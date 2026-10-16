@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import type { InvitationDesign, ThemeId } from "@/types/invitation";
+import { ExperienceMotion } from "./experience-motion";
 
 /** Shared observers; every section remains readable without JavaScript. */
 export function InvitationMotion({ theme, motion = "gentle" }: { theme: ThemeId; motion?: InvitationDesign["motion"] }) {
@@ -31,12 +32,15 @@ export function InvitationMotion({ theme, motion = "gentle" }: { theme: ThemeId;
         const parts = [...entry.target.querySelectorAll("[data-reveal-content] > *")];
         const targets = parts.length ? parts : [entry.target];
         targets.forEach((element, index) => {
-          const distance = motion === "expressive" ? 24 : 14;
-          const transform = theme === "modern" || theme === "lotus" ? `translateY(${distance / 2}px)` : `translateY(${distance}px)`;
-          const animation = element.animate([{ opacity: .3, transform }, { opacity: 1, transform: "none" }], {
-            duration: motion === "expressive" ? 680 : 500,
-            delay: Math.min(index, 5) * 65,
-            easing: "cubic-bezier(.2,.75,.25,1)",
+          const distance = motion === "expressive" ? 28 : 18;
+          const isPhoto = element.closest("[data-photo-album]") || element.tagName === "IMG" || element.closest(".album");
+          const scaleFrom = isPhoto ? 0.91 : 0.95;
+          const translatePart = theme === "modern" || theme === "lotus" ? `translateY(${distance / 2}px)` : `translateY(${distance}px)`;
+          const transform = `${translatePart} scale(${scaleFrom})`;
+          const animation = element.animate([{ opacity: 0, transform }, { opacity: 1, transform: "none" }], {
+            duration: motion === "expressive" ? 720 : 560,
+            delay: Math.min(index, 5) * 70,
+            easing: "cubic-bezier(.16,1,.3,1)",
             fill: "backwards",
           });
           animations.add(animation);
@@ -77,5 +81,5 @@ export function InvitationMotion({ theme, motion = "gentle" }: { theme: ThemeId;
       artVisibility.forEach((_, element) => element.setAttribute(element.hasAttribute("data-ceremony-art") ? "data-art-active" : "data-cover-art-active", "false"));
     };
   }, [theme, motion]);
-  return <span hidden ref={marker} />;
+  return <><span hidden ref={marker} /><ExperienceMotion enabled={motion !== "none"} /></>;
 }

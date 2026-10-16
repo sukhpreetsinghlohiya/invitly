@@ -15,9 +15,14 @@ export const occasionCollections: Record<OccasionId, { title: string; descriptio
   anniversary: { title: "Still choosing you", description: "A floral infinity ribbon, treasured photos, and years worth celebrating.", theme: "champagne", colour: "#75603e", names: ["Neena", "Raj"], venue: "The Rose Dining Room", note: "Join us for dinner, a few favourite stories, and time together." },
   remembrance: { title: "A life, remembered", description: "Quiet greenery, clear details, and space for cherished memories.", theme: "modern", colour: "#4d6155", names: ["Dev Sharma", ""], venue: "The Community Hall", note: "A quiet gathering to share memories and honour a life we hold dear." },
   other: { title: "Good company, together", description: "A warm floral invitation for a gathering of your own.", theme: "mehfil", colour: "#283650", names: ["The Kapoor family", ""], venue: "The Garden Pavilion", note: "Spend an evening with us over food, conversation, and good company." },
+  conference: { title: "Ideas worth gathering for", description: "A premium conference invitation with bold type and clear session details.", theme: "champagne", colour: "#1e2d3d", names: ["TechSummit 2026", ""], venue: "The Grand Convention Centre", note: "Join us for keynote sessions, workshops, and networking over lunch." },
+  webinar: { title: "Your virtual front-row seat", description: "A clean digital invite for your next live online session or webinar.", theme: "modern", colour: "#1a4f70", names: ["Innovation Live", ""], venue: "Online · Zoom / Google Meet", note: "Register your spot and join us live for a session worth your afternoon." },
+  "ladies-night": { title: "The girls are getting together", description: "A fun, vibrant invite for a girls night that nobody will want to miss.", theme: "lotus", colour: "#8b2252", names: ["Priya", ""], venue: "The Rooftop Lounge", note: "Dress up, show up, and get ready for the best night of the year." },
+  "virtual-event": { title: "Connecting across distances", description: "A fresh digital invitation for bringing people together wherever they are.", theme: "ocean", colour: "#0d4a6b", names: ["The Team", ""], venue: "Online · Video call", note: "Join us from wherever you are — all you need is a good connection." },
+  "kids-birthday": { title: "The most fun birthday ever", description: "A colourful kids party invite with cake, games, and pure birthday energy.", theme: "kesar", colour: "#e65100", names: ["Aryan", ""], venue: "The Backyard", note: "Come ready to play games, eat cake, and make some birthday memories!" },
 };
 
-const weddingCoverLines: Record<ThemeId, string> = {
+const weddingCoverLines: Partial<Record<ThemeId, string>> = {
   royal: "Mehmaan nahi, apne banke aaiye",
   modern: "Hum, aap, aur ek nayi shuruat",
   floral: "Khushiyon ko saath khilne dein",
@@ -31,7 +36,7 @@ const weddingCoverLines: Record<ThemeId, string> = {
 };
 
 export function occasionDemo(id: OccasionId, theme: ThemeId = "royal", festivalPreset: FestivalPresetId = "custom"): Invitation {
-  if (id === "wedding") return { ...demoInvitation, occasion: "wedding", coverText: weddingCoverLines[theme], design: { ...getDesign(demoInvitation), music: weddingMusic } };
+  if (id === "wedding") return { ...demoInvitation, occasion: "wedding", coverText: weddingCoverLines[theme] || "Together with our families", design: { ...getDesign(demoInvitation), music: weddingMusic } };
   if (id === "festival") {
     const invitation = applyFestivalPreset(createOccasionInvitation("festival"), festivalPreset);
     return { ...invitation, slug: `demo-festival-${festivalPreset}`, couple: ["The Kapoor family", ""], initials: "K", city: "Jaipur, Rajasthan", families: ["With our family and friends", ""],
@@ -39,7 +44,7 @@ export function occasionDemo(id: OccasionId, theme: ThemeId = "royal", festivalP
     };
   }
   const content = occasionCollections[id], occasion = getOccasion(id);
-  const time = ({ birthday: "16:00", "baby-shower": "15:00", housewarming: "13:00", naming: "11:00", remembrance: "10:00" } as Partial<Record<OccasionId, string>>)[id] ?? "18:00";
+  const time = ({ birthday: "16:00", "baby-shower": "15:00", housewarming: "13:00", naming: "11:00", remembrance: "10:00", conference: "09:00", webinar: "17:00", "ladies-night": "20:00", "virtual-event": "19:00", "kids-birthday": "15:00" } as Partial<Record<OccasionId, string>>)[id] ?? "18:00";
   const startsAt = `${demoInvitation.weddingAt.slice(0, 10)}T${time}:00+05:30`;
   return {
     ...createOccasionInvitation(id), slug: `demo-${id}`, couple: content.names,

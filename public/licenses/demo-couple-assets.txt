@@ -1,0 +1,9 @@
+couple-portrait.webp, couple-walk.webp, couple-engagement.webp
+Original fictional-couple images generated with OpenAI image_gen for this project.
+The portrait was used as an identity reference for the other two images.
+Exact prompts and generation mode: assets/source/demo-couple-prompts.json.
+These are demo illustrations, not photographs of real customers.
+
+../images/openings/ivory-sage-ribbon.webp
+User-provided image, optimized to WebP for the homepage and envelope backdrop.
+Source: Ivory paper invitation with sage ribbon.png, supplied in this conversation.

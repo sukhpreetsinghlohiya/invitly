@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { OpeningTransition, type OpeningPhase } from "./opening-transition";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
@@ -92,7 +93,11 @@ function Envelope({ invitation, onPhaseChange }: { invitation: Invitation; onPha
 
   if (opening?.style !== "envelope" || phase === "open") return null;
   return <section ref={section} className={styles.opening} style={{ "--envelope-texture": `url("${openingSceneAssets.paper}")` } as CSSProperties} data-section="opening" data-opening-style="envelope" data-envelope-phase={phase} data-motion={motion} data-palette={design.palette} data-artwork={design.decoration ? "on" : "off"} aria-label="Your sealed invitation" onKeyDown={event => { if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); open(true); } }}>
+    {design.decoration && <Image src={openingSceneAssets.envelopeBackdrop} alt="" fill sizes="(max-width: 760px) 100vw, 900px" preload className={styles.backdrop} />}
     <div className={styles.card}>
+    <div className={styles.introduction}><h2 data-long={names.length > 45 || undefined} data-indic={hasIndicText(names) || undefined}>{names || "You’re invited"}</h2>
+    {opening.line && <p className={styles.message} data-indic={hasIndicText(opening.line) || undefined}>{opening.line}</p>}
+    {dateLabel && <p className={styles.date}>{dateLabel}</p>}</div>
     <button className={styles.envelope} type="button" onClick={() => open()} disabled={phase === "opening"} aria-label="Break the seal and open invitation" aria-busy={phase === "opening"}>
       <span className={styles.back} aria-hidden="true" />
       <span className={styles.sideLeft} data-opening-part="left" aria-hidden="true" /><span className={styles.sideRight} data-opening-part="right" aria-hidden="true" />
@@ -101,9 +106,6 @@ function Envelope({ invitation, onPhaseChange }: { invitation: Invitation; onPha
       <svg className={styles.foldLines} viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 0 150 240 300 0M0 400 113 235M300 400 187 235" /><path d="M0 2 150 242 300 2M1 400 114 235M299 400 186 235" /></svg>
       <span className={styles.seal} data-opening-part="center" aria-hidden="true"><span className={styles.sealRim} />{design.decoration && <SealIcon icon={opening.icon || "rings"} initials={initials} />}</span>
     </button>
-    <div className={styles.introduction}><h2 data-long={names.length > 45 || undefined} data-indic={hasIndicText(names) || undefined}>{names || "You’re invited"}</h2>
-    {opening.line && <p className={styles.message} data-indic={hasIndicText(opening.line) || undefined}>{opening.line}</p>}
-    {dateLabel && <p className={styles.date}>{dateLabel}</p>}</div>
     <div className={styles.controls}>
     <button type="button" className={styles.openLink} onClick={() => open()} disabled={phase === "opening"}>Open invitation <ArrowUpRight size={15} aria-hidden="true" /></button>
     <button type="button" className={styles.skip} onClick={() => open(true)}>Skip opening <ArrowDown size={13} aria-hidden="true" /></button>

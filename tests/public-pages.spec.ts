@@ -16,8 +16,8 @@ test("homepage explains the product and opens a real invitation", async ({ page 
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.getByText("Made by Sukhpreet", { exact: false })).toBeVisible();
-  for (const theme of ["royal", "modern", "floral"]) {
+  await expect(page.getByText("Made by Sukhpreet", { exact: false })).toHaveCount(0);
+  for (const theme of ["aranya", "riviera", "dastaan"]) {
     await expect(page.locator(`a[href="/demo?theme=${theme}"]`).first()).toBeVisible();
   }
   await expectNoHorizontalOverflow(page);

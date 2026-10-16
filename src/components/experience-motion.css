@@ -1,0 +1,4 @@
+[data-scroll-depth] { translate: 0 var(--scroll-shift, 0px); }
+@media (prefers-reduced-motion: reduce) {
+  [data-scroll-depth] { translate: none !important; }
+}

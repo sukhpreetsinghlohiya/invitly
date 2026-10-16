@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { writeFile } from 'node:fs/promises';
 
-const styles = ['doors', 'envelope', 'flowers', 'sky', 'mandap', 'bike', 'car', 'rings'] as const;
+const styles = ['envelope'] as const;
 const testedProjects = ['mobile-320', 'mobile-390', 'desktop'];
 const pageErrors = new WeakMap<Page, string[]>();
 
@@ -19,7 +19,7 @@ test.beforeEach(async ({ page }, info) => {
 
 test.afterEach(async ({ page }) => { expect(pageErrors.get(page) || [], 'No browser runtime errors').toEqual([]); });
 
-test('every explicit opening can be entered or skipped by keyboard without a second theme opening', async ({ page }) => {
+test('the envelope can be entered by keyboard without a second theme opening', async ({ page }) => {
   test.setTimeout(90000);
   await page.emulateMedia({ reducedMotion: 'reduce' });
   for (const [index, style] of styles.entries()) {
@@ -47,7 +47,7 @@ test('every explicit opening can be entered or skipped by keyboard without a sec
 test('skip remains usable during an animated opening and replay restores only the selected scene', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/demo?theme=royal&opening=sky');
-  const opening = page.locator('[data-opening-style="sky"]');
+  const opening = page.locator('[data-opening-style="envelope"]');
   await expect(opening).toBeVisible();
   await page.clock.install({ time: new Date('2027-01-01T00:00:00Z') });
   await page.clock.pauseAt(new Date('2027-01-01T00:00:01Z'));
@@ -65,17 +65,19 @@ test('skip remains usable during an animated opening and replay restores only th
   await expect(page.locator('[data-section="opening"]:not([data-preview-notice])')).toHaveCount(0);
 });
 
-test('choosing no opening gives immediate access even to a theme with doors', async ({ page }) => {
-  await page.goto('/demo?theme=royal&opening=none');
-  await expect(page.locator('#invitation')).toBeVisible();
-  await expect(page.locator('[data-section="opening"]:not([data-preview-notice])')).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Open invitation', exact: true })).toHaveCount(0);
-  await expect(page.locator('#invitation')).toContainText('Aanya');
-  await noOverflow(page);
+test('old demo opening links resolve to the default envelope', async ({ page }) => {
+  for (const legacy of ['none', 'flowers', 'doors']) {
+    await page.goto(`/demo?theme=royal&opening=${legacy}`);
+    await expect(page.locator('[data-opening-style="envelope"]')).toBeVisible();
+    await expect(page.getByRole('complementary', { name: 'Preview options' }).getByRole('combobox')).toHaveCount(0);
+    await page.getByRole('button', { name: 'Skip opening', exact: true }).click();
+    await expect(page.locator('#invitation')).toBeFocused();
+    await noOverflow(page);
+  }
 });
 
 test('switching designs after opening a demo restores the selected entrance', async ({ page }) => {
-  for (const style of ['envelope', 'flowers']) {
+  for (const style of ['envelope']) {
     await page.goto(`/demo?theme=modern&opening=${style}`);
     await page.getByRole('button', { name: 'Open invitation', exact: true }).click();
     await expect(page.locator('[data-section="opening"]:not([data-preview-notice])')).toHaveCount(0);
@@ -88,48 +90,25 @@ test('switching designs after opening a demo restores the selected entrance', as
   }
 });
 
-test('demo opening choices and replay keep the festival and design context', async ({ page }) => {
-  await page.goto('/demo?theme=royal&occasion=festival&festival=diwali&opening=flowers');
-  await expect(page.locator('[data-opening-style="flowers"]')).toBeVisible();
+test('envelope replay keeps the festival and design context', async ({ page }) => {
+  await page.goto('/demo?theme=royal&occasion=festival&festival=diwali');
   const options = page.getByRole('complementary', { name: 'Preview options', exact: true });
+  const opening = page.locator('[data-opening-style="envelope"]');
+  await expect(opening).toBeVisible();
   await expect(options.locator('.music-control')).toBeVisible();
-  const music = (await options.locator('.music-control').boundingBox())!;
-  const skip = (await page.getByRole('button', { name: 'Skip opening', exact: true }).boundingBox())!;
-  const overlapWidth = Math.max(0, Math.min(music.x + music.width, skip.x + skip.width) - Math.max(music.x, skip.x));
-  const overlapHeight = Math.max(0, Math.min(music.y + music.height, skip.y + skip.height) - Math.max(music.y, skip.y));
-  expect(overlapWidth * overlapHeight, 'Music controls never cover the opening skip action').toBe(0);
-  if (page.viewportSize()!.width <= 760) {
-    await options.getByRole('combobox', { name: 'Opening', exact: true }).selectOption('doors');
-  } else {
-    await options.getByRole('button', { name: 'Palace doors', exact: true }).click();
-    await expect(options.getByRole('button', { name: 'Palace doors', exact: true })).toHaveAttribute('aria-pressed', 'true');
-  }
-  const opening = page.locator('[data-opening-style="doors"]');
-  await expect(opening).toBeVisible();
-  for (const [key, value] of Object.entries({ theme: 'royal', occasion: 'festival', festival: 'diwali', opening: 'doors' })) {
-    expect(new URL(page.url()).searchParams.get(key), key).toBe(value);
-  }
   await opening.getByRole('button', { name: 'Skip opening', exact: true }).click();
-  await expect(opening).toHaveCount(0);
-  await options.getByRole('button', { name: 'Replay opening', exact: true }).click();
+  await options.getByRole('button', { name: 'Replay envelope opening', exact: true }).click();
   await expect(opening).toBeVisible();
-  await expect(page.locator('[data-section="opening"]:not([data-preview-notice])')).toHaveCount(1);
   await page.locator('#demo-design').selectOption('kesar');
   await expect(page.locator('[data-demo-theme]')).toHaveAttribute('data-demo-theme', 'kesar');
-  await expect(opening).toBeVisible();
   const destination = new URL((await page.locator('[data-demo-theme] > header').getByRole('link', { name: 'Make it yours', exact: true }).getAttribute('href'))!, page.url());
-  for (const [key, value] of Object.entries({ theme: 'kesar', occasion: 'festival', festival: 'diwali', opening: 'doors' })) {
+  for (const [key, value] of Object.entries({ theme: 'kesar', occasion: 'festival', festival: 'diwali', opening: 'envelope' })) {
     expect(destination.searchParams.get(key), key).toBe(value);
   }
-  if (page.viewportSize()!.width <= 760) await options.getByRole('combobox', { name: 'Opening', exact: true }).selectOption('none');
-  else await options.getByRole('button', { name: 'No opening', exact: true }).click();
-  await expect(page.locator('[data-section="opening"]:not([data-preview-notice])')).toHaveCount(0);
-  await expect(options.getByRole('button', { name: 'Replay opening', exact: true })).toHaveCount(0);
-  expect(new URL(page.url()).searchParams.get('opening')).toBe('none');
   await noOverflow(page);
 });
 
-test('all eight entrances visibly move before revealing the invitation', async ({ page }, info) => {
+test('the envelope visibly moves before revealing the invitation', async ({ page }, info) => {
   test.setTimeout(120000);
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   for (const style of styles) {
@@ -217,7 +196,7 @@ test('a chosen opening survives saving on this device and appears in the actual 
   await colours.focus();
   await colours.press('ArrowRight');
   await expect(entrance).toBeFocused();
-  await page.getByRole('radio', { name: 'Flowers in bloom', exact: true }).check();
+  await page.getByRole('radio', { name: 'Envelope', exact: true }).check();
   await entrance.focus();
   await entrance.press('End');
   await expect(page.getByRole('tab', { name: 'Music & layout', exact: true })).toBeFocused();
@@ -226,16 +205,16 @@ test('a chosen opening survives saving on this device and appears in the actual 
   await colours.click();
   await expect(page.getByRole('combobox', { name: 'Colour palette', exact: true })).toHaveValue('sage');
   await entrance.click();
-  await expect(page.getByRole('radio', { name: 'Flowers in bloom', exact: true })).toBeChecked();
+  await expect(page.getByRole('radio', { name: 'Envelope', exact: true })).toBeChecked();
   await page.getByRole('button', { name: 'Save draft', exact: true }).click();
   await expect(page.locator('.editor-workspace-status')).toHaveAttribute('data-save-state', 'saved');
   await page.reload();
   await page.getByRole('button', { name: 'Design', exact: true }).click();
   await page.getByRole('tab', { name: 'Opening & motion', exact: true }).click();
-  await expect(page.getByRole('radio', { name: 'Flowers in bloom', exact: true })).toBeChecked();
+  await expect(page.getByRole('radio', { name: 'Envelope', exact: true })).toBeChecked();
   await page.getByRole('button', { name: 'Preview invitation', exact: true }).click();
   const preview = page.frameLocator('iframe[title="Actual guest invitation preview"]');
-  await expect(preview.locator('[data-opening-style="flowers"]')).toBeVisible();
+  await expect(preview.locator('[data-opening-style="envelope"]')).toBeVisible();
   await expect(preview.locator('[data-section="opening"]:not([data-preview-notice])')).toHaveCount(1);
   await preview.getByRole('button', { name: 'Skip opening', exact: true }).click();
   await expect(preview.locator('[data-section="opening"]:not([data-preview-notice])')).toHaveCount(0);
@@ -243,7 +222,7 @@ test('a chosen opening survives saving on this device and appears in the actual 
   await page.getByRole('button', { name: 'Back to editing', exact: true }).click();
   await page.getByRole('button', { name: 'Replay opening', exact: true }).click();
   await page.getByRole('button', { name: 'Preview invitation', exact: true }).click();
-  await expect(preview.locator('[data-opening-style="flowers"]')).toBeVisible();
+  await expect(preview.locator('[data-opening-style="envelope"]')).toBeVisible();
   await expect(preview.locator('[data-section="opening"]:not([data-preview-notice])')).toHaveCount(1);
 });
 
@@ -251,7 +230,7 @@ test.describe('without JavaScript', () => {
   test.use({ javaScriptEnabled: false });
   test('the decorative entrance never prevents reading the invitation', async ({ page }) => {
     await page.goto('/demo?theme=royal&opening=flowers');
-    await expect(page.locator('[data-opening-style="flowers"]')).toBeHidden();
+    await expect(page.locator('[data-opening-style="envelope"]')).toBeHidden();
     await expect(page.locator('#invitation')).toBeVisible();
     await expect(page.locator('#invitation')).toContainText('Aanya');
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Aanya');

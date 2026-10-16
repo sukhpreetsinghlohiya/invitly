@@ -1,0 +1,90 @@
+import { expect, test } from "@playwright/test";
+import { occasionDemo } from "../src/data/occasion-demos";
+import { getDesign } from "../src/data/occasions";
+import { INVITATION_DRAFT_STORAGE_KEY } from "../src/lib/invitation-draft-storage";
+
+const invitation = occasionDemo("wedding", "meenaya");
+const original = { themeId: "meenaya", musicEnabled: false, invitation: { ...invitation, couple: ["Simran", "Arjun"], message: "Our own words, kept exactly as written.", design: { ...getDesign(invitation), opening: { style: "envelope", icon: "rings", line: "With love from our families" } } } };
+
+test.beforeEach(async ({ page }) => {
+  await page.route("**/api/visitor-welcome", route => route.fulfill({ json: { enabled: false } }));
+  await page.route("https://pagead2.googlesyndication.com/**", route => route.abort());
+  await page.addInitScript(({ key, value }) => { if (!localStorage.getItem(key)) localStorage.setItem(key, JSON.stringify(value)); }, { key: INVITATION_DRAFT_STORAGE_KEY, value: original });
+});
+
+test("wedding looks preserve content, support undo, and survive saving and theme changes", async ({ page }, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", error => errors.push(error.message));
+  await page.goto("/customize?occasion=wedding&theme=meenaya");
+  await page.getByRole("button", { name: "Design", exact: true }).click();
+  await page.getByRole("tab", { name: "Colours & type" }).click();
+  const looks = page.getByRole("group", { name: "Wedding style pairings" });
+  await expect(looks).toContainText("Simran");
+  await expect(looks).toContainText("Arjun");
+  const palette = page.getByRole("combobox", { name: "Colour palette", exact: true });
+  const before = await palette.inputValue();
+  await looks.getByRole("button", { name: "Apply Garden vows" }).focus();
+  await page.keyboard.press("Enter");
+  await expect(palette).toHaveValue("sage");
+  await expect(page.getByRole("combobox", { name: "Typography", exact: true })).toHaveValue("script");
+  await page.getByRole("button", { name: "Undo style" }).click();
+  await expect(palette).toHaveValue(before);
+  await looks.getByRole("button", { name: "Apply Quiet editorial" }).click();
+  await expect(page.getByLabel("Decorative artwork", { exact: false })).not.toBeChecked();
+  // A manual refinement must not leave an undo action that overwrites it.
+  await palette.selectOption("rose");
+  await expect(page.getByRole("button", { name: "Undo style" })).toHaveCount(0);
+  await looks.getByRole("button", { name: "Apply Heirloom letter" }).click();
+  await looks.scrollIntoViewIfNeeded();
+  await page.screenshot({ path: info.outputPath("wedding-style-pairings.png") });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
+  await page.getByRole("tab", { name: "Templates", exact: true }).click();
+  await page.getByRole("button", { name: "Coastal Promise", exact: true }).click();
+  await page.getByRole("button", { name: "Save draft", exact: true }).click();
+  await expect(page.locator(".editor-workspace-status")).toHaveAttribute("data-save-state", "saved");
+  const saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)!), INVITATION_DRAFT_STORAGE_KEY);
+  expect(saved.invitation.couple).toEqual(original.invitation.couple);
+  expect(saved.invitation.message).toBe(original.invitation.message);
+  expect(saved.invitation.functions).toEqual(original.invitation.functions.map(item => ({ ...item, startsAt: new Date(item.startsAt).toISOString(), mapUrl: item.mapUrl || "", visibility: item.visibility || "public" })));
+  expect(saved.invitation.design.opening).toEqual(original.invitation.design.opening);
+  expect(saved.themeId).toBe("riviera");
+  await page.reload();
+  await page.getByRole("button", { name: "Design", exact: true }).click();
+  await page.getByRole("tab", { name: "Colours & type" }).click();
+  await expect(page.getByRole("button", { name: "Apply Heirloom letter" })).toHaveAttribute("aria-pressed", "true");
+  const preview = page.frameLocator('iframe[title="Actual guest invitation preview"]');
+  await expect(preview.locator("[data-wedding-flow=shared]")).toHaveAttribute("data-palette", "rose");
+  await expect(preview.locator("[data-wedding-flow=shared]")).toHaveAttribute("data-cinematic-theme", "riviera");
+  expect(errors).toEqual([]);
+});
+
+test("wedding journeys change the real reading order and preview shortcuts reach the right section", async ({ page }, info) => {
+  await page.goto("/customize?occasion=wedding&theme=meenaya");
+  await page.getByRole("button", { name: "Design", exact: true }).click();
+  await page.getByRole("tab", { name: "Music & layout" }).click();
+  const journeys = page.getByRole("group", { name: "Wedding guest journey" });
+  await journeys.getByRole("button", { name: /^The plans first/ }).click();
+  const preview = page.frameLocator('iframe[title="Actual guest invitation preview"]');
+  await expect.poll(() => preview.locator('[data-section="schedule"]').evaluate(node => Number(getComputedStyle(node).order))).toBe(10);
+  await page.getByRole("button", { name: "Undo order" }).click();
+  await expect.poll(() => preview.locator('[data-section="schedule"]').evaluate(node => Number(getComputedStyle(node).order))).toBe(10 + original.invitation.design.sectionOrder.indexOf("schedule") * 10);
+  await journeys.getByRole("button", { name: /^The plans first/ }).click();
+  await journeys.scrollIntoViewIfNeeded();
+  await page.screenshot({ path: info.outputPath("wedding-guest-journey.png") });
+  await page.getByRole("button", { name: "Preview invitation", exact: true }).click();
+  await page.getByRole("combobox", { name: "Review wedding section" }).selectOption("schedule");
+  await expect(preview.getByRole("heading", { name: "The celebrations." })).toBeInViewport();
+  await page.getByRole("combobox", { name: "Review wedding section" }).selectOption("rsvp");
+  await expect(preview.getByRole("textbox", { name: "Your name", exact: true })).toBeInViewport();
+  await page.getByRole("combobox", { name: "Review wedding section" }).selectOption("opening");
+  await expect(preview.getByRole("button", { name: "Open invitation", exact: true })).toBeInViewport();
+  await page.screenshot({ path: info.outputPath("wedding-preview-shortcuts.png") });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
+  await page.getByRole("button", { name: "Back to editing", exact: true }).click();
+  await page.getByRole("button", { name: "Save draft", exact: true }).click();
+  await expect(page.locator(".editor-workspace-status")).toHaveAttribute("data-save-state", "saved");
+  await page.reload();
+  await page.getByRole("button", { name: "Design", exact: true }).click();
+  await page.getByRole("tab", { name: "Music & layout" }).click();
+  await expect(page.getByRole("group", { name: "Wedding guest journey" }).getByRole("button", { name: /^The plans first/ })).toHaveAttribute("aria-pressed", "true");
+});

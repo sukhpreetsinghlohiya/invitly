@@ -9,6 +9,8 @@ import { hasIndicText } from "@/lib/invitation-text";
 import { ArchiveOrnament } from "@/components/archive-ornament";
 import { TraditionSymbol, hasTraditionSymbol } from "@/components/tradition-symbol";
 import type { Invitation, ThemeId } from "@/types/invitation";
+import { isCinematicTheme } from "@/data/cinematic-themes";
+import { CinematicCover } from "./cinematic-cover";
 import "@fontsource/cormorant-garamond/latin-400.css";
 import "@fontsource/cormorant-garamond/latin-400-italic.css";
 import "@fontsource/great-vibes/latin-400.css";
@@ -121,7 +123,7 @@ function DecoChevron() {
 
 /** A stretchable paper rail joins the two fixed-proportion halves of the frame. */
 function FrameMiddle({ theme }: { theme: ThemeId }) {
-  const rails: Record<ThemeId, { paper: [number, number]; soft?: [number, number]; lines: number[]; gold?: number[] }> = {
+  const rails: Partial<Record<ThemeId, { paper: [number, number]; soft?: [number, number]; lines: number[]; gold?: number[] }>> = {
     royal: { paper: [57, 346], lines: [66, 394], gold: [10, 18, 57, 403, 442, 450] },
     mehfil: { paper: [56, 348], lines: [], gold: [19, 56, 66, 394, 404, 441] },
     modern: { paper: [59, 341], soft: [24, 412], lines: [59, 400] },
@@ -133,7 +135,7 @@ function FrameMiddle({ theme }: { theme: ThemeId }) {
     champagne: { paper: [0, 460], lines: [], gold: [18, 28, 60, 400, 432, 442] },
     sindoor: { paper: [78, 304], lines: [88, 372], gold: [14, 24, 78, 382, 436, 446] },
   };
-  const rail = rails[theme];
+  const rail = rails[theme] || rails.royal!;
   return <>
     <rect width="460" height="1" fill="var(--art-ground)" />
     {rail.soft && <rect x={rail.soft[0]} width={rail.soft[1]} height="1" fill="var(--art-soft)" />}
@@ -210,6 +212,7 @@ function CoverIllustration({ id, theme, sikh, accent, compact }: { id: string; t
 /** A single, real cover composition shared by the catalogue and the invitation. */
 export function IllustratedCover({ invitation, theme, compact = false }: Props) {
   const id = `illustrated-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  if (isCinematicTheme(theme)) return <CinematicCover invitation={invitation} theme={theme} compact={compact} />;
   const design = getDesign(invitation);
   const names = invitation.couple.filter(Boolean);
   const nameLength = Math.max(...names.map(name => name.length), 0);

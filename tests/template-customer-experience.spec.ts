@@ -24,7 +24,7 @@ test("music settings stay out of the invitation until requested and can be dismi
 
 test("changing a demo design keeps its occasion and tradition and locks stale customization links", async ({ page }) => {
   await page.goto("/demo?theme=lotus&occasion=engagement&tradition=neutral");
-  const select = page.getByRole("combobox", { name: "YOU’RE PREVIEWING", exact: true });
+  const select = page.getByRole("combobox", { name: "LIVE DEMO", exact: true });
   const customize = page.locator("header").first().getByRole("link", { name: "Make it yours" });
   let release: (() => void) | undefined;
   const waiting = new Promise<void>(resolve => { release = resolve; });

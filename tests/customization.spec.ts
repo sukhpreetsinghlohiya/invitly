@@ -1,6 +1,10 @@
 import { mkdir } from "node:fs/promises";
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
 
+test.beforeEach(async ({ page }) => {
+  await page.route('**/api/visitor-welcome', route => route.fulfill({ json: { enabled: false } }));
+});
+
 async function expectNoHorizontalOverflow(page: Page) {
   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
 }
@@ -11,16 +15,16 @@ async function capture(page: Page, testInfo: TestInfo, name: string) {
   await page.screenshot({ path: `artifacts/screenshots/${name}-${testInfo.project.name}-viewport.png` });
 }
 
-test("the collection shows ten themes, filters by style, and opens the selected editor", async ({ page }, testInfo) => {
+test("the collection shows sixteen themes, filters by style, and opens the selected editor", async ({ page }, testInfo) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/templates");
-  await expect(page.locator("article.collection-card")).toHaveCount(10);
-  await expect(page.locator('.collection-count[role="status"]')).toHaveText("10 invitations to make your own");
+  await expect(page.locator("article.collection-card")).toHaveCount(16);
+  await expect(page.locator('.collection-count[role="status"]')).toHaveText("16 invitations to make your own");
   await expectNoHorizontalOverflow(page);
   await capture(page, testInfo, "templates");
   const filters = page.getByRole("group", { name: "Filter invitation styles" });
-  for (const [name, count] of [["Indian", 5], ["Minimal", 2], ["Floral", 2], ["Contemporary", 1]] as const) {
+  for (const [name, count] of [["Indian", 10], ["Minimal", 2], ["Floral", 2], ["Contemporary", 2]] as const) {
     await filters.getByRole("button", { name, exact: true }).click();
     await expect(page.locator("article.collection-card")).toHaveCount(count);
     await expect(filters.getByRole("button", { name, exact: true })).toHaveAttribute("aria-pressed", "true");
@@ -29,7 +33,7 @@ test("the collection shows ten themes, filters by style, and opens the selected 
   const all = filters.getByRole("button", { name: "All", exact: true });
   await all.focus();
   await page.keyboard.press("Enter");
-  await expect(page.locator("article.collection-card")).toHaveCount(10);
+  await expect(page.locator("article.collection-card")).toHaveCount(16);
   await page.getByRole("link", { name: "Customize Pichwai Garden", exact: true }).click();
   await expect(page).toHaveURL(/\/customize\?theme=pichwai/);
   await page.getByRole("button", { name: "Design", exact: true }).click();

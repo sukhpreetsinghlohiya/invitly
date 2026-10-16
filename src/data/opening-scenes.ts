@@ -6,4 +6,5 @@ export const openingSceneAssets = {
   car: "/images/openings/car.webp",
   bike: "/images/openings/bike.webp",
   paper: "/images/openings/embossed-paper.webp",
+  envelopeBackdrop: "/images/openings/ivory-sage-ribbon.webp",
 } as const;

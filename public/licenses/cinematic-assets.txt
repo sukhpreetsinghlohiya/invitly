@@ -1,0 +1,24 @@
+Cinematic wedding collection — asset provenance
+
+Original AI-generated images: /images/cinematic/temple.webp, coast.webp,
+palace.webp, reactions.webp. Generated with OpenAI image_gen on 2026-10-14.
+Prompts and source file paths: assets/source/cinematic-prompts.json.
+Reaction imagery and conversations are illustrative, not customer testimonials.
+
+Collection previews render the actual invitation covers using original generated
+scenery. Third-party preview images were reviewed as user-supplied references
+and are not shipped in this collection.
+
+Design research references (reviewed 2026-10-14):
+https://invitely.studio/demo-meenaya
+https://aamantraninvites.com/
+https://zareqia.com/
+https://tyingknot.in/pricing
+https://einvit.in/
+https://wedence.in/pricing
+https://wetales.in/blog/digital-wedding-invitations-your-ultimate-qa-guide
+https://invitemart.com/collections/custom-invitation
+https://www.wedmegood.com/wedding-invitations
+
+These references informed general user flows. Their brands, testimonials,
+photographs and implementation are not included in our designs.

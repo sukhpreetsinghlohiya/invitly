@@ -40,6 +40,11 @@ const occasionCopy: Record<Exclude<OccasionId, "wedding">, OccasionCopy> = {
   anniversary: { storyLabel: "FROM OUR ALBUM OF LIFE", storyTitle: "All the little things that became a life.", scheduleLabel: "ANOTHER MEMORY TO MAKE", scheduleTitle: "Together, once more.", rsvpTitle: "The years are sweeter with you.", photoTitle: "The story we are still writing." },
   remembrance: { storyLabel: "IN LOVING MEMORY", storyTitle: "A life held close.", scheduleLabel: "TIME & PLACE", scheduleTitle: "A gathering in remembrance.", rsvpTitle: "Let us know if you can join us.", photoTitle: "Treasured memories." },
   other: { storyLabel: "A PERSONAL INVITATION", storyTitle: "Good company makes the occasion.", scheduleLabel: "THE PLAN", scheduleTitle: "Let’s spend some time together.", rsvpTitle: "We would love your company.", photoTitle: "A few moments to share." },
+  conference: { storyLabel: "YOU ARE INVITED TO ATTEND", storyTitle: "Ideas worth gathering for.", scheduleLabel: "THE PROGRAMME", scheduleTitle: "Here is what we have planned for you.", rsvpTitle: "Reserve your place.", photoTitle: "From our previous events." },
+  webinar: { storyLabel: "JOIN US ONLINE", storyTitle: "A session worth your time.", scheduleLabel: "SESSION DETAILS", scheduleTitle: "Here is how to join us live.", rsvpTitle: "Register your spot.", photoTitle: "Past sessions and highlights." },
+  "ladies-night": { storyLabel: "THE GIRLS ARE GETTING TOGETHER", storyTitle: "A night you will not want to miss.", scheduleLabel: "THE NIGHT’S PLAN", scheduleTitle: "Here’s what we have lined up.", rsvpTitle: "Tell us you’re coming!", photoTitle: "Our best nights, remembered." },
+  "virtual-event": { storyLabel: "WE ARE MEETING ONLINE", storyTitle: "Distance is no reason not to gather.", scheduleLabel: "THE SESSION PLAN", scheduleTitle: "Here is how to join.", rsvpTitle: "See you online!", photoTitle: "Moments from our virtual world." },
+  "kids-birthday": { storyLabel: "PARTY TIME!", storyTitle: "Cake, games, and the best birthday ever.", scheduleLabel: "THE PARTY PLAN", scheduleTitle: "Here is what we have planned!", rsvpTitle: "Come to the party!", photoTitle: "Birthday memories." },
 };
 
 /** Occasion-specific guest pages. Editing, upload and host-account code never enter this component. */

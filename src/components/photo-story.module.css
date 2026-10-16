@@ -35,3 +35,10 @@
 @media(prefers-reduced-motion:reduce) { .heroSlide,.heroSlide img,.card { transition:none; }.heroSlide img { transform:none!important; animation:none!important; }.playback { display:none!important; } }
 .frameBranch:first-child { left:-1%; }.frameBranch:last-child { right:-1%; }
 @media(max-width:650px) { .heroSlide img[src*="courtyard"] { object-position:74% center; } }
+
+.album[data-editorial=true] .stage { aspect-ratio:1.85; min-height:340px; }
+.album[data-editorial=true] .card { width:31%; height:90%; padding:8px 8px 32px; border-color:#b4a48c40; box-shadow:0 10px 26px #3b281b16; }
+.album[data-editorial=true] .card[data-position=center] { transform:translate3d(0,0,0) rotate(-2deg); }
+.album[data-editorial=true] .card[data-position=left] { transform:translate3d(-105%,3%,-50px) rotate(-7deg); opacity:.85; }
+.album[data-editorial=true] .card[data-position=right] { transform:translate3d(105%,3%,-50px) rotate(7deg); opacity:.85; }
+@media(max-width:650px) { .album[data-editorial=true] .stage { aspect-ratio:.95; min-height:290px; }.album[data-editorial=true] .card { width:69%; height:83%; }.album[data-editorial=true] .card[data-position=left] { transform:translate3d(-34%,2%,-100px) rotate(-8deg); }.album[data-editorial=true] .card[data-position=right] { transform:translate3d(34%,2%,-100px) rotate(8deg); } }

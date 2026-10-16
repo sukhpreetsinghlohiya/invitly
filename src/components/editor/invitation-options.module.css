@@ -10,3 +10,4 @@
 .replayRow { display:flex; flex-wrap:wrap; align-items:center; gap:7px 15px; margin:17px 0 20px; }.replayRow button { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:10px 13px; border:1px solid #d8c8bb; border-radius:5px; background:#fffdf8; color:#743e49; font:500 11px/1.5 var(--sans); cursor:pointer; }.replayRow button:focus-visible { outline:2px solid #743e49; outline-offset:3px; }.replayRow>span { color:#807368; font:10px/1.6 var(--sans); }
 @media(max-width:480px) { .openingGrid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }.openingName { font-size:12px; }.openingChoice small { font-size:10px; }.openingThumbnail { margin-bottom:10px; } }
 @media(prefers-reduced-motion:reduce) { .openingChoice { transition:none; } }
+.openingGrid { grid-template-columns:minmax(0,220px); }

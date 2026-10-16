@@ -144,6 +144,59 @@
 .cover[data-layout=keepsake][data-occasion=remembrance] .keepsakeVisual { border-radius:0; }.cover[data-layout=keepsake][data-occasion=remembrance] .names { font-style:normal; }
 .cover[data-layout=keepsake][data-occasion=other] { --occasion-ink:#4b5c43; --occasion-paper:#f4f0e3; --occasion-accent:#8a9064; --cover-wash:#d9ddc7; }
 
+/* Professional / social occasion stationery. */
+.cover[data-occasion=conference] { --occasion-ink:#d4a853; --occasion-paper:#1e2d3d; --occasion-accent:#c49a3f; --cover-wash:#2d3f52; }
+.cover[data-occasion=conference][data-layout=signature] .composition { padding:9cqi 12cqi; background:var(--occasion-paper); border-block:1.5cqi solid var(--occasion-ink); }
+.cover[data-occasion=conference][data-layout=signature] .composition::before { inset:3.5cqi; border:1px solid var(--occasion-accent); outline:1px solid color-mix(in srgb,var(--occasion-ink) 28%,transparent); outline-offset:1.2cqi; }
+.cover[data-occasion=conference][data-layout=signature] .signatureMain { order:-1; margin:2cqi 0 4cqi; }
+.cover[data-occasion=conference][data-layout=signature] .occasionName { order:-2; }
+.cover[data-occasion=conference][data-layout=signature] .names { font-size:16cqi; letter-spacing:-.02em; }
+.cover[data-occasion=conference][data-layout=signature] .names[data-long=true] { font-size:12cqi; }
+.cover[data-occasion=conference][data-layout=signature] .signatureVisual { width:78%; }
+.cover[data-occasion=conference][data-layout=signature] .details { border-top:1px solid color-mix(in srgb,var(--occasion-ink) 40%,transparent); padding-top:4cqi; margin-top:4cqi; }
+
+.cover[data-occasion=webinar] { --occasion-ink:#1a4f70; --occasion-paper:#f0f7ff; --occasion-accent:#2980b9; --cover-wash:#d4e9f5; }
+.cover[data-occasion=webinar][data-layout=signature] .composition { padding:9cqi 12cqi; background:var(--occasion-paper); border:1.5cqi solid var(--cover-wash); }
+.cover[data-occasion=webinar][data-layout=signature] .composition::before { inset:3cqi; border:1px solid color-mix(in srgb,var(--occasion-accent) 35%,transparent); }
+.cover[data-occasion=webinar][data-layout=signature] .signatureMain { order:-1; margin:2cqi 0 4cqi; }
+.cover[data-occasion=webinar][data-layout=signature] .occasionName { order:-2; }
+.cover[data-occasion=webinar][data-layout=signature] .names { font-size:15cqi; }
+.cover[data-occasion=webinar][data-layout=signature] .names[data-long=true] { font-size:11cqi; }
+.cover[data-occasion=webinar][data-layout=signature] .signatureVisual { width:82%; margin-top:3cqi; }
+.cover[data-occasion=webinar][data-layout=signature] .divider { width:22cqi; }
+
+.cover[data-occasion=ladies-night] { --occasion-ink:#6b1a3d; --occasion-paper:#fff0f8; --occasion-accent:#c4547a; --cover-wash:#f5c2d8; }
+.cover[data-occasion=ladies-night][data-layout=signature] .composition { padding:9cqi 12cqi 11cqi; background:repeating-linear-gradient(135deg,transparent 0 6cqi,color-mix(in srgb,var(--cover-wash) 18%,transparent) 6cqi 7cqi),var(--occasion-paper); border:2cqi solid var(--cover-wash); }
+.cover[data-occasion=ladies-night][data-layout=signature] .composition::before { inset:3cqi; border-radius:36cqi 36cqi 2px 2px; border:1px solid color-mix(in srgb,var(--occasion-accent) 35%,transparent); }
+.cover[data-occasion=ladies-night][data-layout=signature] .signatureMain { order:-1; margin:2cqi 0 4cqi; }
+.cover[data-occasion=ladies-night][data-layout=signature] .occasionName { order:-2; }
+.cover[data-occasion=ladies-night][data-layout=signature] .names { font-size:19cqi; font-style:italic; }
+.cover[data-occasion=ladies-night][data-layout=signature] .names[data-long=true] { font-size:13cqi; }
+.cover[data-occasion=ladies-night][data-layout=signature] .signatureVisual { width:76%; }
+.cover[data-occasion=ladies-night][data-layout=signature] .divider { display:none; }
+.cover[data-occasion=ladies-night][data-layout=signature] .details { border-top:1px dashed var(--occasion-accent); padding-top:5cqi; margin-top:5cqi; }
+
+.cover[data-occasion=virtual-event] { --occasion-ink:#c5f0ea; --occasion-paper:#0d2d3a; --occasion-accent:#34b9a5; --cover-wash:#1a3d4a; }
+.cover[data-occasion=virtual-event][data-layout=signature] .composition { padding:9cqi 12cqi; background:var(--occasion-paper); border:2cqi solid var(--cover-wash); }
+.cover[data-occasion=virtual-event][data-layout=signature] .composition::before { inset:3.5cqi; border:1px solid color-mix(in srgb,var(--occasion-accent) 45%,transparent); }
+.cover[data-occasion=virtual-event][data-layout=signature] .signatureMain { order:-1; margin:2cqi 0 4cqi; }
+.cover[data-occasion=virtual-event][data-layout=signature] .occasionName { order:-2; }
+.cover[data-occasion=virtual-event][data-layout=signature] .names { font-size:16cqi; letter-spacing:-.025em; }
+.cover[data-occasion=virtual-event][data-layout=signature] .names[data-long=true] { font-size:12cqi; }
+.cover[data-occasion=virtual-event][data-layout=signature] .signatureVisual { width:80%; }
+.cover[data-occasion=virtual-event][data-layout=signature] .details { border-top:1px solid color-mix(in srgb,var(--occasion-accent) 35%,transparent); padding-top:4cqi; margin-top:4cqi; }
+
+.cover[data-occasion=kids-birthday] { --occasion-ink:#bf360c; --occasion-paper:#fffde7; --occasion-accent:#ff6f00; --cover-wash:#ffe082; }
+.cover[data-occasion=kids-birthday][data-layout=signature] .composition { padding:9cqi 11cqi; background:repeating-linear-gradient(90deg,transparent 0 4cqi,color-mix(in srgb,var(--cover-wash) 22%,transparent) 4cqi 8cqi),var(--occasion-paper); border:2.5cqi solid var(--occasion-ink); border-radius:4cqi; }
+.cover[data-occasion=kids-birthday][data-layout=signature] .composition::before { inset:3cqi; border:2px solid var(--occasion-accent); border-radius:2.5cqi; outline:1px solid var(--cover-wash); outline-offset:1.2cqi; }
+.cover[data-occasion=kids-birthday][data-layout=signature] .signatureMain { order:-1; margin:2cqi 0 4cqi; }
+.cover[data-occasion=kids-birthday][data-layout=signature] .occasionName { order:-2; }
+.cover[data-occasion=kids-birthday][data-layout=signature] .names { font-size:22cqi; font-style:italic; }
+.cover[data-occasion=kids-birthday][data-layout=signature] .names[data-long=true] { font-size:14cqi; }
+.cover[data-occasion=kids-birthday][data-layout=signature] .signatureVisual { width:82%; margin-bottom:0; }
+.cover[data-occasion=kids-birthday][data-layout=signature] .divider { display:none; }
+.cover[data-occasion=kids-birthday][data-layout=signature] .details { border-top:2px dashed var(--occasion-accent); padding-top:5cqi; margin-top:5cqi; }
+
 /* Engagement stationery has one spacing rhythm at every size, with art kept clear of editable copy. */
 .engagementGarden { position:relative; width:100%; aspect-ratio:4/3; isolation:isolate; }
 .engagementGarden>img { display:block; width:100%; height:100%; object-fit:contain; }

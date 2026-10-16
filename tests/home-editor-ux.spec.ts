@@ -1,6 +1,10 @@
 import { expect, test, type Page } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
 
+test.beforeEach(async ({ page }) => {
+  await page.route('**/api/visitor-welcome', route => route.fulfill({ json: { enabled: false } }));
+});
+
 // The account journey uses disposable local credentials; never record auth traces.
 test.use({ trace: 'off', screenshot: 'off', video: 'off' });
 
@@ -24,10 +28,10 @@ test('homepage login, keyboard FAQs and footer navigation work at every viewport
   }
   expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
   await expect(page.locator('.marketing-header')).toHaveCount(1);
-  await expect(page.locator('main .hero')).toHaveCount(1);
+  await expect(page.getByRole('region', { name: 'Your wedding. A beautiful beginning.' })).toHaveCount(1);
   await mkdir('artifacts/home-editor-after', { recursive: true });
   await capturePage(page, `homepage-${info.project.name}`, true);
-  await page.locator('main .hero').screenshot({ path: `artifacts/home-editor-after/hero-${info.project.name}.png` });
+  await page.getByRole('region', { name: 'Your wedding. A beautiful beginning.' }).screenshot({ path: `artifacts/home-editor-after/hero-${info.project.name}.png` });
 
   const faq = page.locator('#faqs');
   const questions = faq.locator('details');

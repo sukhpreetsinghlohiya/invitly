@@ -5,6 +5,7 @@ import { getOccasionTheme } from "@/data/occasion-themes";
 import { getOccasionArtwork } from "@/data/occasion-art";
 import { getFestival } from "@/data/festivals";
 import { FestivalArtwork } from "./festival-art";
+import { OccasionSvgArt, hasOccasionSvgArt } from "./occasion-svg-art";
 import { formatEventDate } from "@/data/demo-invitation";
 import { hasIndicText } from "@/lib/invitation-text";
 import { InvitationImage } from "@/components/invitation-image";
@@ -71,7 +72,7 @@ export function OccasionCover({ invitation, theme, compact = false, cover, photo
   const Heading = compact ? "h2" : "h1";
   const artwork = <div className={`${styles.artwork} ${cover ? styles.photograph : ""}`} data-occasion-art={occasion.id}>
     {cover ? (compact ? <InvitationImage src={cover.url} alt={cover.alt} width={cover.width} height={cover.height} sizes="230px" /> : <HeroPhotoSlideshow photos={photos.length ? photos : [cover]} coverPhotoId={cover.id} motion={occasion.id === "remembrance" ? "none" : design.motion || "gentle"} />)
-      : design.decoration && (festival ? <FestivalArtwork preset={festival.preset} /> : occasion.id === "engagement" ? <EngagementGarden compact={compact} /> : <><Image src={illustration.src} alt="" width={illustration.width} height={illustration.height} sizes={compact ? "230px" : "(max-width: 700px) 88vw, 480px"} preload={!compact} /><ArtAccents occasion={occasion.id} /></>)}
+      : design.decoration && (festival ? <FestivalArtwork preset={festival.preset} /> : occasion.id === "engagement" ? <EngagementGarden compact={compact} /> : hasOccasionSvgArt(occasion.id) ? <OccasionSvgArt occasion={occasion.id} /> : <><Image src={illustration.src} alt="" width={illustration.width} height={illustration.height} sizes={compact ? "230px" : "(max-width: 700px) 88vw, 480px"} preload={!compact} /><ArtAccents occasion={occasion.id} /></>)}
   </div>;
   const title = <div className={styles.identity}>
     <TraditionSymbol invitation={invitation} />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { InvitationContent } from "@/components/invitation-content";
 import { getDesign } from "@/data/occasions";
 import { validateInvitationDraft, type InvitationDraft } from "@/lib/invitation-draft";
@@ -9,6 +9,7 @@ import type { EventPhoto } from "@/types/media";
 export function DraftPreview() {
   const [preview, setPreview] = useState<{ draft: InvitationDraft; photos: EventPhoto[]; timestamp: number } | null>(null);
   const [error, setError] = useState("");
+  const requestedSection = useRef<string | null>(null);
   useEffect(() => {
     function receive(event: MessageEvent) {
       if (event.source !== window.parent || event.origin !== window.location.origin) return;
@@ -16,6 +17,7 @@ export function DraftPreview() {
       if (event.data?.type !== "invitly-preview") return;
       const checked = validateInvitationDraft(event.data.draft, "draft");
       if (!checked.data) { setError(checked.error); return; }
+      if (["opening", "story", "schedule", "photos", "rsvp", "updates"].includes(event.data.reviewSection)) requestedSection.current = event.data.reviewSection;
       const photos = (Array.isArray(event.data.photos) ? event.data.photos : []).filter((photo: EventPhoto) => photo && typeof photo.url === "string" && /^\/dashboard\/events\/[0-9a-f-]{36}\/media\/[0-9a-f-]{36}$/.test(photo.url) && typeof photo.alt === "string" && Number.isFinite(photo.width) && Number.isFinite(photo.height)).slice(0, 12);
       setPreview({ draft: checked.data, photos, timestamp: Date.now() }); setError("");
     }
@@ -36,6 +38,21 @@ export function DraftPreview() {
     window.parent.postMessage({ type: "invitly-preview-ready" }, window.location.origin);
     return () => { window.removeEventListener("message", receive); window.removeEventListener("keydown", keydown); document.removeEventListener("click", navigate); };
   }, []);
+  useEffect(() => {
+    if (!preview || !requestedSection.current) return;
+    const section = requestedSection.current;
+    if (section === "opening") document.dispatchEvent(new Event("invitly:replay-opening"));
+    const frame = requestAnimationFrame(() => {
+      requestedSection.current = null;
+      if (section === "opening") { window.scrollTo({ top: 0, behavior: "instant" }); return; }
+      const target = document.querySelector<HTMLElement>(`[data-section="${section}"]`);
+      if (!target) return;
+      // Scroll only this frame; scrollIntoView can also move the host's dialog.
+      const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+      window.scrollTo({ top: window.scrollY + target.getBoundingClientRect().top - margin, behavior: "instant" });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [preview]);
   if (!preview) return <main id="main" className="preview-waiting"><p>{error || "Your invitation preview appears here as you create it."}</p></main>;
   const { draft, photos, timestamp } = preview;
   const previewIdentity = `${draft.themeId}:${draft.invitation.occasion || "wedding"}:${draft.invitation.tradition || "neutral"}:${getDesign(draft.invitation).opening?.style || "theme"}:${draft.invitation.festival?.preset || ""}`;

@@ -36,7 +36,7 @@ test("email-link landing is inert until confirmation and errors have recovery pa
 
 test("demo selector preserves the chosen design and occasion in the editor link", async ({ page }, info) => {
   await page.goto("/demo?theme=royal&occasion=wedding&tradition=neutral");
-  const select = page.getByLabel("YOU’RE PREVIEWING", { exact: true });
+  const select = page.getByLabel("LIVE DEMO", { exact: true });
   await expect(select).toHaveValue("royal");
   await expect(page.getByRole("button", { name: /^(Play|Pause) music$/ })).toHaveCount(1);
   await page.screenshot({ path: `artifacts/auth-demo/demo-${info.project.name}.png`, fullPage: false });

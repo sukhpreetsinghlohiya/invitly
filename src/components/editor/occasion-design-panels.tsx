@@ -16,6 +16,7 @@ import type { AudioUploadContext } from "./custom-audio-upload";
 import { MusicPicker } from "./music-picker";
 import { InvitationDesignOptions } from "./invitation-options";
 import { TraditionIcon, traditionSymbolLabel } from "@/components/tradition-symbol";
+import { WeddingStyleStudio, WeddingJourneyStudio } from "./wedding-studio";
 
 type PanelProps = { draft: InvitationDraft; change: (draft: InvitationDraft) => void };
 
@@ -45,6 +46,7 @@ export function DesignPanel({ draft, change, chooseTheme, ...uploadContext }: Pa
   const design = getDesign(draft.invitation);
   const themes = getOccasionThemes(draft.invitation.occasion);
   const music = design.music || defaultMusic;
+  const isWedding = !draft.invitation.occasion || draft.invitation.occasion === "wedding";
   function update(patch: Partial<InvitationDesign>) { change({ ...draft, invitation: { ...draft.invitation, design: { ...design, ...patch } } }); }
   function move(index: number, direction: number) { const order = [...design.sectionOrder]; const target = index + direction; if (target < 0 || target >= order.length) return; [order[index], order[target]] = [order[target], order[index]]; update({ sectionOrder: order }); }
   function navigateTabs(event: KeyboardEvent<HTMLButtonElement>, index: number) {
@@ -58,6 +60,7 @@ export function DesignPanel({ draft, change, chooseTheme, ...uploadContext }: Pa
       <div className="editor-theme-grid">{themes.map(item => <button type="button" key={item.id} aria-pressed={draft.themeId === item.id} aria-label={item.name} className="editor-theme-choice" onClick={() => chooseTheme(item.id)}><span className="editor-theme-art" aria-hidden="true">{!draft.invitation.occasion || draft.invitation.occasion === "wedding" ? <IllustratedCover theme={item.id} invitation={draft.invitation} compact /> : <InvitationArt theme={item.id} invitation={draft.invitation} compact />}{draft.themeId === item.id && <b><Check size={13} /></b>}</span><strong>{item.name}</strong></button>)}</div>
     </div>
     <div className="editor-design-panel" role="tabpanel" id={`${tabId}-panel-1`} aria-labelledby={`${tabId}-tab-1`} hidden={activeTab !== 1}>
+      {isWedding && <WeddingStyleStudio invitation={draft.invitation} design={design} onChange={update} />}
       <div className="editor-field-pair"><label className="form-field">Colour palette<select value={design.palette} onChange={event => update({ palette: event.target.value as InvitationDesign["palette"] })}><option value="original">Theme original</option><option value="rose">Rose & ivory</option><option value="sage">Sage & paper</option><option value="indigo">Indigo & pearl</option></select></label><label className="form-field">Typography<select value={design.typography} onChange={event => update({ typography: event.target.value as InvitationDesign["typography"] })}><option value="original">Theme original</option><option value="serif">Classic serif</option><option value="sans">Modern sans</option><option value="script">Soft calligraphy</option></select></label></div>
       <label className="form-field">Cover text<input maxLength={160} value={draft.invitation.coverText ?? ""} onChange={event => change({ ...draft, invitation: { ...draft.invitation, coverText: event.target.value } })} /><small>Leave blank for a quieter cover.</small></label>
       <label className="editor-toggle"><input type="checkbox" checked={design.decoration} onChange={event => update({ decoration: event.target.checked })} /><span><strong>Decorative artwork</strong><small>Flowers, frames and motifs from your chosen design.</small></span></label>
@@ -68,6 +71,7 @@ export function DesignPanel({ draft, change, chooseTheme, ...uploadContext }: Pa
       <label className="form-field">Movement & transitions<select value={design.motion || "gentle"} onChange={event => update({ motion: event.target.value as InvitationDesign["motion"] })}><option value="gentle">Gentle · quiet, quick reveals</option><option value="expressive">Expressive · a little more theatre</option><option value="none">Still · no decorative animation</option></select><small>Your guests’ reduced-motion setting always takes priority.</small></label>
     </div>
     <div className="editor-design-panel" role="tabpanel" id={`${tabId}-panel-3`} aria-labelledby={`${tabId}-tab-3`} hidden={activeTab !== 3}>
+      {isWedding && <WeddingJourneyStudio design={design} onChange={update} />}
       <div className="editor-music"><label className="editor-toggle"><input type="checkbox" checked={draft.musicEnabled} onChange={event => change({ ...draft, musicEnabled: event.target.checked })} /><span><strong>A soundtrack for your story</strong><small>Guests can play or pause the music.</small></span></label>{draft.musicEnabled && <MusicPicker {...uploadContext} music={music} change={value => update({ music: value })} />}</div>
       <div className="editor-section-order"><h3>Arrange your invitation</h3><p>Move sections up or down. Empty sections stay hidden.</p><ol>{design.sectionOrder.map((section, index) => <li key={section}><span>{sectionLabels[section]}</span><button type="button" aria-label={`Move ${sectionLabels[section]} up`} disabled={index === 0} onClick={() => move(index, -1)}><ArrowUp size={16} /></button><button type="button" aria-label={`Move ${sectionLabels[section]} down`} disabled={index === design.sectionOrder.length - 1} onClick={() => move(index, 1)}><ArrowDown size={16} /></button></li>)}</ol></div>
     </div>

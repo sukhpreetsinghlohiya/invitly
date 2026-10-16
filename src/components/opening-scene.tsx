@@ -45,7 +45,7 @@ export function OpeningScene({ style, phase = "closed", compact = false }: { sty
       <span className={styles.ribbon} />
     </>}
     {scene === "envelope" && <>
-      <Art src={openingSceneAssets.paper} />
+      <Art src={openingSceneAssets.envelopeBackdrop} />
       <span className={styles.envelopeSide} /><span className={styles.envelopeFlap} /><span className={styles.envelopeSeal}><span>♡</span></span>
     </>}
     {scene === "none" && <><Art src={openingSceneAssets.paper} /><span className={styles.plainCard}><i /><i /><b>♥</b><i /></span></>}

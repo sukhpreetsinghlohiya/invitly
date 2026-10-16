@@ -11,11 +11,11 @@ import { usePhotoPlayback } from "../use-photo-playback";
 import styles from "./wedding.module.css";
 import album from "../photo-story.module.css";
 
-export function PhotoGallery({ photos, motion = "gentle", theme = "royal", occasion = "wedding" }: { photos: EventPhoto[]; isDemo?: boolean; motion?: InvitationDesign["motion"]; theme?: ThemeId; occasion?: OccasionId }) {
-  return <PhotoAlbum key={photos.map(photo => photo.id).join(":")} photos={photos} motion={motion} theme={theme} occasion={occasion} />;
+export function PhotoGallery({ photos, motion = "gentle", theme = "royal", occasion = "wedding", editorial = false }: { photos: EventPhoto[]; isDemo?: boolean; motion?: InvitationDesign["motion"]; theme?: ThemeId; occasion?: OccasionId; editorial?: boolean }) {
+  return <PhotoAlbum key={photos.map(photo => photo.id).join(":")} photos={photos} motion={motion} theme={theme} occasion={occasion} editorial={editorial} />;
 }
 
-function PhotoAlbum({ photos, motion, theme, occasion }: { photos: EventPhoto[]; motion: string; theme: ThemeId; occasion: OccasionId }) {
+function PhotoAlbum({ photos, motion, theme, occasion, editorial }: { photos: EventPhoto[]; motion: string; theme: ThemeId; occasion: OccasionId; editorial: boolean }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const touchStart = useRef<number | null>(null);
   const [active, setActive] = useState(0);
@@ -25,7 +25,7 @@ function PhotoAlbum({ photos, motion, theme, occasion }: { photos: EventPhoto[];
   function moveLightbox(direction: number) { setActive(value => (value + direction + photos.length) % photos.length); }
   if (!photo) return null;
   return <>
-    <div ref={root} className={album.album} data-photo-album data-photo-index={index} data-count={photos.length} data-motion={motion} data-photo-playing={playing} {...interaction} role="region" aria-roledescription="carousel" aria-label="Photo album" onKeyDown={event => {
+    <div ref={root} className={album.album} data-photo-album data-editorial={editorial || undefined} data-photo-index={index} data-count={photos.length} data-motion={motion} data-photo-playing={playing} {...interaction} role="region" aria-roledescription="carousel" aria-label="Photo album" onKeyDown={event => {
       if (event.key === "ArrowLeft") { event.preventDefault(); move(-1); }
       if (event.key === "ArrowRight") { event.preventDefault(); move(1); }
     }}>
@@ -33,8 +33,8 @@ function PhotoAlbum({ photos, motion, theme, occasion }: { photos: EventPhoto[];
         if (touchStart.current !== null) { const distance = (event.changedTouches[0]?.clientX ?? touchStart.current) - touchStart.current; if (Math.abs(distance) > 45) move(distance > 0 ? -1 : 1); }
         touchStart.current = null;
       }}>
-        <div className={album.frame} aria-hidden="true" data-decoration><ArchiveOrnament kind="branch" className={album.frameBranch} /><ArchiveOrnament kind="branch" className={album.frameBranch} /></div>
-        <PhotoAlbumFrame theme={theme} occasion={occasion} />
+        {!editorial && <div className={album.frame} aria-hidden="true" data-decoration><ArchiveOrnament kind="branch" className={album.frameBranch} /><ArchiveOrnament kind="branch" className={album.frameBranch} /></div>}
+        {!editorial && <PhotoAlbumFrame theme={theme} occasion={occasion} />}
         {photos.map((item, position) => {
           const side = position === index ? "center" : position === (index + 1) % photos.length ? "right" : position === (index + photos.length - 1) % photos.length ? "left" : "hidden";
           return <button key={item.id} type="button" className={album.card} data-position={side} aria-hidden={side === "hidden"} tabIndex={side === "hidden" ? -1 : 0} aria-label={`View photo ${position + 1}: ${item.alt}`} onClick={() => open(position)}>

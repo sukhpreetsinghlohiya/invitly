@@ -20,13 +20,13 @@ test("colour and artwork searches have matching counts, a clear button and a ful
   await input.press("Escape");
   await expect(input).toHaveValue("");
   await expect(input).toBeFocused();
-  await expect(cards).toHaveCount(10);
+  await expect(cards).toHaveCount(16);
   await input.fill("gold rings");
   await expect(cards).toHaveCount(1);
   await expect(cards.getByRole("heading")).toHaveText("Champagne Hour");
   await page.getByRole("button", { name: "Clear search", exact: true }).click();
   await expect(input).toBeFocused();
-  await expect(cards).toHaveCount(10);
+  await expect(cards).toHaveCount(16);
   await filters.getByRole("button", { name: "Minimal", exact: true }).click();
   await input.fill("blue doves");
   await expect(cards).toHaveCount(0);
@@ -34,7 +34,7 @@ test("colour and artwork searches have matching counts, a clear button and a ful
   await page.getByRole("button", { name: "Reset filters", exact: true }).click();
   await expect(input).toHaveValue("");
   await expect(filters.getByRole("button", { name: "All", exact: true })).toHaveAttribute("aria-pressed", "true");
-  await expect(cards).toHaveCount(10);
+  await expect(cards).toHaveCount(16);
   expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
 });
 
@@ -61,7 +61,7 @@ test("changing tradition disables stale preview links until the selected artwork
   const customize = page.getByRole("link", { name: "Customize Royal Indian", exact: true });
   await expect(customize).toHaveAttribute("href", /tradition=sikh/);
   await expect(customize).not.toHaveAttribute("aria-disabled");
-  await expect(page.locator('.collection-card [data-tradition-symbol="sikh"]')).toHaveCount(10);
+  await expect(page.locator('.collection-card [data-tradition-symbol="sikh"]')).toHaveCount(16);
 });
 
 test("engagement search uses its own colours and artwork", async ({ page }) => {
@@ -107,13 +107,13 @@ test("a closer look browses all designs without duplicate artwork IDs and restor
   }
   await expect(dialog.getByRole('button', { name: 'Next design', exact: true })).toBeDisabled();
   await dialog.getByRole('button', { name: 'Previous design', exact: true }).click();
-  await expect(dialog.getByRole('heading', { level: 2 })).toHaveText('Champagne Hour');
+  await expect(dialog.getByRole('heading', { level: 2 })).toHaveText(themes.at(-2)!.name);
   expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
   await page.screenshot({ path: info.outputPath('gallery-design-preview.png') });
   await page.keyboard.press('Escape');
   await expect(dialog).toHaveCount(0);
   await expect(opener).toBeFocused();
-  await expect(page.locator('[data-illustrated-cover]')).toHaveCount(10);
+  await expect(page.locator('[data-illustrated-cover]')).toHaveCount(16);
 });
 
 test("favourites persist and removing the last saved design recovers a usable empty state", async ({ page }) => {
@@ -132,7 +132,7 @@ test("favourites persist and removing the last saved design recovers a usable em
   await expect(page.getByRole('searchbox', { name: 'Find a design', exact: true })).toBeFocused();
   await expect(page.getByRole('heading', { name: 'Keep the ones you love.', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Explore designs', exact: true }).click();
-  await expect(page.locator('article.collection-card')).toHaveCount(10);
+  await expect(page.locator('article.collection-card')).toHaveCount(16);
   await expect(page.getByRole('button', { name: 'Save Royal Indian to favourites', exact: true })).toHaveAttribute('aria-pressed', 'false');
 });
 

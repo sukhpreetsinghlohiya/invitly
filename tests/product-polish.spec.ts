@@ -48,7 +48,7 @@ test("debounced design search has a useful empty state and recovery", async ({ p
   await expect(page.getByRole("heading", { name: "No matching designs yet." })).toBeVisible();
   await page.locator('.collection-empty').getByRole("button", { name: "Clear search and style" }).click();
   await expect(search).toHaveValue("");
-  await expect(page.locator(".collection-card")).toHaveCount(10);
+  await expect(page.locator(".collection-card")).toHaveCount(16);
 });
 
 test("maps load by choice and event calendars show guest-local time", async ({ browser }) => {

@@ -23,10 +23,10 @@ export function InvitationDetailOptions({ invitation, onChange, onError }: { inv
 }
 
 export function InvitationDesignOptions({ design, onChange }: { design: InvitationDesign; onChange: (patch: Partial<InvitationDesign>) => void }) {
-  const opening: InvitationOpening = design.opening || { style: "theme", icon: "monogram", line: "An invitation, just for you" };
+  const opening: InvitationOpening = design.opening || { style: "envelope", icon: "monogram", line: "An invitation, just for you" };
   return <section className={styles.section} aria-labelledby="opening-options-title">
-    <h3 id="opening-options-title">Choose an entrance.</h3>
-    <fieldset className={styles.openingChoices}><legend>Invitation opening</legend><div className={styles.openingGrid}>{openingStyles.map(item => <label key={item.id} className={styles.openingChoice} data-selected={opening.style === item.id}><input type="radio" name="invitation-opening" value={item.id} checked={opening.style === item.id} aria-label={item.label} onChange={() => onChange({ opening: { ...opening, style: item.id } })} /><div className={styles.openingThumbnail}><OpeningScene style={item.id} compact /></div><span className={styles.openingName}>{item.label}</span></label>)}</div></fieldset>
+    <h3 id="opening-options-title">Your envelope.</h3>
+    <fieldset className={styles.openingChoices}><legend>Invitation opening</legend><div className={styles.openingGrid}>{openingStyles.filter(item => item.id === "envelope").map(item => <label key={item.id} className={styles.openingChoice} data-selected={opening.style === item.id}><input type="radio" name="invitation-opening" value={item.id} checked={opening.style === item.id} aria-label={item.label} onChange={() => onChange({ opening: { ...opening, style: item.id } })} /><div className={styles.openingThumbnail}><OpeningScene style={item.id} compact /></div><span className={styles.openingName}>{item.label}</span></label>)}</div></fieldset>
     <p className={styles.openingIntro}>{openingStyles.find(item => item.id === opening.style)?.description}</p>
     {opening.style !== "theme" && opening.style !== "none" && <div className={styles.replayRow}><button type="button" onClick={() => window.dispatchEvent(new Event("invitly:preview-replay"))}><RotateCcw size={15} aria-hidden="true" /> Replay opening</button><span>Try it in your live invitation preview.</span></div>}
     {opening.style === "envelope" && <label className="form-field">Envelope cover icon<select value={opening.icon} onChange={event => onChange({ opening: { ...opening, icon: event.target.value as InvitationOpening["icon"] } })}><option value="rings">Two rings</option><option value="flower">A flower</option><option value="monogram">Your initials</option></select></label>}

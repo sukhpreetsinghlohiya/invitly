@@ -1,0 +1,15 @@
+{
+  "tool": "Built-in image_gen",
+  "mode": "generate; reference-based identity-preserving variants",
+  "basePrompt": "Use case: photorealistic-natural. Asset: fictional couple portrait for a wedding invitation demo; establish a consistent couple for a photo series. A South Asian couple both about 29 years old: woman with warm medium brown skin, oval face, expressive almond brown eyes, long dark hair in a low bun, small rounded nose, gentle smile; man with medium brown skin, slightly square face, wavy short black hair, neat short beard and warm brown eyes. Both clearly facing camera in a natural happy waist-up portrait, standing close, bride in tasteful muted rose and antique gold wedding lehenga with matching dupatta and delicate gold jewellery, groom in ivory embroidered sherwani without turban. Warm natural afternoon light, jasmine and soft greenery in a courtyard. Refined editorial photography, natural skin texture, realistic anatomy, authentic affectionate expression. Portrait 4:5 framing, both faces unobstructed with extra space around heads for flexible crops. No guests, no text, no logos, no watermark. One photograph only.",
+  "variantPrompts": [
+    "Use case: identity-preserve. Reference image: identity reference for BOTH fictional adults, same exact couple. Create a new candid wedding photograph of this SAME woman and SAME man, preserving their facial features, skin tones, hair and body proportions, exact muted rose and antique gold lehenga and ivory embroidered sherwani. They walk hand in hand in a jasmine-filled sandstone courtyard at golden hour, smiling at each other. Both faces visible at three-quarter angle. Medium full-length composition, portrait 4:5; realistic natural skin, documentary wedding photography, warm understated luxurious mood. No extra people, no collage, no text or watermark. Must be recognizably the same couple as reference.",
+    "Use case: identity-preserve. Reference image: identity reference for BOTH fictional adults, same exact couple. Create a new engagement photograph of this SAME woman and SAME man, faithfully preserve both faces, hair, skin tones and body proportions. They sit closely together at an ivory linen table in a garden, smiling while he gently holds her hand to admire her engagement ring. Bride now wears a sage embroidered Indian suit with long dark hair in the same low bun, groom wears an off-white kurta with his identical short wavy hair and neat beard. Both faces unobstructed and clearly visible. Candid refined editorial photo, natural skin texture, soft evening light, cream roses and delicate garden bokeh. Portrait 4:5. No other people, no collage, no lettering, no watermark. Must be recognizably the same couple as reference."
+  ],
+  "reference": "exec-d2a6c7ec-cd6f-4017-b673-46ae52b12ee9.png",
+  "assets": [
+    "couple-portrait.webp",
+    "couple-walk.webp",
+    "couple-engagement.webp"
+  ]
+}
