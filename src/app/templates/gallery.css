@@ -14,8 +14,9 @@
 .collection-intro p { font-size:14px; line-height:1.7; max-width:680px; color:var(--collection-muted); }
 .collection-mobile-break { display:none; }
 .collection-free-note { display:inline-flex; align-items:center; gap:8px; flex-shrink:0; padding:11px 14px; background:#edf2e9; color:#496344; border:1px solid #e0e8da; border-radius:7px; font-size:12px; }
-.collection-occasion-tabs { display:flex; gap:25px; border-bottom:1px solid var(--collection-line); margin-top:24px; }
-.collection-occasion-tabs a { display:inline-flex; align-items:center; gap:9px; min-height:54px; border-bottom:2px solid transparent; font-size:14px; font-weight:550; color:var(--collection-muted); margin-bottom:-1px; }
+.collection-occasion-tabs { display:flex; gap:25px; border-bottom:1px solid var(--collection-line); margin-top:24px; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+.collection-occasion-tabs::-webkit-scrollbar { display:none; }
+.collection-occasion-tabs a { display:inline-flex; align-items:center; gap:9px; min-height:54px; border-bottom:2px solid transparent; font-size:14px; font-weight:550; color:var(--collection-muted); margin-bottom:-1px; white-space:nowrap; flex-shrink:0; }
 .collection-occasion-tabs a[aria-current=page] { border-color:var(--maroon); color:var(--maroon); }
 .collection-occasion-tabs span { display:grid; place-items:center; font-size:10px; min-width:20px; height:20px; border-radius:5px; background:#f0ebe5; }
 .collection-catalog { padding-block:26px 45px; scroll-margin-top:20px; }
