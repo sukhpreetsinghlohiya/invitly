@@ -7,9 +7,12 @@
 .how-invitly-heading p:first-child { font-weight:600; color:#473a31; margin-bottom:8px; }
 .how-invitly-heading .text-link { margin-top:13px; min-height:44px; font-size:13px; gap:12px; }
 .how-invitly-steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:22px; padding:0; margin:0; list-style:none; }
-.how-invitly-step { container-type:inline-size; min-width:0; display:flex; flex-direction:column; padding:20px 22px 22px; background:#fffcf6; border:1px solid #dfd2bf; border-radius:10px; box-shadow:0 7px 22px -16px #63473135; }
+.how-invitly-step { container-type:inline-size; min-width:0; display:flex; flex-direction:column; padding:20px 22px 22px; background:#fffcf6; border:1px solid #dfd2bf; border-radius:10px; box-shadow:0 7px 22px -16px #63473135; border-top:3px solid #c0a882; }
+.how-invitly-steps>li:nth-child(1) { border-top-color:#8b4b54; }
+.how-invitly-steps>li:nth-child(2) { border-top-color:#5c7352; }
+.how-invitly-steps>li:nth-child(3) { border-top-color:#6b7e9e; }
 .how-step-label { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px; }
-.how-step-label>span { font:600 9px/1.6 var(--sans); letter-spacing:.08em; color:#7d523e; }
+.how-step-label>span { font:700 9px/1.6 var(--sans); letter-spacing:.1em; color:#5e3c2d; }
 .how-invitly-step h3 { font:400 clamp(25px,2.6vw,32px)/1.15 var(--serif); letter-spacing:-.025em; margin:25px 0 12px; }
 .how-invitly-step>p { font-size:14px; line-height:1.8; color:#65584b; margin:0; }
 .how-step-checks { display:grid; gap:13px; margin:20px 0 24px; padding:0; list-style:none; }

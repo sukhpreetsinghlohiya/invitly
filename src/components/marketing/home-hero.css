@@ -15,7 +15,12 @@
 .stationery-hero-actions .button { min-height:48px; font-size:13px; border-radius:4px; padding:12px 20px; background:var(--stationery-burgundy); gap:24px; box-shadow:0 3px 8px #71312d0b; }
 .stationery-hero-actions .button:hover { background:#773c44; }
 .stationery-hero-actions .text-link { min-height:48px; font-size:13px; color:#553a34; text-decoration:underline; text-underline-offset:5px; gap:12px; }
-.stationery-small-note { color:#786954; font-size:11px; margin-top:19px; }
+.stationery-small-note { display:none; }
+.stationery-trust-strip { display:flex; gap:10px 18px; flex-wrap:wrap; margin-top:20px; }
+.stationery-trust-item { display:inline-flex; align-items:center; gap:7px; font:500 11px/1.5 var(--sans); color:#574738; }
+.stationery-trust-item svg { color:#7b5234; flex-shrink:0; }
+@media(max-width:760px) { .stationery-trust-strip { justify-content:center; gap:8px 14px; } }
+@media(max-width:360px) { .stationery-trust-item { font-size:10px; } }
 .stationery-scene { position:relative; width:100%; min-width:0; padding-top:0; }
 .stationery-scene-label { display:flex; align-items:center; justify-content:center; gap:11px; margin-bottom:-3px; color:#79694f; font:500 9px/1.5 var(--sans); letter-spacing:.12em; }
 .stationery-scene-label>svg { width:12px; height:12px; color:#97603e; }

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check, Music, Users, Sparkles } from "lucide-react";
 import { Flower } from "@/components/brand";
 import { StationeryCard } from "./stationery-art";
 import "./home-hero.css";
@@ -23,7 +23,13 @@ export function HomeHero() {
         <h1 id="home-title">A little link.<br />A lot of<br /><em>togetherness.</em></h1>
         <p className="stationery-description">For the moments that bring us close. Create a thoughtful wedding or engagement invitation with your story, schedule, directions and RSVPs, all in one beautiful link.</p>
         <div className="stationery-hero-actions"><Link href="/templates#occasion-collections-title" className="button">Create your invitation <ArrowRight size={18} aria-hidden="true" /></Link><Link href="/demo" className="text-link">Open a live invitation <ArrowUpRight size={18} aria-hidden="true" /></Link></div>
-        <p className="stationery-small-note">Your first 2 invitations free · Photos, music & RSVPs included.</p>
+        <div className="stationery-trust-strip">
+          <span className="stationery-trust-item"><Check size={12} strokeWidth={2.5} aria-hidden="true" /> Free to start</span>
+          <span className="stationery-trust-item"><Check size={12} strokeWidth={2.5} aria-hidden="true" /> Photos &amp; music</span>
+          <span className="stationery-trust-item"><Check size={12} strokeWidth={2.5} aria-hidden="true" /> Personal RSVPs</span>
+          <span className="stationery-trust-item"><Check size={12} strokeWidth={2.5} aria-hidden="true" /> 15+ occasions</span>
+        </div>
+        <p className="stationery-small-note">Your first 2 invitations are free.</p>
       </div>
       <div className="stationery-scene">
         <span className="stationery-scene-label"><Flower /><span>MADE FOR YOUR MOMENTS</span><i /></span>
