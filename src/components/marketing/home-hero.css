@@ -6,10 +6,10 @@
 .stationery-hero-wrap { position:relative; isolation:isolate; border-bottom:1px solid #e7decf; }
 .stationery-home .stationery-hero { position:relative; z-index:2; width:min(1140px,calc(100% - 96px)); min-height:620px; padding:36px 0 78px; gap:30px; grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr); }
 .stationery-hero-copy { position:relative; z-index:2; padding-left:20px; }
-.stationery-kicker { font-size:10px; letter-spacing:.15em; color:#536a52; margin-bottom:20px; gap:9px; }
+.stationery-kicker { font-family:var(--display); font-size:10px; font-weight:400; letter-spacing:.22em; color:#536a52; margin-bottom:20px; gap:9px; }
 .stationery-kicker>span { width:6px; height:6px; border-radius:50%; background:currentColor; }
-.stationery-home .stationery-hero h1 { font:400 clamp(55px,5.1vw,78px)/1.015 var(--serif); letter-spacing:-.055em; color:#362d26; }
-.stationery-home .stationery-hero h1 em { color:var(--stationery-burgundy); letter-spacing:-.06em; }
+.stationery-home .stationery-hero h1 { font:400 clamp(55px,5.1vw,78px)/1.015 var(--serif); letter-spacing:-.035em; color:#362d26; }
+.stationery-home .stationery-hero h1 em { color:var(--stationery-burgundy); letter-spacing:-.04em; }
 .stationery-description { max-width:390px; font-size:15px; line-height:1.85; color:#716657; margin-top:25px; }
 .stationery-hero-actions { display:flex; gap:25px; align-items:center; flex-wrap:wrap; margin-top:28px; }
 .stationery-hero-actions .button { min-height:48px; font-size:13px; border-radius:4px; padding:12px 20px; background:var(--stationery-burgundy); gap:24px; box-shadow:0 3px 8px #71312d0b; }
