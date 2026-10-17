@@ -4,9 +4,7 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Flower } from "@/components/brand";
 import { Footer } from "@/components/footer";
-import { InvitationArt } from "@/components/invitation-art";
 import { SetupNotice } from "@/components/setup-notice";
-import { demoInvitation } from "@/data/demo-invitation";
 import { themes } from "@/data/themes";
 import { HowItWorks } from "@/components/marketing/how-it-works";
 import { CelebrationCompanion } from "@/components/marketing/celebration-companion";
@@ -15,6 +13,7 @@ import { OccasionMarquee } from "@/components/marketing/occasion-marquee";
 import { OccasionShowcase } from "@/components/marketing/occasion-showcase";
 import { FrequentlyAskedQuestions } from "@/components/marketing/faq";
 import { BottomAd } from "@/components/marketing/bottom-ad";
+import { ThemeCarousel } from "@/components/marketing/theme-carousel";
 import "@/components/marketing/marketing.css";
 
 export const metadata = { ...publicMetadata("Invitly — A little link. A lot of togetherness.", "Thoughtful wedding and engagement invitations. Choose a design, tell your story, share personal guest links, and collect RSVPs.", "/"), title: { absolute: "Invitly — A little link. A lot of togetherness." } };
@@ -29,7 +28,7 @@ export default function Home() {
       <HomeHero />
       <OccasionMarquee />
       <OccasionShowcase />
-      <section id="themes" className="section container"><div className="section-heading"><div><span className="eyebrow">THE INVITLY COLLECTION</span><h2>Your story. <em>Your kind of beautiful.</em></h2></div><p>Ten wedding designs and three engagement designs are ready to make your own. More occasions are coming soon.</p></div><div className="theme-grid">{themes.slice(0, 3).map((theme) => <Link href={`/demo?theme=${theme.id}`} key={theme.id} className="theme-card"><div className={`theme-preview preview-${theme.id}`}><span className="theme-number">N° {theme.number}</span><InvitationArt theme={theme.id} invitation={demoInvitation} compact /><span className="preview-open" aria-hidden="true"><ArrowUpRight size={20} /></span></div><div className="theme-title"><h3>{theme.name}</h3><span>{theme.category}</span></div><p>{theme.description}</p><span className="theme-link">Explore invitation <ArrowRight size={15} /></span></Link>)}</div><div className="homepage-collection-link"><Link className="button button-secondary" href="/templates">Explore the collections <ArrowRight size={16} /></Link></div></section>
+      <section id="themes" className="section container"><div className="section-heading"><div><span className="eyebrow">THE INVITLY COLLECTION</span><h2>Your story. <em>Your kind of beautiful.</em></h2></div><p>Ten wedding designs and three engagement designs, ready to make your own. More occasions coming soon.</p></div><ThemeCarousel themes={themes.slice(0, 10)} /><div className="homepage-collection-link"><Link className="button button-secondary" href="/templates">Explore all collections <ArrowRight size={16} /></Link></div></section>
       <HowItWorks />
       <CelebrationCompanion />
       <FrequentlyAskedQuestions />

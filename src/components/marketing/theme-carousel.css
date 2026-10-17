@@ -1,0 +1,58 @@
+.theme-carousel { position: relative; }
+
+.tc-track {
+  display: flex;
+  gap: 27px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 0;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+}
+.tc-track::-webkit-scrollbar { display: none; }
+
+.tc-card {
+  flex: 0 0 calc((100% - 54px) / 3);
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.tc-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.tc-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background .18s, border-color .18s, color .18s, opacity .18s;
+}
+.tc-arrow:hover:not(:disabled) {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+.tc-arrow:disabled {
+  opacity: .3;
+  cursor: default;
+}
+
+@media (max-width: 1100px) {
+  .tc-card { flex-basis: calc((100% - 27px) / 2); }
+}
+
+@media (max-width: 600px) {
+  .tc-card { flex-basis: 82vw; }
+  .tc-track { gap: 18px; }
+}
