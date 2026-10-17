@@ -26,10 +26,10 @@ const occasionArtwork: Record<OccasionId, OccasionArtwork> = {
   anniversary: { src: providedArtwork.floralInfinity.src, width: providedArtwork.floralInfinity.width, height: providedArtwork.floralInfinity.height, motion: "ambient" },
   other: { src: "/images/occasions/other.webp", width: 480, height: 360, motion: "ambient" },
   remembrance: { src: "/images/occasions/remembrance.webp", width: 480, height: 360 },
-  conference: watercolorArtwork.marigold,
-  webinar: watercolorArtwork.marigold,
-  "ladies-night": watercolorArtwork.engagement,
-  "virtual-event": watercolorArtwork.marigold,
+  conference: watercolorArtwork.housewarming,
+  webinar: watercolorArtwork.housewarming,
+  "ladies-night": watercolorArtwork.birthday,
+  "virtual-event": watercolorArtwork.housewarming,
   "kids-birthday": watercolorArtwork.birthday,
 };
 

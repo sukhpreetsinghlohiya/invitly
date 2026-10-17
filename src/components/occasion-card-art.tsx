@@ -1,9 +1,15 @@
 import Image from "next/image";
 import type { OccasionId } from "@/types/invitation";
 import { getOccasionArtwork } from "@/data/occasion-art";
+import { OccasionSvgArt, hasOccasionSvgArt } from "@/components/occasions/occasion-svg-art";
 
 /** Shared, locally hosted artwork with preserved transparency. */
 export function OccasionCardArt({ occasion }: { occasion: OccasionId }) {
+  if (hasOccasionSvgArt(occasion)) {
+    return <div className="occasion-card-art" aria-hidden="true">
+      <OccasionSvgArt occasion={occasion} />
+    </div>;
+  }
   const art = getOccasionArtwork(occasion);
   return <div className="occasion-card-art" aria-hidden="true">
     <Image src={art.src} alt="" width={art.width} height={art.height}

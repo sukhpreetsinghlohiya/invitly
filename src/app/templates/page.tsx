@@ -51,7 +51,7 @@ export default async function TemplatesPage({ searchParams }: { searchParams: Pr
       <section className="occasion-collections container" aria-labelledby="occasion-collections-title"><div className="collection-section-heading"><h2 id="occasion-collections-title">More moments to celebrate</h2><span>Find your next invitation</span></div><div className="occasion-collection-grid">{available.map(item => {
         const collection = occasionCollections[item.id];
         return <Link key={item.id} href={`/templates?occasion=${item.id}${traditionQuery}#collection`} aria-current={occasion.id === item.id ? "page" : undefined} className={`occasion-collection occasion-collection-${item.id}`} prefetch={false}><OccasionCardArt occasion={item.id} /><div className="occasion-collection-copy"><span>{item.name}</span><strong>{collection.title}</strong><p>{collection.description}</p><span className="occasion-collection-action">Explore designs <ArrowRight size={15} aria-hidden="true" /></span></div></Link>;
-      })}</div><p className="collection-coming-note">Birthday, baby shower, housewarming and more collections are coming soon.</p></section>
+      })}</div></section>
       <section className="collection-process" aria-label="From choosing a theme to sharing your invitation"><ol className="container"><li><span>01</span><div><strong>Find your design</strong><p>Choose the card that feels like you.</p></div></li><li><span>02</span><div><strong>Make it personal</strong><p>Add details, photos and an opening.</p></div></li><li><span>03</span><div><strong>Invite your people</strong><p>Share one beautiful invitation link.</p></div></li></ol></section>
     </main><Footer />
   </div>;
