@@ -1,6 +1,6 @@
 import { createAdminClient, getSupabaseServiceConfig } from "@/lib/supabase/admin";
 import { getRazorpayConfig, verifyWebhookSignature } from "@/lib/razorpay";
-import { PRO_DURATION_DAYS } from "@/lib/billing";
+import { PACKS, type PackId } from "@/lib/billing";
 import type { Json } from "@/types/database";
 
 export const runtime = "nodejs";
@@ -28,47 +28,50 @@ export async function POST(request: Request) {
   let event: RazorpayWebhook;
   try { event = JSON.parse(raw) as RazorpayWebhook; } catch { return reply({ error: "bad json" }, 400); }
   const payment = event.payload?.payment?.entity;
-  if (!payment?.id || !payment.order_id) return reply({ ok: true });
+  if (!payment?.id) return reply({ ok: true });
 
   const eventId = `${payment.id}:${event.event}`;
   const admin = createAdminClient();
-  const { error: insertError } = await admin
-    .from("billing_events")
-    .insert({
-      event_id: eventId,
-      event_type: event.event,
-      user_id: payment.notes?.userId ?? null,
-      payload: event as unknown as Json,
-    });
-  // Duplicate (idempotent replay) → ack and stop.
-  if (insertError && insertError.code === "23505") return reply({ ok: true, duplicate: true });
-  if (insertError) {
-    console.error("billing.webhook.log_failed", insertError);
-    return reply({ error: "log failed" }, 500);
-  }
+  const { error: logError } = await admin.from("billing_events").insert({
+    event_id: eventId,
+    event_type: event.event,
+    user_id: payment.notes?.userId ?? null,
+    payload: event as unknown as Json,
+  });
+  if (logError && logError.code === "23505") return reply({ ok: true, duplicate: true });
+  if (logError) { console.error("billing.webhook.log_failed", logError); return reply({ error: "log failed" }, 500); }
 
   if (event.event !== "payment.captured" && event.event !== "order.paid") return reply({ ok: true });
 
-  const { data: pending } = await admin
-    .from("user_plans")
-    .select("user_id, status")
-    .eq("razorpay_order_id", payment.order_id)
-    .maybeSingle();
-  if (!pending) return reply({ ok: true });
-  if (pending.status === "active") return reply({ ok: true, already: true });
+  const userId = payment.notes?.userId;
+  const packId = payment.notes?.packId as PackId | undefined;
+  if (!userId || !packId || !(packId in PACKS)) return reply({ ok: true });
+  const pack = PACKS[packId];
 
-  const activatedAt = new Date();
-  const expiresAt = new Date(activatedAt.getTime() + PRO_DURATION_DAYS * 24 * 60 * 60 * 1000);
-  const { error } = await admin.from("user_plans").update({
-    status: "active",
-    activated_at: activatedAt.toISOString(),
-    expires_at: expiresAt.toISOString(),
+  // Same idempotency guard as /verify. Verify path usually wins (synchronous
+  // from the browser modal); this is the safety net when the user closes the
+  // tab before verify runs.
+  const { error: ledgerError } = await admin.from("credit_transactions").insert({
+    user_id: userId,
+    delta: pack.credits,
+    reason: "purchase",
     razorpay_payment_id: payment.id,
-    updated_at: activatedAt.toISOString(),
-  }).eq("user_id", pending.user_id).eq("razorpay_order_id", payment.order_id);
-  if (error) {
-    console.error("billing.webhook.activate_failed", error);
-    return reply({ error: "activate failed" }, 500);
-  }
+    pack_id: packId,
+    note: pack.name,
+  });
+  if (ledgerError && ledgerError.code === "23505") return reply({ ok: true, already: true });
+  if (ledgerError) { console.error("billing.webhook.ledger_failed", ledgerError); return reply({ error: "ledger failed" }, 500); }
+
+  const { data: existing } = await admin.from("user_credits").select("balance, lifetime_purchased").eq("user_id", userId).maybeSingle();
+  const nextBalance = (existing?.balance ?? 0) + pack.credits;
+  const nextLifetime = (existing?.lifetime_purchased ?? 0) + pack.credits;
+  const { error: upsertError } = await admin.from("user_credits").upsert({
+    user_id: userId,
+    balance: nextBalance,
+    lifetime_purchased: nextLifetime,
+    updated_at: new Date().toISOString(),
+  }, { onConflict: "user_id" });
+  if (upsertError) { console.error("billing.webhook.upsert_failed", upsertError); return reply({ error: "credit failed" }, 500); }
+
   return reply({ ok: true });
 }

@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient, getSupabaseServiceConfig } from "@/lib/supabase/admin";
+import { getSupabaseServiceConfig } from "@/lib/supabase/admin";
 import { createRazorpayOrder, getRazorpayConfig } from "@/lib/razorpay";
-import { PLANS, type PlanId } from "@/lib/billing";
+import { PACKS, type PackId } from "@/lib/billing";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -32,42 +32,32 @@ export async function POST(request: Request) {
 
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError || !user) return reply({ error: "Please sign in to upgrade." }, 401);
+  if (authError || !user) return reply({ error: "Please sign in to add credits." }, 401);
 
-  let body: { planId?: unknown };
+  let body: { packId?: unknown };
   try { body = await request.json(); } catch { return reply({ error: "Please try again." }, 400); }
-  const planId = typeof body.planId === "string" ? (body.planId as PlanId) : null;
-  if (!planId || !(planId in PLANS) || planId === "free") return reply({ error: "Choose a plan to upgrade." }, 400);
-  const plan = PLANS[planId];
+  const packId = typeof body.packId === "string" ? (body.packId as PackId) : null;
+  if (!packId || !(packId in PACKS)) return reply({ error: "Choose a credit pack." }, 400);
+  const pack = PACKS[packId];
 
   const order = await createRazorpayOrder(razorpay, {
-    amountPaise: plan.amountPaise,
+    amountPaise: pack.amountPaise,
     currency: "INR",
-    receipt: `inv_${user.id.slice(0, 8)}_${Date.now()}`,
-    notes: { userId: user.id, planId },
+    receipt: `cr_${user.id.slice(0, 8)}_${Date.now()}`,
+    notes: { userId: user.id, packId, credits: String(pack.credits) },
   }).catch((error) => {
     console.error("razorpay.order.failed", error);
     return null;
   });
   if (!order) return reply({ error: "We couldn’t start checkout. Please try again." }, 502);
 
-  const admin = createAdminClient();
-  await admin.from("user_plans").upsert({
-    user_id: user.id,
-    plan: planId,
-    status: "inactive",
-    razorpay_order_id: order.id,
-    amount_paise: plan.amountPaise,
-    currency: order.currency,
-    updated_at: new Date().toISOString(),
-  }, { onConflict: "user_id" });
-
   return reply({
     orderId: order.id,
     amount: order.amount,
     currency: order.currency,
     keyId: razorpay.keyId,
-    planName: plan.name,
+    packName: pack.name,
+    credits: pack.credits,
     userEmail: user.email ?? "",
   });
 }

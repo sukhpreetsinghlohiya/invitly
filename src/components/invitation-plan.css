@@ -20,4 +20,21 @@
 .plan-highlights li { display:flex; gap:10px; align-items:flex-start; font-size:14px; color:var(--ink); line-height:1.55; }
 .plan-highlights li svg { color:var(--maroon); flex-shrink:0; margin-top:3px; }
 .plan-footnote { margin-top:24px; font-size:12px; color:var(--muted); }
+.credit-balance-card { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin:20px 0; padding:22px; background:linear-gradient(180deg,#fdf5e4 0%,#f5e0b8 100%); border:1px solid #c69b74; border-radius:var(--iv-radius-panel); }
+.credit-balance-card>div { display:flex; flex-direction:column; gap:4px; min-width:0; }
+.credit-balance-card .credit-label { font-family:var(--display); font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--maroon); }
+.credit-balance-card strong { font:28px/1.1 var(--serif); color:var(--ink); font-weight:500; }
+.credit-actions { display:flex; flex-wrap:wrap; gap:12px; margin:18px 0 24px; }
+.credit-actions .button { gap:8px; }
+.credit-ledger-heading { font:22px var(--serif); margin:28px 0 12px; letter-spacing:-.02em; }
+.credit-ledger { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0; border-top:1px solid var(--border); }
+.credit-ledger li { display:flex; justify-content:space-between; align-items:center; gap:16px; padding:14px 0; border-bottom:1px solid var(--border); }
+.credit-ledger li>div { display:flex; flex-direction:column; gap:3px; min-width:0; }
+.credit-ledger li strong { font-size:14px; color:var(--ink); }
+.credit-ledger li span { font-size:12px; color:var(--muted); }
+.credit-ledger-right { text-align:right; align-items:flex-end !important; }
+.credit-ledger time { font-size:11px; color:var(--muted); }
+.credit-delta-positive { font-family:var(--display); font-weight:500; color:#2d6a3e; font-size:15px; }
+.credit-delta-negative { font-family:var(--display); font-weight:500; color:#8c3a2f; font-size:15px; }
+@media(max-width:600px) { .credit-balance-card { grid-template-columns:1fr; gap:12px; padding:18px; }.credit-balance-card strong { font-size:22px; } }
 @media(max-width:600px) { .invitation-allowance { flex-direction:column; align-items:stretch; padding:20px; gap:16px; }.invitation-limit { padding:20px; }.invitation-limit .button { width:100%; } }

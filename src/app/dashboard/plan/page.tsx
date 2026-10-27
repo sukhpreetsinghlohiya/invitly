@@ -1,25 +1,32 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Sparkles, Check } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { Brand } from "@/components/brand";
 import { Footer } from "@/components/footer";
-import { InvitationLimitNotice } from "@/components/invitation-plan-notice";
 import { getSupabaseConfig } from "@/lib/env";
 import { createClient } from "@/lib/supabase/server";
-import { getInvitationAllowance } from "@/lib/invitation-allowance";
-import { FREE_INVITATION_LIMIT } from "@/lib/invitation-plan";
-import { PLANS } from "@/lib/billing";
+import { CREDITS_PER_INVITATION, getRecentCreditTransactions, getUserCredits } from "@/lib/billing";
 
-export const metadata = { title: "Your plan", robots: { index: false, follow: false } };
+export const metadata = { title: "Your credits", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
-type Props = { searchParams: Promise<{ welcome?: string }> };
+type Props = { searchParams: Promise<{ welcome?: string; added?: string }> };
 
-function formatExpiry(iso: string | null) {
-  if (!iso) return null;
+function reasonLabel(reason: string) {
+  switch (reason) {
+    case "signup_grant": return "Welcome credits";
+    case "purchase": return "Credits added";
+    case "invitation_spend": return "Invitation created";
+    case "refund": return "Refund";
+    case "adjustment": return "Adjustment";
+    default: return reason;
+  }
+}
+
+function formatDate(iso: string) {
   try {
-    return new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
-  } catch { return null; }
+    return new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  } catch { return iso; }
 }
 
 export default async function PlanPage({ searchParams }: Props) {
@@ -27,42 +34,51 @@ export default async function PlanPage({ searchParams }: Props) {
   const client = await createClient();
   const { data: { user }, error } = await client.auth.getUser();
   if (error || !user) redirect("/login");
-  const { welcome } = await searchParams;
-  const allowance = await getInvitationAllowance(client, user.id);
-  const pro = PLANS.pro;
-  const expiresLabel = formatExpiry(allowance.plan.expiresAt);
-  const justUpgraded = welcome === "pro" && allowance.unlimited;
+  const { welcome, added } = await searchParams;
+  const [credits, transactions] = await Promise.all([
+    getUserCredits(client, user.id),
+    getRecentCreditTransactions(client, user.id, 10),
+  ]);
+  const invitations = Math.floor(credits.balance / CREDITS_PER_INVITATION);
+  const justAdded = welcome === "credits" && typeof added === "string" && /^\d+$/.test(added);
 
   return <>
     <main id="main" className="utility-page container invitation-plan-page">
       <Brand />
       <section className="utility-card">
-        <p className="eyebrow">YOUR INVITLY PLAN</p>
+        <p className="eyebrow">YOUR INVITLY CREDITS</p>
 
-        {allowance.unlimited ? <>
-          <h1>{justUpgraded ? "Welcome to Pro." : "You’re on Invitly Pro."}</h1>
-          <p><strong>Unlimited invitations</strong>{expiresLabel ? <> · active until {expiresLabel}</> : null}</p>
-          <p>Thank you — your upgrade helps us keep building beautiful invitations for Indian families. Create as many invitations as you need.</p>
-          <ul className="plan-highlights">
-            {pro.highlights.map((item) => <li key={item}><Check size={16} aria-hidden="true" /> {item}</li>)}
+        {justAdded ? <h1>{Number(added).toLocaleString("en-IN")} credits added. ✨</h1>
+          : credits.balance === 0 ? <h1>Add credits to create your next invitation.</h1>
+          : <h1>You have {credits.balance.toLocaleString("en-IN")} credits.</h1>}
+
+        <div className="credit-balance-card" aria-live="polite">
+          <div><span className="credit-label">Current balance</span><strong>{credits.balance.toLocaleString("en-IN")} credits</strong></div>
+          <div><span className="credit-label">Invitations available</span><strong>{invitations}</strong></div>
+          <div><span className="credit-label">Lifetime purchased</span><strong>{credits.lifetimePurchased.toLocaleString("en-IN")}</strong></div>
+        </div>
+
+        <p className="plan-footnote">Each new invitation uses {CREDITS_PER_INVITATION} credits. Credits never expire.</p>
+
+        <div className="credit-actions">
+          <Link className="button" href="/pricing"><Sparkles size={16} aria-hidden="true" /> Add credits</Link>
+          {credits.balance >= CREDITS_PER_INVITATION ? <Link className="button button-secondary" href="/customize">Create an invitation</Link> : null}
+        </div>
+
+        {transactions.length ? <>
+          <h2 className="credit-ledger-heading">Recent activity</h2>
+          <ul className="credit-ledger">
+            {transactions.map((tx) => <li key={tx.id}>
+              <div><strong>{reasonLabel(tx.reason)}</strong><span>{tx.note ?? ""}</span></div>
+              <div className="credit-ledger-right">
+                <span className={tx.delta > 0 ? "credit-delta-positive" : "credit-delta-negative"}>{tx.delta > 0 ? "+" : ""}{tx.delta.toLocaleString("en-IN")}</span>
+                <time dateTime={tx.createdAt}>{formatDate(tx.createdAt)}</time>
+              </div>
+            </li>)}
           </ul>
-          <p><Link className="button" href="/customize">Create an invitation</Link></p>
-          <Link className="text-link" href="/dashboard">Back to your invitations</Link>
-        </> : allowance.limitReached ? <>
-          <h1>Ready for more celebrations?</h1>
-          <p><strong>{Math.min(allowance.used, FREE_INVITATION_LIMIT)} of {FREE_INVITATION_LIMIT} free invitations used</strong></p>
-          <InvitationLimitNotice />
-        </> : <>
-          <h1>Your first two invitations are on us.</h1>
-          <p><strong>{Math.min(allowance.used, FREE_INVITATION_LIMIT)} of {FREE_INVITATION_LIMIT} free invitations used</strong></p>
-          <p>Try any template with your free invitations. You can edit, publish and share them at no extra cost.</p>
-          <p>Planning a wedding or hosting multiple functions? Upgrade to Pro for unlimited invitations for a year.</p>
-          <p><Link className="button" href="/pricing"><Sparkles size={16} aria-hidden="true" /> See Pro — {pro.priceLabel}</Link></p>
-          <p><Link className="button button-secondary" href="/customize">Create an invitation</Link></p>
-          <Link className="text-link" href="/dashboard">Back to your invitations</Link>
-        </>}
+        </> : null}
 
-        <p className="plan-footnote">Free slots are used when you first save an invitation to your account. Deleting or unpublishing it does not restore a slot.</p>
+        <Link className="text-link" href="/dashboard">Back to your invitations</Link>
       </section>
     </main>
     <Footer />

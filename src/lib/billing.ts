@@ -1,90 +1,103 @@
-import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
 
-export const PLAN_IDS = ["free", "pro"] as const;
-export type PlanId = (typeof PLAN_IDS)[number];
+export const CREDITS_PER_INVITATION = 100;
+export const SIGNUP_CREDIT_GRANT = 200;
 
-export type PlanDefinition = {
-  id: PlanId;
+export const PACK_IDS = ["starter", "family", "studio", "atelier"] as const;
+export type PackId = (typeof PACK_IDS)[number];
+
+export type CreditPack = {
+  id: PackId;
   name: string;
   tagline: string;
-  priceLabel: string;
+  credits: number;
   amountPaise: number;
-  highlights: string[];
-  cta: string;
-  limitLabel: string;
+  priceLabel: string;
+  perInviteLabel: string;
+  savingsLabel?: string;
+  featured?: boolean;
 };
 
-export const PLANS: Record<PlanId, PlanDefinition> = {
-  free: {
-    id: "free",
-    name: "First Looks",
-    tagline: "Try Invitly, no payment needed.",
-    priceLabel: "Free",
-    amountPaise: 0,
-    limitLabel: "2 invitations",
-    highlights: [
-      "Create up to 2 full invitations",
-      "Every template, every occasion",
-      "Guest RSVPs & live updates",
-      "Share by WhatsApp link",
-    ],
-    cta: "Start free",
+export const PACKS: Record<PackId, CreditPack> = {
+  starter: {
+    id: "starter",
+    name: "A small moment",
+    tagline: "One beautiful invitation.",
+    credits: 100,
+    amountPaise: 4900,
+    priceLabel: "₹49",
+    perInviteLabel: "₹49 / invitation",
   },
-  pro: {
-    id: "pro",
-    name: "The Full Celebration",
-    tagline: "For the people who are planning the whole thing.",
-    priceLabel: "₹999",
-    amountPaise: 99900,
-    limitLabel: "Unlimited invitations",
-    highlights: [
-      "Unlimited invitations for one year",
-      "No Invitly watermark on your pages",
-      "Priority support when it matters",
-      "Early access to new templates",
-    ],
-    cta: "Upgrade to Pro",
+  family: {
+    id: "family",
+    name: "A family affair",
+    tagline: "For the full week of functions.",
+    credits: 500,
+    amountPaise: 19900,
+    priceLabel: "₹199",
+    perInviteLabel: "₹39 / invitation",
+    savingsLabel: "Save ₹46",
+    featured: true,
+  },
+  studio: {
+    id: "studio",
+    name: "A season of celebrations",
+    tagline: "A dozen invitations, one wedding, every function.",
+    credits: 1200,
+    amountPaise: 39900,
+    priceLabel: "₹399",
+    perInviteLabel: "₹33 / invitation",
+    savingsLabel: "Save ₹189",
+  },
+  atelier: {
+    id: "atelier",
+    name: "A studio year",
+    tagline: "Hosts, planners, big families.",
+    credits: 3000,
+    amountPaise: 89900,
+    priceLabel: "₹899",
+    perInviteLabel: "₹30 / invitation",
+    savingsLabel: "Save ₹571",
   },
 };
 
-export const PRO_DURATION_DAYS = 365;
-
-export type UserPlanRecord = {
-  plan: PlanId;
-  status: "inactive" | "active" | "expired" | "refunded";
-  activatedAt: string | null;
-  expiresAt: string | null;
+export type CreditBalance = {
+  balance: number;
+  lifetimePurchased: number;
+  invitationsAvailable: number;
 };
 
-export const DEFAULT_PLAN: UserPlanRecord = {
-  plan: "free",
-  status: "inactive",
-  activatedAt: null,
-  expiresAt: null,
-};
-
-export async function getUserPlan(
-  client: SupabaseClient<Database>,
-  userId: string,
-): Promise<UserPlanRecord> {
-  const { data, error } = await client
-    .from("user_plans")
-    .select("plan, status, activated_at, expires_at")
+export async function getUserCredits(client: SupabaseClient<Database>, userId: string): Promise<CreditBalance> {
+  const { data } = await client
+    .from("user_credits")
+    .select("balance, lifetime_purchased")
     .eq("user_id", userId)
     .maybeSingle();
-  if (error || !data) return DEFAULT_PLAN;
-  return {
-    plan: (data.plan as PlanId) ?? "free",
-    status: data.status as UserPlanRecord["status"],
-    activatedAt: data.activated_at,
-    expiresAt: data.expires_at,
-  };
+  const balance = data?.balance ?? 0;
+  const lifetimePurchased = data?.lifetime_purchased ?? 0;
+  return { balance, lifetimePurchased, invitationsAvailable: Math.floor(balance / CREDITS_PER_INVITATION) };
 }
 
-export function isPlanActive(plan: UserPlanRecord) {
-  if (plan.plan !== "pro" || plan.status !== "active") return false;
-  if (!plan.expiresAt) return true;
-  return new Date(plan.expiresAt).getTime() > Date.now();
+export type CreditTransaction = {
+  id: string;
+  delta: number;
+  reason: Database["public"]["Tables"]["credit_transactions"]["Row"]["reason"];
+  note: string | null;
+  createdAt: string;
+};
+
+export async function getRecentCreditTransactions(
+  client: SupabaseClient<Database>,
+  userId: string,
+  limit = 10,
+): Promise<CreditTransaction[]> {
+  const { data } = await client
+    .from("credit_transactions")
+    .select("id, delta, reason, note, created_at")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (!data) return [];
+  return data.map((row) => ({ id: row.id, delta: row.delta, reason: row.reason, note: row.note, createdAt: row.created_at }));
 }

@@ -2,9 +2,10 @@
 
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
+import type { PackId } from "@/lib/billing";
 
 type Props = {
-  planId: "pro";
+  packId: PackId;
   className?: string;
   children: React.ReactNode;
   isAuthed: boolean;
@@ -48,7 +49,7 @@ function loadRazorpayScript(): Promise<boolean> {
   });
 }
 
-export function UpgradeButton({ planId, className, children, isAuthed, billingReady }: Props) {
+export function UpgradeButton({ packId, className, children, isAuthed, billingReady }: Props) {
   const router = useRouter();
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -64,7 +65,7 @@ export function UpgradeButton({ planId, className, children, isAuthed, billingRe
     const response = await fetch("/api/billing/checkout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ planId }),
+      body: JSON.stringify({ packId }),
     });
     if (!response.ok) {
       const data = await response.json().catch(() => ({}));
@@ -77,7 +78,7 @@ export function UpgradeButton({ planId, className, children, isAuthed, billingRe
       amount: order.amount,
       currency: order.currency,
       name: "Invitly",
-      description: order.planName,
+      description: `${order.credits} credits · ${order.packName}`,
       order_id: order.orderId,
       prefill: { email: order.userEmail || undefined },
       theme: { color: "#58252f" },
@@ -93,13 +94,13 @@ export function UpgradeButton({ planId, className, children, isAuthed, billingRe
           setStatus("error"); setMessage(data?.error ?? "We received your payment but couldn’t confirm it. Please contact support.");
           return;
         }
-        router.push("/dashboard/plan?welcome=pro");
+        router.push(`/dashboard/plan?welcome=credits&added=${order.credits}`);
         router.refresh();
       },
       modal: { ondismiss: () => setStatus("idle") },
     };
     new window.Razorpay(options).open();
-  }, [billingReady, isAuthed, planId, router]);
+  }, [billingReady, isAuthed, packId, router]);
 
   return <>
     <button type="button" onClick={handleClick} disabled={status === "loading"} className={className}>
