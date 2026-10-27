@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Check, Play, Star } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check, Play } from "lucide-react";
 import { cinematicThemes } from "@/data/cinematic-themes";
 import { occasionDemo } from "@/data/occasion-demos";
 import { CinematicCover } from "@/components/wedding/cinematic-cover";
@@ -23,10 +23,10 @@ export function CinematicHomeHero() {
       />
       <div className={styles.heroGrad} />
       <div className={styles.heroContent}>
-        <p className={styles.heroEye}>India's most personal digital invitation</p>
+        <p className={styles.heroEye}>India&rsquo;s most personal digital invitation</p>
         <h1 id="home-h1" className={styles.heroH1}>
           The invitation<br />
-          <em>they'll never forget.</em>
+          <em>they&rsquo;ll never forget.</em>
         </h1>
         <p className={styles.heroSub}>
           Add your names, photos, music and story.<br />
@@ -88,7 +88,7 @@ export function CinematicCollection() {
         </p>
       </div>
       <div className={styles.showcaseGrid}>
-        {cinematicThemes.map((theme, i) => (
+        {cinematicThemes.map((theme) => (
           <article key={theme.id} className={styles.showcaseCard} data-reveal>
             <Link href={`/demo?theme=${theme.id}`} className={styles.cardThumb} aria-label={`Preview ${theme.name}`}>
               <CinematicCover invitation={occasionDemo("wedding", theme.id)} theme={theme.id} compact />
@@ -166,7 +166,7 @@ export function FeatureHighlights() {
       <div className={styles.featsInner}>
         <div className={styles.featsHead} data-reveal>
           <span className={styles.tag}>EVERYTHING INCLUDED</span>
-          <h2 id="feats-h2" className={styles.sectionH2}>Everything you need,<br /><em>nothing you don't.</em></h2>
+          <h2 id="feats-h2" className={styles.sectionH2}>Everything you need,<br /><em>nothing you don&rsquo;t.</em></h2>
         </div>
         <div className={styles.featsGrid}>
           {feats.map(f => (
@@ -203,7 +203,7 @@ export function WeddingReactions() {
           {testi.map(t => (
             <div key={t.name} className={styles.proofCard} data-reveal>
               <div className={styles.proofStars}>{Array(t.s).fill("★").join("")}</div>
-              <p className={styles.proofQ}>"{t.q}"</p>
+              <p className={styles.proofQ}>&ldquo;{t.q}&rdquo;</p>
               <div className={styles.proofAuthor}>
                 <span className={styles.proofAvatar}>{t.i}</span>
                 <div>

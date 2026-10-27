@@ -1,0 +1,48 @@
+.pricing-page { padding: clamp(48px, 7vw, 96px) 0 clamp(72px, 9vw, 128px); }
+.pricing-header { max-width: 640px; margin: 0 auto 56px; text-align: center; }
+.pricing-header .eyebrow { color: var(--maroon); }
+.pricing-header h1 { font: clamp(44px, 6.5vw, 72px)/1.05 var(--serif); letter-spacing: -.03em; margin: 18px 0 20px; color: var(--ink); }
+.pricing-header h1 em { font-style: italic; color: var(--maroon); }
+.pricing-header p { font-size: 17px; color: var(--muted); max-width: 520px; margin: 0 auto; }
+.pricing-handwritten { display: inline-block; font: italic 22px var(--serif); color: #a07050; transform: rotate(-2deg); margin-bottom: 6px; }
+
+.pricing-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; max-width: 960px; margin: 0 auto; }
+.pricing-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--iv-radius-panel); padding: 40px 32px 36px; display: flex; flex-direction: column; gap: 22px; box-shadow: var(--iv-shadow-panel); position: relative; }
+.pricing-card.is-featured { background: linear-gradient(180deg, #fffcf5 0%, #fef5e6 100%); border-color: #c69b74; }
+.pricing-card .pricing-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--maroon, #58252f); color: #fff9ed; font-family: var(--display); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; padding: 7px 16px; border-radius: 999px; }
+.pricing-card h2 { font: 32px var(--serif); letter-spacing: -.02em; margin: 0; color: var(--ink); }
+.pricing-card .pricing-tagline { font: italic 17px var(--serif); color: var(--muted); margin: 0; }
+.pricing-card .pricing-price { display: flex; align-items: baseline; gap: 10px; margin: 8px 0 0; }
+.pricing-card .pricing-price strong { font: 54px/1 var(--serif); color: var(--ink); font-weight: 500; letter-spacing: -.02em; }
+.pricing-card .pricing-price span { font-family: var(--display); font-size: 11px; letter-spacing: .18em; color: var(--muted); text-transform: uppercase; }
+.pricing-card ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
+.pricing-card li { display: flex; gap: 11px; align-items: flex-start; font-size: 15px; line-height: 1.55; color: var(--ink); }
+.pricing-card li svg { flex-shrink: 0; margin-top: 3px; color: var(--maroon); }
+.pricing-card .button,
+.pricing-card .pricing-cta { width: 100%; justify-content: center; margin-top: auto; }
+.pricing-card .pricing-cta { background: var(--primary); color: var(--primary-foreground); border: none; font-family: var(--sans); font-weight: 500; font-size: 14px; min-height: 48px; border-radius: var(--iv-radius-control); cursor: pointer; transition: background .2s ease, transform .15s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.pricing-card .pricing-cta:hover:not(:disabled) { background: var(--primary-hover); transform: translateY(-1px); }
+.pricing-card .pricing-cta:disabled { opacity: .6; cursor: wait; }
+.pricing-error { font-size: 13px; color: #a63a3a; margin: 10px 0 0; text-align: center; }
+
+.pricing-note { max-width: 640px; margin: 48px auto 0; text-align: center; font-size: 13px; color: var(--muted); }
+.pricing-note a { color: var(--maroon); text-decoration: underline; text-underline-offset: 3px; }
+
+.pricing-faq { max-width: 720px; margin: 64px auto 0; display: flex; flex-direction: column; gap: 24px; }
+.pricing-faq h2 { font: 32px var(--serif); text-align: center; margin: 0 0 8px; letter-spacing: -.02em; }
+.pricing-faq details { background: var(--surface); border: 1px solid var(--border); border-radius: var(--iv-radius-panel); padding: 18px 22px; }
+.pricing-faq summary { font-family: var(--sans); font-weight: 500; font-size: 15px; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.pricing-faq summary::after { content: "+"; font-family: var(--display); color: var(--maroon); font-size: 20px; transition: transform .2s ease; }
+.pricing-faq details[open] summary::after { content: "–"; }
+.pricing-faq p { margin: 14px 0 0; font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+.pricing-header-nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
+
+@media (max-width: 760px) {
+  .pricing-grid { grid-template-columns: 1fr; max-width: 420px; }
+  .pricing-card { padding: 32px 24px; }
+  .pricing-card h2 { font-size: 28px; }
+  .pricing-card .pricing-price strong { font-size: 44px; }
+  .pricing-header h1 { font-size: clamp(36px, 10vw, 54px); }
+  .pricing-header p { font-size: 15px; }
+}

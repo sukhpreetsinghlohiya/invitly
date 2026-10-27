@@ -35,6 +35,8 @@ type Segment = { id: string; event_id: string; title: string; description: strin
 type Media = { id: string; event_id: string; storage_path: string; alt_text: string; mime_type: string; size_bytes: number; created_at: string; width: number | null; height: number | null };
 type GuestGroup = { id: string; event_id: string; name: string; function_ids: string[] | null; created_at: string };
 type Guest = { id: string; event_id: string; group_id: string | null; name: string; email: string; phone: string; max_party_size: number; token_hash: string; created_at: string };
+type UserPlan = { user_id: string; plan: "free" | "pro"; status: "inactive" | "active" | "expired" | "refunded"; activated_at: string | null; expires_at: string | null; razorpay_order_id: string | null; razorpay_payment_id: string | null; amount_paise: number | null; currency: string | null; updated_at: string };
+type BillingEvent = { event_id: string; user_id: string | null; event_type: string; payload: Json; received_at: string };
 type GuestResponse = { guest_id: string; event_id: string; status: "attending" | "maybe" | "declined"; party_size: number; note: string; updated_at: string };
 type EventRelationship<Name extends string> = [{ foreignKeyName: Name; columns: ["event_id"]; isOneToOne: false; referencedRelation: "events"; referencedColumns: ["id"] }];
 type Table<Row, Required extends keyof Row, Relationships = []> = { Row: Row; Insert: Pick<Row, Required> & Partial<Omit<Row, Required>>; Update: Partial<Row>; Relationships: Relationships };
@@ -43,6 +45,8 @@ export type Database = {
   public: {
     Tables: {
       invitation_allowances: Table<{ user_id: string; invitations_used: number }, "user_id">;
+      user_plans: Table<UserPlan, "user_id">;
+      billing_events: Table<BillingEvent, "event_id" | "event_type" | "payload">;
       profiles: Table<Profile, "id">;
       themes: Table<Theme, "id" | "name">;
       event_segments: Table<Segment, "event_id" | "title" | "starts_at", EventRelationship<"event_segments_event_id_fkey">>;

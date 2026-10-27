@@ -32,18 +32,18 @@ export default async function DashboardPage() {
   const { data: events, error } = await supabase.from("events").select("*").eq("owner_id", user.id).order("created_at", { ascending: false });
   const invitations = events || [];
   const allowance = await getInvitationAllowance(supabase, user.id).catch(() => null);
-  const createHref = allowance?.limitReached ? "/dashboard/plan" : "/customize";
+  const createHref = allowance?.limitReached ? "/pricing" : "/customize";
   const published = invitations.filter((event) => event.is_published).length;
   const unpublished = invitations.filter((event) => !event.is_published && event.published_at).length;
   const displayName = typeof user.user_metadata?.full_name === "string" ? user.user_metadata.full_name.trim().split(/\s+/)[0] : "";
   return <div className="dashboard-page">
-    <header className="dashboard-header container"><Brand /><nav aria-label="Host navigation"><Link href="/templates">The collection</Link><Link className="button button-small" href={createHref}><Plus size={15} /> {allowance?.limitReached ? "More invitations" : "New invitation"}</Link></nav></header>
+    <header className="dashboard-header container"><Brand /><nav aria-label="Host navigation"><Link href="/templates">The collection</Link><Link className="button button-small" href={createHref}><Plus size={15} /> {allowance?.limitReached ? "Upgrade to Pro" : "New invitation"}</Link></nav></header>
     <main id="main" className="dashboard-main container">
       <section className="dashboard-welcome"><div><span className="eyebrow">YOUR HOST WORKSPACE</span><h1>{displayName ? `Hi, ${displayName}.` : "Hi there."}<br /><em>Your people, together.</em></h1><p>Your invitations, guest responses and thoughtful details, all in one place.</p></div><div className="dashboard-welcome-art" aria-hidden="true"><Flower /><span>Good things<br />are <em>coming together.</em></span><i>MADE FOR YOUR MOMENTS</i></div></section>
       <div className="dashboard-account"><span>Signed in as <strong>{user.email}</strong></span><SignOutForm /></div>
-      {allowance ? <InvitationAllowanceBanner used={allowance.used} /> : <p className="form-error" role="alert">{ALLOWANCE_UNAVAILABLE_MESSAGE}</p>}
+      {allowance ? <InvitationAllowanceBanner used={allowance.used} unlimited={allowance.unlimited} /> : <p className="form-error" role="alert">{ALLOWANCE_UNAVAILABLE_MESSAGE}</p>}
       {!error && <dl className="dashboard-overview"><div><dt>Your invitations</dt><dd>{invitations.length}</dd></div><div><dt>Published invitations</dt><dd>{published}</dd></div><div><dt>Private drafts</dt><dd>{invitations.length - published - unpublished}</dd></div><div><dt>Unpublished</dt><dd>{unpublished}</dd></div></dl>}
-      <section className="dashboard-celebrations" aria-labelledby="celebrations-heading"><div className="dashboard-section-heading"><div><span className="eyebrow">EVERY STORY STARTS SOMEWHERE</span><h2 id="celebrations-heading">Your <em>invitations.</em></h2></div><Link href={createHref} className="text-link">{allowance?.limitReached ? "More invitations · Coming soon" : "Create an invitation"} <ArrowRight size={15} /></Link></div>
+      <section className="dashboard-celebrations" aria-labelledby="celebrations-heading"><div className="dashboard-section-heading"><div><span className="eyebrow">EVERY STORY STARTS SOMEWHERE</span><h2 id="celebrations-heading">Your <em>invitations.</em></h2></div><Link href={createHref} className="text-link">{allowance?.limitReached ? "Upgrade to Pro" : "Create an invitation"} <ArrowRight size={15} /></Link></div>
         {error ? <div className="dashboard-empty" role="alert"><h3>Your invitations couldn’t be loaded.</h3><p>Please refresh to try again. If this is a new installation, check that the database migrations have been applied.</p><Link className="button button-secondary" href="/dashboard">Try again</Link></div> : invitations.length ? <div className="dashboard-event-grid">{invitations.map((event) => {
           const validated = validateInvitationDraft({ themeId: event.theme_id, invitation: event.invitation_content, musicEnabled: event.music_enabled }, "draft");
           const theme = getOccasionTheme(validated.data?.invitation.occasion, resolveTheme(event.theme_id));

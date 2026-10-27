@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Check, Music, Users, Sparkles } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
 import { Flower } from "@/components/brand";
 import { StationeryCard } from "./stationery-art";
 import "./home-hero.css";
